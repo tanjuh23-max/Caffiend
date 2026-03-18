@@ -7,3 +7,4 @@ Sitemap: https://caffiend-one.vercel.app/sitemap.xml
 # Block internal/API paths
 Disallow: /api/
 Disallow: /_vercel/
+Disallow: /cdn-cgi/
