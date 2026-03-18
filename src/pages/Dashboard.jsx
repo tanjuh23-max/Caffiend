@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Plus, Trash2, Moon, TrendingUp } from 'lucide-react';
+import { Plus, Trash2, Moon, TrendingUp, Share2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { ZONE_INFO, formatHours, getMgPerKg } from '../utils/caffeineCalc';
 import { DRINKS, QUICK_ADD_IDS } from '../data/drinks';
@@ -222,6 +222,22 @@ export default function Dashboard() {
             </div>
             <p className="text-white font-semibold text-sm">Caffeine Curve</p>
             <span className="ml-auto text-[10px]" style={{ color: 'rgba(255,255,255,0.25)' }}>Next 10h</span>
+            <button
+              onClick={() => {
+                const sleepMsg = sleepSafeIn === 0 ? 'safe to sleep now' : sleepSafeIn ? `safe to sleep in ${formatHours(sleepSafeIn)}` : 'heavy load';
+                const text = `My caffeine level right now: ${Math.round(currentCaffeine)}mg (${mgPerKg} mg/kg) — ${sleepMsg} ☕\n\nTracking with Caffiend 👇\nhttps://caffiend-one.vercel.app`;
+                if (navigator.share) {
+                  navigator.share({ text }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+                }
+              }}
+              className="w-7 h-7 rounded-xl flex items-center justify-center ml-1 active:scale-95 transition-transform"
+              style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.2)' }}
+              title="Share your caffeine curve"
+            >
+              <Share2 size={13} style={{ color: '#fbbf24' }} />
+            </button>
           </div>
           <div className="px-2 pb-3">
             <CaffeineCurve data={caffeineCurve} sleepThreshold={settings.sleepThreshold} dailyLimit={settings.dailyLimit} />

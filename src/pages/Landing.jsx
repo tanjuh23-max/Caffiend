@@ -669,7 +669,13 @@ export default function Landing() {
             <ProFeature>Custom drinks — save any drink with your exact caffeine data</ProFeature>
             <ProFeature>Barcode scanner — point at any can and get instant caffeine data</ProFeature>
             <ProFeature>Export to CSV — take your data to any health app or doctor visit</ProFeature>
-            <div className="mt-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="mt-6 pt-4 flex flex-col gap-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex items-center gap-2">
+                <span style={{ color: '#22c55e' }}>✓</span>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  <strong style={{ color: 'rgba(255,255,255,0.7)' }}>7-day money-back guarantee</strong> — not happy? Full refund, no questions asked.
+                </p>
+              </div>
               <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
                 Already purchased?{' '}
                 <button onClick={() => navigate('/app')} style={{ color: '#f59e0b', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit', fontSize: 'inherit' }}>
@@ -705,24 +711,123 @@ export default function Landing() {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4">
-            <BlogCard
-              href="/blog/caffeine-half-life.html"
-              tag="Pharmacology"
-              title="The Caffeine Half-Life Guide: How Long Does Coffee Really Last?"
-              excerpt="From first sip to final trace — a complete timeline of what caffeine does inside you."
-            />
-            <BlogCard
-              href="/blog/caffeine-and-sleep.html"
-              tag="Sleep Science"
-              title="How Caffeine Ruins Your Sleep (Even When You Fall Asleep Fine)"
-              excerpt="The hidden way afternoon coffee steals your deep sleep — even hours after you've forgotten you drank it."
-            />
-            <BlogCard
-              href="/blog/best-time-for-coffee.html"
-              tag="Optimisation"
-              title="The Best (and Worst) Times to Drink Coffee, According to Science"
-              excerpt="Cortisol rhythms, chronotypes, and why your morning cup might be doing less than you think."
-            />
+            <BlogCard href="/blog/caffeine-half-life.html" tag="Pharmacology" title="The Caffeine Half-Life Guide: How Long Does Coffee Really Last?" excerpt="From first sip to final trace — a complete timeline of what caffeine does inside you." />
+            <BlogCard href="/blog/caffeine-and-sleep.html" tag="Sleep Science" title="How Caffeine Ruins Your Sleep (Even When You Fall Asleep Fine)" excerpt="The hidden way afternoon coffee steals your deep sleep — even hours after you've forgotten you drank it." />
+            <BlogCard href="/blog/best-time-for-coffee.html" tag="Optimisation" title="The Best (and Worst) Times to Drink Coffee, According to Science" excerpt="Cortisol rhythms, chronotypes, and why your morning cup might be doing less than you think." />
+            <BlogCard href="/blog/caffeine-calculator.html" tag="Science" title="Caffeine Calculator: How the Pharmacokinetic Model Actually Works" excerpt="The maths behind the curve — how we calculate exactly what's in your bloodstream right now." />
+            <BlogCard href="/blog/monster-energy-caffeine.html" tag="Energy Drinks" title="How Much Caffeine Is in Monster Energy? Every Flavour Compared" excerpt="Original, Ultra, Zero Sugar, Java — every variant ranked with sleep impact data." />
+            <BlogCard href="/blog/how-much-caffeine-too-much.html" tag="Safety" title="How Much Caffeine Is Too Much? Science-Backed Daily Limits" excerpt="The FDA says 400mg. But that ignores body weight, genetics, and timing. Here's the full picture." />
+            <BlogCard href="/blog/pre-workout-caffeine-sleep.html" tag="Fitness" title="Does Pre-Workout Ruin Your Sleep? The Caffeine Problem Explained" excerpt="A 300mg pre-workout at 6pm still has 150mg active at midnight. Here's the timing data." />
+            <BlogCard href="/blog/caffeine-sensitivity.html" tag="Genetics" title="Why Caffeine Hits You Differently: The CYP1A2 Gene Explained" excerpt="Fast vs slow metabolisers — why the same coffee affects people completely differently." />
+            <BlogCard href="/blog/caffeine-mg-per-kg.html" tag="Dosing" title="How Much Caffeine Is Right for Your Body Weight?" excerpt="A 60kg person and a 90kg person should not be drinking the same amount. Here's the science." />
+            <BlogCard href="/blog/caffeine-drinks-comparison.html" tag="Reference" title="Caffeine Content in Every Drink — Complete 2025 Guide" excerpt="Coffee, energy drinks, tea, pre-workout — every drink ranked by caffeine content." />
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMPARISON TABLE ── */}
+      <section className="px-6 py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#f59e0b', fontFamily: "'JetBrains Mono', monospace" }}>
+              How we compare
+            </p>
+            <h2 className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              No other app does this
+            </h2>
+          </div>
+          <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(255,255,255,0.02)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  {['Feature', 'Caffiend', 'Apple Health', 'Chronometer', 'Caffeine Informer'].map((h, i) => (
+                    <th key={h} style={{
+                      padding: '14px 16px', textAlign: i === 0 ? 'left' : 'center',
+                      fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace",
+                      color: i === 1 ? '#f59e0b' : 'rgba(255,255,255,0.4)',
+                      fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
+                      background: i === 1 ? 'rgba(245,158,11,0.05)' : 'transparent',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['Real-time metabolism curve', '✅', '❌', '❌', '❌'],
+                  ['Sleep impact predictor', '✅', '❌', '❌', '❌'],
+                  ['Pharmacokinetic model', '✅', '❌', '❌', '❌'],
+                  ['mg/kg personalised dosing', '✅', '❌', '❌', '❌'],
+                  ['Barcode scanner', '✅ Pro', '❌', '✅', '❌'],
+                  ['Caffeine history', '✅', '✅', '✅', '❌'],
+                  ['No account needed', '✅', '❌', '❌', '✅'],
+                  ['Free to use', '✅', '✅', '✅', '✅'],
+                ].map((row, ri) => (
+                  <tr key={ri} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} style={{
+                        padding: '13px 16px', textAlign: ci === 0 ? 'left' : 'center',
+                        fontSize: ci === 0 ? '0.85rem' : '1rem',
+                        color: ci === 0 ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.9)',
+                        background: ci === 1 ? 'rgba(245,158,11,0.03)' : 'transparent',
+                        fontWeight: ci === 1 ? 600 : 400,
+                      }}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="px-6 py-16">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#f59e0b', fontFamily: "'JetBrains Mono', monospace" }}>
+              Questions
+            </p>
+            <h2 className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              FAQ
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {[
+              {
+                q: 'How accurate is the caffeine tracking?',
+                a: "We use the same one-compartment pharmacokinetic model used in peer-reviewed caffeine research (Nehlig et al., 1992). The model uses a 5.7-hour half-life and 45-minute absorption phase — the published averages for healthy adults. Individual variation exists (genetics, liver health, tolerance) but the model is significantly more accurate than any timer-based approach."
+              },
+              {
+                q: 'Is my data private?',
+                a: "Yes. All your caffeine data is stored locally on your device using localStorage — nothing is sent to our servers. We don't collect, store, or sell any personal data. You can delete everything instantly from Settings."
+              },
+              {
+                q: 'Does it work offline?',
+                a: "Yes. Caffiend is a Progressive Web App (PWA) that works fully offline once loaded. Your data stays on your device and the app functions without an internet connection."
+              },
+              {
+                q: "What's the difference between Free and Pro?",
+                a: "Free gives you real-time caffeine tracking, the metabolism curve, sleep predictor, and 7-day history — everything you need to understand your caffeine. Pro unlocks 90+ day history, advanced weekly analytics, the barcode scanner, custom drinks, and CSV export."
+              },
+              {
+                q: 'Do I need to create an account?',
+                a: "No account needed to use Caffiend. Just open the app and start tracking. Pro verification is done by email only — no passwords, no sign-up forms."
+              },
+              {
+                q: 'What if Pro is not right for me?',
+                a: "If you subscribe to Pro and it's not what you expected, email us within 7 days for a full refund. No questions asked."
+              },
+            ].map(({ q, a }, i) => (
+              <details key={i} className="group rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <summary className="flex items-center justify-between px-6 py-5 cursor-pointer list-none" style={{ color: 'rgba(255,255,255,0.87)' }}>
+                  <span className="font-semibold text-sm pr-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{q}</span>
+                  <span className="text-amber-400 shrink-0 text-lg leading-none group-open:rotate-45 transition-transform duration-200">+</span>
+                </summary>
+                <div className="px-6 pb-5">
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{a}</p>
+                </div>
+              </details>
+            ))}
           </div>
         </div>
       </section>
