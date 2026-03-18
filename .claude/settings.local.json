@@ -25,7 +25,9 @@
       "WebFetch(domain:www.reddit.com)",
       "WebSearch",
       "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__execute_sql",
-      "WebFetch(domain:caffiend-one.vercel.app)"
+      "WebFetch(domain:caffiend-one.vercel.app)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git status; git log --oneline -5\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git config user.email ''tanjuhassan@hotmail.com''; git config user.name ''tanjuh23-max''; git commit -m ''Initial commit — full Caffiend app''; git push -u origin main\")"
     ]
   }
 }

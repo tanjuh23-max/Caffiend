@@ -350,7 +350,7 @@ export default function Landing() {
 
             <h1
               className="landing-mono font-extrabold leading-none mb-6"
-              style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', letterSpacing: '-0.03em' }}
+              style={{ fontSize: 'clamp(2.6rem, 7vw, 5rem)', letterSpacing: '-0.03em' }}
             >
               <span
                 style={{
@@ -360,7 +360,7 @@ export default function Landing() {
                   backgroundClip: 'text',
                 }}
               >
-                Know Your
+                Is tonight's sleep
               </span>
               <br />
               <span
@@ -371,7 +371,7 @@ export default function Landing() {
                   backgroundClip: 'text',
                 }}
               >
-                Buzz.
+                already ruined?
               </span>
             </h1>
 
@@ -379,9 +379,9 @@ export default function Landing() {
               className="text-lg leading-relaxed mb-8 anim-2"
               style={{ color: 'rgba(255,255,255,0.55)', maxWidth: '520px' }}
             >
-              Caffiend models exactly how caffeine behaves in your bloodstream — real absorption curves,
-              5.7-hour half-life decay, and a sleep predictor that tells you when you'll finally wind down.
-              No guessing. Just science.
+              Caffiend shows you exactly how much caffeine is active in your bloodstream right now —
+              and precisely when it'll drop low enough to actually sleep. That 3pm coffee might still
+              be 50% active at 9pm. Now you'll know before it's too late.
             </p>
 
             <div className="flex flex-wrap gap-4 anim-3">
@@ -414,11 +414,44 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── APP SCREENSHOTS ── */}
+      <section className="px-6 py-12 overflow-hidden">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-center text-xs uppercase tracking-widest mb-8"
+            style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>
+            See it in action
+          </p>
+          <div className="flex gap-6 justify-center items-end flex-wrap">
+            {[
+              { src: '/screenshot-dashboard.png', label: 'Live gauge' },
+              { src: '/screenshot-curve.png', label: 'Metabolism curve' },
+              { src: '/screenshot-history.png', label: '7-day history' },
+            ].map(({ src, label }) => (
+              <div key={src} className="flex flex-col items-center gap-3">
+                <div
+                  className="rounded-2xl overflow-hidden"
+                  style={{
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,158,11,0.08)',
+                    width: '160px',
+                  }}
+                >
+                  <img src={src} alt={label} style={{ width: '100%', display: 'block' }} />
+                </div>
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── TRUST BADGES ── */}
       <section className="px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-wrap gap-3 justify-center">
           <Badge>Pharmacokinetics-based</Badge>
-          <Badge>Free forever</Badge>
+          <Badge>Free to start</Badge>
           <Badge>No account needed</Badge>
           <Badge>Works offline</Badge>
         </div>
@@ -584,7 +617,7 @@ export default function Landing() {
               Caffiend Pro
             </h2>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              For serious optimisers who want every edge.
+              For people who take sleep and performance seriously.
             </p>
           </div>
 
@@ -596,11 +629,11 @@ export default function Landing() {
             >
               <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>Monthly</p>
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>£7</span>
+                <span className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>£9.99</span>
                 <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/month</span>
               </div>
               <p className="text-xs mb-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Cancel anytime</p>
-              <a href="https://buy.stripe.com/fZu9AS30FeZ4fAe8M42Ji03" className="cta-btn cta-secondary w-full justify-center" style={{ display: 'flex' }}>
+              <a href="https://buy.stripe.com/8x28wO0Sx4kqco27I02Ji04" className="cta-btn cta-secondary w-full justify-center" style={{ display: 'flex' }}>
                 Get Pro Monthly
               </a>
             </div>
@@ -611,15 +644,15 @@ export default function Landing() {
                 className="absolute top-4 right-4 text-xs px-2 py-0.5 rounded-full font-bold"
                 style={{ background: 'rgba(245,158,11,0.2)', color: '#f59e0b', fontFamily: "'JetBrains Mono', monospace" }}
               >
-                Save 17%
+                Save 50%
               </div>
               <p className="text-xs uppercase tracking-widest mb-1" style={{ color: '#f59e0b', fontFamily: "'JetBrains Mono', monospace" }}>Annual</p>
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>£70</span>
+                <span className="landing-mono font-extrabold text-4xl" style={{ color: 'rgba(255,255,255,0.9)' }}>£59.99</span>
                 <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/year</span>
               </div>
-              <p className="text-xs mb-6" style={{ color: 'rgba(255,255,255,0.3)' }}>£5.83/month billed annually</p>
-              <a href="https://buy.stripe.com/fZu9AS30FeZ4fAe8M42Ji03" className="cta-btn cta-primary w-full justify-center" style={{ display: 'flex' }}>
+              <p className="text-xs mb-6" style={{ color: 'rgba(255,255,255,0.3)' }}>£5/month — 2 months free</p>
+              <a href="https://buy.stripe.com/aFa8wO8kZ8AG2Ns4vO2Ji05" className="cta-btn cta-primary w-full justify-center" style={{ display: 'flex' }}>
                 Get Pro Annual →
               </a>
             </div>
@@ -631,11 +664,11 @@ export default function Landing() {
             style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
             <p className="text-xs uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>Everything in Pro</p>
-            <ProFeature>Unlimited caffeine history (free tier: last 7 days)</ProFeature>
-            <ProFeature>Advanced analytics — weekly patterns, peak times, total weekly load</ProFeature>
-            <ProFeature>Custom beverages — save your own drinks with exact caffeine data</ProFeature>
-            <ProFeature>Export to CSV for use in health apps or spreadsheets</ProFeature>
-            <ProFeature>Priority support &amp; early access to new features</ProFeature>
+            <ProFeature>Full caffeine history — see every crash pattern across 90+ days</ProFeature>
+            <ProFeature>Weekly analytics — spot which days you're overloading and wrecking your sleep</ProFeature>
+            <ProFeature>Custom drinks — save any drink with your exact caffeine data</ProFeature>
+            <ProFeature>Barcode scanner — point at any can and get instant caffeine data</ProFeature>
+            <ProFeature>Export to CSV — take your data to any health app or doctor visit</ProFeature>
             <div className="mt-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
               <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
                 Already purchased?{' '}
