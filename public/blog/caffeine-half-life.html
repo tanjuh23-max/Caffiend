@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Caffeine Half-Life Guide: How Long Does Coffee Really Last? | Caffiend</title>
+  <meta name="description" content="Caffeine's half-life is 5–7 hours. That means your 3pm coffee still has you at 50% caffeine by 9pm. Here's the complete science-backed timeline for a 200mg dose.">
+  <link rel="canonical" href="https://caffiend-one.vercel.app/blog/caffeine-half-life.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Caffeine Half-Life Guide: How Long Does Coffee Really Last?">
+  <meta property="og:description" content="Caffeine's half-life is 5–7 hours. That means your 3pm coffee still has you at 50% caffeine by 9pm. Here's the complete science-backed timeline.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://caffiend-one.vercel.app/blog/caffeine-half-life.html">
+  <meta property="og:site_name" content="Caffiend">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The Caffeine Half-Life Guide: How Long Does Coffee Really Last?">
+  <meta name="twitter:description" content="Caffeine's half-life is 5–7 hours. Here's the complete breakdown of what happens from first sip to last trace.">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Caffeine Half-Life Guide: How Long Does Coffee Really Last?",
+    "description": "Caffeine's half-life is 5–7 hours. That means your 3pm coffee still has you at 50% caffeine by 9pm. Here's the complete science-backed timeline for a 200mg dose.",
+    "author": { "@type": "Organization", "name": "Caffiend" },
+    "publisher": { "@type": "Organization", "name": "Caffiend", "url": "https://caffiend-one.vercel.app" },
+    "datePublished": "2025-03-01",
+    "dateModified": "2025-03-18",
+    "mainEntityOfPage": "https://caffiend-one.vercel.app/blog/caffeine-half-life.html",
+    "keywords": "caffeine half life, how long does caffeine last, caffeine in your system"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #060608;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
+      --text: rgba(255,255,255,0.87);
+      --muted: rgba(255,255,255,0.45);
+      --faint: rgba(255,255,255,0.2);
+      --amber: #f59e0b;
+      --orange: #f97316;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--amber); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(6,6,8,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #fcd34d, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-cta {
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Article header */
+    .article-header {
+      padding: 64px 0 48px;
+    }
+
+    .article-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 20px;
+    }
+
+    .article-meta {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Article body */
+    .article-body {
+      padding-bottom: 64px;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.9);
+      margin: 48px 0 16px;
+    }
+
+    h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.8);
+      margin: 32px 0 12px;
+    }
+
+    p { margin-bottom: 20px; color: rgba(255,255,255,0.7); }
+
+    ul, ol {
+      margin: 0 0 20px 24px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    li { margin-bottom: 8px; }
+
+    strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 32px 0;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead th {
+      background: rgba(255,255,255,0.04);
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.7);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .td-highlight {
+      color: var(--amber);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Callout box */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.18);
+      margin: 32px 0;
+    }
+
+    .callout p { color: rgba(255,255,255,0.75); margin-bottom: 0; }
+
+    /* CTA Section */
+    .cta-section {
+      margin: 64px 0;
+      padding: 40px;
+      border-radius: 20px;
+      background: rgba(245,158,11,0.05);
+      border: 1px solid rgba(245,158,11,0.15);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+    }
+
+    .cta-btn:hover {
+      box-shadow: 0 6px 28px rgba(245,158,11,0.45);
+      text-decoration: none;
+    }
+
+    /* Related posts */
+    .related-posts {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .related-card {
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s;
+    }
+
+    .related-card:hover { border-color: rgba(245,158,11,0.25); text-decoration: none; }
+
+    .related-card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+
+    .related-card h3 {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--faint);
+    }
+
+    footer a { color: var(--faint); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Caffiend</a>
+  <a href="https://caffiend-one.vercel.app/app" class="nav-cta">Open App →</a>
+</nav>
+
+<main>
+  <div class="container">
+    <header class="article-header">
+      <div class="article-tag">Pharmacology</div>
+      <h1>The Caffeine Half-Life Guide: How Long Does Coffee Really Last?</h1>
+      <div class="article-meta">
+        <span>March 2025</span>
+        <span>8 min read</span>
+        <span>by Caffiend</span>
+      </div>
+    </header>
+
+    <article class="article-body">
+
+      <p>
+        You drink a coffee at 3pm. By 9pm you feel fine — maybe a little tired — and you assume the caffeine is long gone.
+        It isn't. At 9pm, you still have roughly <strong>50% of that caffeine circulating in your bloodstream</strong>.
+        Understanding caffeine's half-life is one of the most useful things you can do for your sleep, your performance, and your relationship with coffee.
+      </p>
+
+      <h2>What is a half-life?</h2>
+
+      <p>
+        Half-life is a pharmacokinetic concept: the time it takes for the concentration of a substance in your blood to
+        fall by half. It's used for everything from radioactive isotopes to antibiotics to, yes, caffeine.
+      </p>
+
+      <p>
+        Importantly, half-life doesn't mean the substance is gone after one half-life. It means it's halved.
+        After two half-lives it's at 25%. After three, 12.5%. The math is exponential, not linear.
+      </p>
+
+      <h2>Caffeine's half-life: the numbers</h2>
+
+      <p>
+        Caffeine's half-life in healthy adults averages <strong>5–6 hours</strong>, with most studies centring around 5.7 hours.
+        This varies considerably between individuals — more on that below — but 5.7 hours is a solid, research-backed baseline.
+      </p>
+
+      <p>
+        The landmark figure comes from multiple pharmacokinetic studies, including Nehlig et al. (1992) and Fredholm et al. (1999),
+        which established the parameters still used in clinical research today.
+      </p>
+
+      <h2>The full timeline for one cup of coffee</h2>
+
+      <p>
+        Let's walk through what actually happens after a 200mg dose (roughly a large filter coffee or two espressos) taken at midday.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time after drinking</th>
+              <th>Clock time (if drank at 12:00)</th>
+              <th>Caffeine remaining</th>
+              <th>How you likely feel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0 min</td>
+              <td>12:00</td>
+              <td class="td-highlight">200mg (0%)</td>
+              <td>Starting absorption</td>
+            </tr>
+            <tr>
+              <td>15 min</td>
+              <td>12:15</td>
+              <td>~67mg absorbed so far</td>
+              <td>Slight alertness starting</td>
+            </tr>
+            <tr>
+              <td>45 min</td>
+              <td>12:45</td>
+              <td class="td-highlight">~200mg (peak)</td>
+              <td>Full effect — alert, focused</td>
+            </tr>
+            <tr>
+              <td>2 hrs</td>
+              <td>14:00</td>
+              <td class="td-highlight">~165mg</td>
+              <td>Still notably caffeinated</td>
+            </tr>
+            <tr>
+              <td>5.7 hrs</td>
+              <td>17:42</td>
+              <td class="td-highlight">100mg (50% gone)</td>
+              <td>Feel somewhat wired, may not realise</td>
+            </tr>
+            <tr>
+              <td>11.4 hrs</td>
+              <td>23:24</td>
+              <td class="td-highlight">50mg (75% gone)</td>
+              <td>Subtle stimulation; sleep disruption likely</td>
+            </tr>
+            <tr>
+              <td>17.1 hrs</td>
+              <td>05:06 (next day)</td>
+              <td class="td-highlight">25mg (87.5% gone)</td>
+              <td>Below most sleep thresholds</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>The key insight:</strong> If you drink a 200mg coffee at 3pm, you'll still have ~100mg of caffeine active
+          at 8:42pm — just as you're winding down for bed. That 100mg is enough to delay sleep onset and reduce deep sleep
+          duration, even if you don't feel wide awake.
+        </p>
+      </div>
+
+      <h2>What affects your caffeine half-life?</h2>
+
+      <p>
+        The 5.7-hour average hides a surprisingly wide range. Your actual half-life could be anywhere from 2.5 to 10+ hours
+        depending on several factors:
+      </p>
+
+      <h3>1. Genetics (CYP1A2 enzyme)</h3>
+      <p>
+        The liver enzyme CYP1A2 is responsible for metabolising roughly 95% of caffeine. A common genetic variant
+        (rs762551) creates two phenotypes: fast metabolisers (half-life ~3–4h) and slow metabolisers (half-life ~7–9h).
+        Around 50% of people carry the slow variant. If coffee keeps you up even when you drink it in the morning,
+        you might be a slow metaboliser.
+      </p>
+
+      <h3>2. Oral contraceptives</h3>
+      <p>
+        Oestrogen-containing contraceptives significantly inhibit CYP1A2 activity, roughly doubling caffeine's half-life.
+        Women on the pill may have a caffeine half-life of 10–12 hours — meaning a morning coffee could still be
+        50% active at midnight.
+      </p>
+
+      <h3>3. Pregnancy</h3>
+      <p>
+        During the third trimester, caffeine half-life can extend to 15+ hours due to major changes in CYP1A2 activity.
+        This is a key reason why official guidelines recommend limiting caffeine during pregnancy.
+      </p>
+
+      <h3>4. Age</h3>
+      <p>
+        Liver metabolism slows with age. Older adults tend to process caffeine more slowly, which partly explains why
+        older people are often more sensitive to coffee's effects.
+      </p>
+
+      <h3>5. Smoking</h3>
+      <p>
+        Cigarette smoking actually induces CYP1A2, making smokers metabolise caffeine roughly twice as fast as non-smokers.
+        Smokers typically have a half-life of 2.5–3.5 hours — one reason they often drink more coffee.
+      </p>
+
+      <h3>6. Liver health</h3>
+      <p>
+        Any condition that reduces liver function (hepatitis, cirrhosis, certain medications) will slow caffeine metabolism.
+        Liver disease can extend half-life to 60–100 hours in severe cases.
+      </p>
+
+      <h2>The absorption phase: what happens first</h2>
+
+      <p>
+        Before half-life even matters, caffeine needs to get into your bloodstream. This is the absorption phase.
+        Caffeine is highly bioavailable — nearly 100% of it is absorbed through the gastrointestinal tract, primarily the small intestine.
+      </p>
+
+      <p>
+        The process takes roughly 45 minutes from first sip to peak plasma concentration. Factors that slow absorption:
+        food in the stomach (especially high-fat meals), and drinking caffeine on an empty stomach actually speeds it up —
+        which is why espresso on an empty stomach hits harder and faster.
+      </p>
+
+      <h2>Practical implications for sleep</h2>
+
+      <p>
+        Sleep researchers generally suggest keeping active caffeine below ~30mg before bedtime. Working backwards from
+        a midnight bedtime with a 5.7h half-life:
+      </p>
+
+      <ul>
+        <li>200mg coffee → safe to drink by <strong>7:30am</strong> (to be below 30mg by midnight)</li>
+        <li>140mg coffee → safe to drink by <strong>9:00am</strong></li>
+        <li>80mg drink (Red Bull) → safe to drink by <strong>11:30am</strong></li>
+      </ul>
+
+      <p>
+        These numbers shift dramatically if you're a slow metaboliser. If your half-life is 8 hours, you'd need to
+        stop drinking caffeine by late morning to be clear by midnight.
+      </p>
+
+      <h2>The compounding problem: multiple drinks</h2>
+
+      <p>
+        Most people don't drink just one coffee. If you have a coffee at 8am, 11am, and 3pm, the caffeine from each dose
+        doesn't disappear before the next one arrives — it stacks. By evening, you could have 150–200mg still active
+        from residual accumulation, even if you don't feel particularly wired.
+      </p>
+
+      <p>
+        This is why a proper caffeine tracker — one that models the actual pharmacokinetics of every dose — is far more
+        accurate than just counting cups.
+      </p>
+
+      <div class="cta-section">
+        <h2>See your exact caffeine level right now</h2>
+        <p style="color: rgba(255,255,255,0.55); margin-top: 8px;">
+          Caffiend models the full absorption and half-life curve for every drink you log — so you can see precisely
+          when your caffeine will drop below your sleep threshold.
+        </p>
+        <a href="https://caffiend-one.vercel.app/app" class="cta-btn">Start Tracking Free →</a>
+      </div>
+
+    </article>
+
+    <section class="related-posts">
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3);">Related reading</p>
+      <div class="related-grid">
+        <a href="/blog/caffeine-and-sleep.html" class="related-card">
+          <div class="related-card-tag">Sleep Science</div>
+          <h3>How Caffeine Ruins Your Sleep (Even When You Fall Asleep Fine)</h3>
+        </a>
+        <a href="/blog/caffeine-mg-per-kg.html" class="related-card">
+          <div class="related-card-tag">Dosing</div>
+          <h3>How Much Caffeine Is Right for Your Body Weight?</h3>
+        </a>
+        <a href="/blog/best-time-for-coffee.html" class="related-card">
+          <div class="related-card-tag">Optimisation</div>
+          <h3>The Best (and Worst) Times to Drink Coffee, According to Science</h3>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <a href="https://caffiend-one.vercel.app">caffiend-one.vercel.app</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/privacy">Privacy</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/terms">Terms</a>
+  <br><br>
+  © 2025 Caffiend. Built with actual science.
+</footer>
+
+</body>
+</html>

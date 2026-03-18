@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #060608; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    canvas { display: block; width: 500px; height: 500px; }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="1000" height="1000"></canvas>
+  <script>
+    document.fonts.ready.then(() => {
+      // Extra wait for font activation
+      return new Promise(r => setTimeout(r, 400));
+    }).then(() => {
+      const canvas = document.getElementById('c');
+      const ctx = canvas.getContext('2d');
+      const S = 1000;
+
+      // Background
+      const bg = ctx.createRadialGradient(500, 380, 0, 500, 500, 650);
+      bg.addColorStop(0, '#18110a');
+      bg.addColorStop(1, '#060608');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, S, S);
+
+      // Ambient amber glow
+      const amb = ctx.createRadialGradient(500, 430, 0, 500, 430, 420);
+      amb.addColorStop(0, 'rgba(245,158,11,0.20)');
+      amb.addColorStop(1, 'rgba(245,158,11,0)');
+      ctx.fillStyle = amb;
+      ctx.fillRect(0, 0, S, S);
+
+      // Arc: center (500, 460), R=230 — snug in upper 3/5 of canvas
+      const cx = 500, cy = 460, R = 230;
+      function polar(deg) {
+        const rad = (deg - 90) * Math.PI / 180;
+        return { x: cx + R * Math.cos(rad), y: cy + R * Math.sin(rad) };
+      }
+      const startPt = polar(-120);
+      const endPt   = polar(120);
+      const tipPt   = polar(48);
+
+      const sA = Math.atan2(startPt.y - cy, startPt.x - cx);
+      const eA = Math.atan2(endPt.y   - cy, endPt.x   - cx);
+      const tA = Math.atan2(tipPt.y   - cy, tipPt.x   - cx);
+
+      // Track
+      ctx.save();
+      ctx.strokeStyle = '#1e1e26';
+      ctx.lineWidth = 46;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, sA, eA, false);
+      ctx.stroke();
+      ctx.restore();
+
+      // Progress arc — glow pass
+      const grad = ctx.createLinearGradient(startPt.x, startPt.y, tipPt.x, tipPt.y);
+      grad.addColorStop(0, '#f59e0b');
+      grad.addColorStop(1, '#f97316');
+
+      ctx.save();
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 46;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = '#f97316';
+      ctx.shadowBlur = 32;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, sA, tA, false);
+      ctx.stroke();
+      ctx.restore();
+
+      // Progress arc — crisp pass
+      ctx.save();
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 46;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, sA, tA, false);
+      ctx.stroke();
+      ctx.restore();
+
+      // Needle outer halo
+      const h2 = ctx.createRadialGradient(tipPt.x, tipPt.y, 0, tipPt.x, tipPt.y, 75);
+      h2.addColorStop(0, 'rgba(249,115,22,0.28)');
+      h2.addColorStop(1, 'rgba(249,115,22,0)');
+      ctx.fillStyle = h2;
+      ctx.beginPath();
+      ctx.arc(tipPt.x, tipPt.y, 75, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Needle inner halo
+      const h1 = ctx.createRadialGradient(tipPt.x, tipPt.y, 0, tipPt.x, tipPt.y, 38);
+      h1.addColorStop(0, 'rgba(249,115,22,0.50)');
+      h1.addColorStop(1, 'rgba(249,115,22,0)');
+      ctx.fillStyle = h1;
+      ctx.beginPath();
+      ctx.arc(tipPt.x, tipPt.y, 38, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Needle dot
+      ctx.save();
+      ctx.fillStyle = '#f97316';
+      ctx.shadowColor = '#f97316';
+      ctx.shadowBlur = 20;
+      ctx.beginPath();
+      ctx.arc(tipPt.x, tipPt.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // White center
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(tipPt.x, tipPt.y, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Wordmark
+      const textGrad = ctx.createLinearGradient(250, 0, 750, 0);
+      textGrad.addColorStop(0,    '#fcd34d');
+      textGrad.addColorStop(0.55, '#ffffff');
+      ctx.fillStyle = textGrad;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "800 88px 'JetBrains Mono', monospace";
+      ctx.fillText('Caffiend', 500, 790);
+
+      // Tagline
+      ctx.fillStyle = 'rgba(255,255,255,0.28)';
+      ctx.font = "600 26px 'JetBrains Mono', monospace";
+      ctx.fillText('KNOW YOUR BUZZ', 500, 860);
+
+      // Store + trigger download
+      window.__pngData = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = window.__pngData;
+      a.download = 'caffiend-instagram.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      console.log('PNG downloaded, size:', window.__pngData.length);
+    });
+  </script>
+</body>
+</html>

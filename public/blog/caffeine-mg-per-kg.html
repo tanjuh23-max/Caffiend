@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Much Caffeine Is Right for Your Body Weight? | Caffiend</title>
+  <meta name="description" content="The optimal caffeine dose is 3–6mg per kg of body weight. A 60kg person's safe limit is very different from a 90kg person's. Here's how to calculate yours.">
+  <link rel="canonical" href="https://caffiend-one.vercel.app/blog/caffeine-mg-per-kg.html">
+
+  <meta property="og:title" content="How Much Caffeine Is Right for Your Body Weight?">
+  <meta property="og:description" content="The research-backed optimal caffeine dose is 3–6mg/kg. Here's how to calculate your personal limit and why generic guidelines miss the point.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://caffiend-one.vercel.app/blog/caffeine-mg-per-kg.html">
+  <meta property="og:site_name" content="Caffiend">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How Much Caffeine Is Right for Your Body Weight?">
+  <meta name="twitter:description" content="The research-backed optimal caffeine dose is 3–6mg/kg. Calculate your personal limit — not the generic average.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How Much Caffeine Is Right for Your Body Weight?",
+    "description": "The optimal caffeine dose is 3–6mg per kg of body weight. A 60kg person's safe limit is very different from a 90kg person's. Here's how to calculate yours.",
+    "author": { "@type": "Organization", "name": "Caffiend" },
+    "publisher": { "@type": "Organization", "name": "Caffiend", "url": "https://caffiend-one.vercel.app" },
+    "datePublished": "2025-03-01",
+    "dateModified": "2025-03-18",
+    "mainEntityOfPage": "https://caffiend-one.vercel.app/blog/caffeine-mg-per-kg.html",
+    "keywords": "caffeine body weight, safe caffeine dose, how much caffeine per kg, caffeine sensitivity"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #060608;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
+      --text: rgba(255,255,255,0.87);
+      --muted: rgba(255,255,255,0.45);
+      --faint: rgba(255,255,255,0.2);
+      --amber: #f59e0b;
+      --orange: #f97316;
+      --green: #34d399;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--amber); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(6,6,8,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #fcd34d, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-cta {
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+    .article-header { padding: 64px 0 48px; }
+
+    .article-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.2);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 20px;
+    }
+
+    .article-meta { font-size: 0.82rem; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+    .article-body { padding-bottom: 64px; }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.9);
+      margin: 48px 0 16px;
+    }
+
+    h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.8);
+      margin: 32px 0 12px;
+    }
+
+    p { margin-bottom: 20px; color: rgba(255,255,255,0.7); }
+    ul, ol { margin: 0 0 20px 24px; color: rgba(255,255,255,0.7); }
+    li { margin-bottom: 8px; }
+    strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+    .callout {
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: rgba(52,211,153,0.06);
+      border: 1px solid rgba(52,211,153,0.18);
+      margin: 32px 0;
+    }
+    .callout p { color: rgba(255,255,255,0.75); margin-bottom: 0; }
+
+    /* Person cards */
+    .person-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .person-card {
+      padding: 24px 20px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .person-weight {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.9);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .person-range {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--amber);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .person-note { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 32px 0;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+    thead th {
+      background: rgba(255,255,255,0.04);
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td { padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); }
+    tbody tr:last-child td { border-bottom: none; }
+    .td-amber { color: var(--amber); font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+    .td-green { color: var(--green); font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+
+    .cta-section {
+      margin: 64px 0;
+      padding: 40px;
+      border-radius: 20px;
+      background: rgba(245,158,11,0.05);
+      border: 1px solid rgba(245,158,11,0.15);
+      text-align: center;
+    }
+
+    .cta-section h2 { margin-top: 0; font-size: 1.5rem; }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+    }
+
+    .cta-btn:hover { text-decoration: none; }
+
+    .related-posts { padding: 48px 0; border-top: 1px solid var(--border); }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+    .related-card { padding: 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); text-decoration: none; display: block; transition: border-color 0.2s; }
+    .related-card:hover { border-color: rgba(245,158,11,0.25); text-decoration: none; }
+    .related-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+    .related-card h3 { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.4; }
+
+    footer { padding: 32px 24px; border-top: 1px solid var(--border); text-align: center; font-size: 0.8rem; color: var(--faint); }
+    footer a { color: var(--faint); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Caffiend</a>
+  <a href="https://caffiend-one.vercel.app/app" class="nav-cta">Open App →</a>
+</nav>
+
+<main>
+  <div class="container">
+    <header class="article-header">
+      <div class="article-tag">Dosing</div>
+      <h1>How Much Caffeine Is Right for Your Body Weight?</h1>
+      <div class="article-meta">
+        <span>March 2025</span>
+        <span>8 min read</span>
+        <span>by Caffiend</span>
+      </div>
+    </header>
+
+    <article class="article-body">
+
+      <p>
+        Two colleagues, same office, same drinks order — a large flat white at 9am. By noon, one is buzzing and slightly jittery.
+        The other barely feels it. They're both on the same caffeine. What's different?
+      </p>
+
+      <p>
+        Body weight is one of the biggest factors. Caffeine distributes through your body's water volume.
+        A larger body means more total volume for the same amount of caffeine to spread through — producing
+        a lower peak concentration, and therefore a less intense effect. This is basic pharmacokinetics,
+        and it's the reason the "400mg/day" guideline most people quote is incomplete.
+      </p>
+
+      <h2>Why the 400mg guideline doesn't tell the whole story</h2>
+
+      <p>
+        The FDA's 400mg/day guidance for healthy adults is a population-level upper limit. It's the dose below which
+        the vast majority of people don't experience adverse effects. But it says nothing about the optimal dose
+        for a specific person — and it's calibrated for an average adult body weight of roughly 70kg.
+      </p>
+
+      <p>
+        400mg for a 60kg person is <strong>6.7mg/kg</strong> — above the performance range and edging toward
+        where side effects (anxiety, palpitations, GI distress) become more likely.
+      </p>
+
+      <p>
+        400mg for a 90kg person is <strong>4.4mg/kg</strong> — comfortably within the performance-enhancing range.
+      </p>
+
+      <p>
+        Same number. Very different biological reality.
+      </p>
+
+      <h2>The research-backed performance window: 3–6mg/kg</h2>
+
+      <p>
+        The sports science and cognitive performance literature consistently points to <strong>3–6mg/kg</strong> as
+        the range where caffeine provides measurable benefits with minimal adverse effects.
+      </p>
+
+      <p>
+        At 3mg/kg: alertness improves, reaction time quickens, endurance exercise performance increases by 2–4%.
+        Effects are clean and focused for most people.
+      </p>
+
+      <p>
+        At 6mg/kg: maximum cognitive and physical performance benefits — but with noticeably higher risk of
+        jitteriness, anxiety, and elevated heart rate in sensitive individuals.
+      </p>
+
+      <p>
+        At 9mg/kg+: diminishing returns, with side effects typically outweighing benefits for most people.
+        This is also where the FDA starts to see safety concerns.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>Key research:</strong> Graham & Spriet (1995) established much of the foundational work on caffeine
+          and athletic performance using mg/kg dosing. Subsequent meta-analyses (including Astorino & Roberson, 2010)
+          confirmed the 3–6mg/kg range as optimal for most performance outcomes.
+        </p>
+      </div>
+
+      <h2>Your personal dose: examples by body weight</h2>
+
+      <div class="person-grid">
+        <div class="person-card">
+          <span class="person-weight">55kg</span>
+          <span class="person-range">165–330mg/day</span>
+          <p class="person-note">Performance range. About 1–2 flat whites. Be cautious with energy drinks.</p>
+        </div>
+        <div class="person-card">
+          <span class="person-weight">70kg</span>
+          <span class="person-range">210–420mg/day</span>
+          <p class="person-note">Roughly 1–3 cups. The FDA's 400mg limit fits well here.</p>
+        </div>
+        <div class="person-card">
+          <span class="person-weight">85kg</span>
+          <span class="person-range">255–510mg/day</span>
+          <p class="person-note">More headroom. 3–4 cups comfortably within range.</p>
+        </div>
+        <div class="person-card">
+          <span class="person-weight">100kg</span>
+          <span class="person-range">300–600mg/day</span>
+          <p class="person-note">Upper limit well above population guideline. Very robust tolerance.</p>
+        </div>
+      </div>
+
+      <h2>Why two people feel the same drink so differently</h2>
+
+      <p>
+        Body weight is one factor. But several others layer on top of it:
+      </p>
+
+      <h3>1. CYP1A2 enzyme genetics</h3>
+      <p>
+        Slow metabolisers (roughly 50% of the population) break caffeine down more slowly, meaning the same dose
+        stays in their system longer and accumulates to higher peak levels. Even at the same body weight,
+        a slow metaboliser will feel 200mg far more intensely than a fast metaboliser.
+      </p>
+
+      <h3>2. Adenosine receptor density</h3>
+      <p>
+        People with more adenosine receptors have more "slots" for caffeine to block — and potentially feel
+        its effects more strongly. This varies genetically and also adapts with habitual use (tolerance
+        develops partly through upregulating receptor density).
+      </p>
+
+      <h3>3. Caffeine tolerance</h3>
+      <p>
+        Regular caffeine consumption causes the brain to grow additional adenosine receptors as a compensatory
+        mechanism. Habitual drinkers need more caffeine to achieve the same effect. This is why your first
+        coffee after a break feels intense — the receptors have down-regulated.
+      </p>
+
+      <h3>4. Hormonal factors</h3>
+      <p>
+        Oestrogen inhibits caffeine metabolism. Women generally process caffeine more slowly than men of the same
+        weight, and this effect is amplified by hormonal contraceptives. The same 200mg can have very different
+        durations in two people of identical body weight.
+      </p>
+
+      <h3>5. Hydration and body composition</h3>
+      <p>
+        Caffeine distributes in body water, not fat tissue. Two people of the same total weight but different body
+        fat percentages will have different distributions — someone with more lean mass has more body water,
+        diluting caffeine more effectively.
+      </p>
+
+      <h2>How to calculate your personal limit</h2>
+
+      <p>Here's a practical approach to finding your optimal range:</p>
+
+      <ol>
+        <li><strong>Calculate your 3mg/kg dose</strong> — this is your conservative daily target. Multiply your weight in kg by 3.</li>
+        <li><strong>Calculate your 6mg/kg dose</strong> — this is your upper performance limit. Multiply by 6.</li>
+        <li><strong>Start at the lower end</strong> and observe your response over a week. Note sleep quality, jitteriness, heart rate changes.</li>
+        <li><strong>Adjust based on tolerance and genetics.</strong> If you're a known slow metaboliser (you feel caffeine strongly and for a long time), stay near the lower end.</li>
+      </ol>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Body weight</th>
+              <th>Conservative (3mg/kg)</th>
+              <th>Optimal (4.5mg/kg)</th>
+              <th>Upper limit (6mg/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>50kg</td><td class="td-green">150mg</td><td class="td-amber">225mg</td><td>300mg</td></tr>
+            <tr><td>60kg</td><td class="td-green">180mg</td><td class="td-amber">270mg</td><td>360mg</td></tr>
+            <tr><td>70kg</td><td class="td-green">210mg</td><td class="td-amber">315mg</td><td>420mg</td></tr>
+            <tr><td>80kg</td><td class="td-green">240mg</td><td class="td-amber">360mg</td><td>480mg</td></tr>
+            <tr><td>90kg</td><td class="td-green">270mg</td><td class="td-amber">405mg</td><td>540mg</td></tr>
+            <tr><td>100kg</td><td class="td-green">300mg</td><td class="td-amber">450mg</td><td>600mg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Per-dose matters too, not just daily total</h2>
+
+      <p>
+        Spreading caffeine across multiple smaller doses is generally more effective than one large dose. A single
+        600mg dose has a different effect profile than six 100mg doses spread through the day — the large single
+        dose produces a sharper peak and more intense side effects.
+      </p>
+
+      <p>
+        The most effective approach: smaller doses (1–2mg/kg per dose) taken at strategic times. Front-load
+        in the morning, stop several hours before bed. Let the pharmacokinetics work in your favour.
+      </p>
+
+      <div class="cta-section">
+        <h2>Track your caffeine in mg/kg — personalised to you</h2>
+        <p style="color: rgba(255,255,255,0.55); margin-top: 8px;">
+          Enter your weight in Caffiend's settings and every drink you log will show your dose in mg/kg —
+          giving you a biologically meaningful number instead of a generic count.
+        </p>
+        <a href="https://caffiend-one.vercel.app/app" class="cta-btn">Try Caffiend Free →</a>
+      </div>
+
+    </article>
+
+    <section class="related-posts">
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3);">Related reading</p>
+      <div class="related-grid">
+        <a href="/blog/caffeine-half-life.html" class="related-card">
+          <div class="related-card-tag">Pharmacology</div>
+          <h3>The Caffeine Half-Life Guide: How Long Does Coffee Really Last?</h3>
+        </a>
+        <a href="/blog/caffeine-drinks-comparison.html" class="related-card">
+          <div class="related-card-tag">Reference</div>
+          <h3>Caffeine Content in Every Drink: The Complete 2025 Guide</h3>
+        </a>
+        <a href="/blog/caffeine-and-sleep.html" class="related-card">
+          <div class="related-card-tag">Sleep Science</div>
+          <h3>How Caffeine Ruins Your Sleep (Even When You Fall Asleep Fine)</h3>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <a href="https://caffiend-one.vercel.app">caffiend-one.vercel.app</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/privacy">Privacy</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/terms">Terms</a>
+  <br><br>
+  © 2025 Caffiend. Built with actual science.
+</footer>
+
+</body>
+</html>

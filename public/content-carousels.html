@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Caffiend — Carousel Sets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#060608;--amber:#f59e0b;--orange:#f97316;--violet:#a78bfa;--mono:'JetBrains Mono',monospace;}
+html,body{background:#0d0d10;font-family:var(--mono);display:flex;flex-direction:column;align-items:center;padding:32px 20px;gap:40px;}
+.set-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:-24px;align-self:flex-start;margin-left:calc(50% - 540px);}
+.slide{width:1080px;height:1080px;background:var(--bg);position:relative;overflow:hidden;flex-shrink:0;display:flex;flex-direction:column;}
+.slide::before{content:'';position:absolute;inset:0;z-index:10;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.035;}
+.glow{position:absolute;border-radius:50%;pointer-events:none;}
+/* Shared content styles */
+.c-inner{position:relative;z-index:5;padding:80px 80px 72px;display:flex;flex-direction:column;height:100%;}
+.c-tag{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px;}
+.c-tag.amber{color:#f59e0b;opacity:.8;}
+.c-tag.violet{color:#a78bfa;opacity:.8;}
+.c-title{font-size:70px;font-weight:800;line-height:.96;letter-spacing:-.025em;color:#fff;margin-bottom:12px;}
+.c-title em{font-style:normal;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.c-title.small{font-size:56px;}
+.c-sub{font-size:22px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:48px;}
+.c-body{font-size:26px;color:rgba(255,255,255,.6);line-height:1.55;}
+.c-body strong{color:#fff;}
+.c-body em{font-style:normal;color:#f59e0b;}
+.c-caption{margin-top:auto;padding-top:32px;font-size:20px;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.05);}
+.c-caption strong{color:rgba(255,255,255,.6);}
+.c-num{font-size:160px;font-weight:800;line-height:.85;letter-spacing:-.04em;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.amber-card{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:20px;padding:36px;}
+.violet-card{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.18);border-radius:20px;padding:36px;}
+.stat-row{display:flex;gap:40px;margin-top:auto;}
+.stat-item{}.stat-val{font-size:44px;font-weight:800;color:#f59e0b;}.stat-lbl{font-size:14px;color:rgba(255,255,255,.3);margin-top:4px;}
+.logo-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;}
+.logo-combo{display:flex;align-items:center;gap:14px;}
+.logo-name-sm{font-size:26px;font-weight:800;background:linear-gradient(135deg,#fcd34d,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tagline-sm{font-size:16px;color:rgba(255,255,255,.2);}
+.slide-num{font-size:13px;color:rgba(255,255,255,.15);letter-spacing:.1em;}
+.list{display:flex;flex-direction:column;gap:32px;flex:1;}
+.list-item{display:flex;align-items:flex-start;gap:24px;}
+.list-icon{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);display:flex;align-items:center;justify-content:center;font-size:18px;color:#f59e0b;font-weight:800;margin-top:2px;}
+.list-icon.violet{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.2);color:#a78bfa;}
+.list-text{font-size:26px;font-weight:600;color:rgba(255,255,255,.75);line-height:1.4;}
+.list-text strong{color:#fff;}
+.pill-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:auto;}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,158,11,.85);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:40px;padding:12px 24px;}
+.pill.violet{color:rgba(167,139,250,.85);background:rgba(167,139,250,.07);border-color:rgba(167,139,250,.18);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;}
+.info-card{border-radius:20px;padding:36px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px;}
+.info-card .ic-val{font-size:52px;font-weight:800;line-height:1;}.ic-val.amber{background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}.ic-val.violet{background:linear-gradient(135deg,#c4b5fd,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.info-card .ic-label{font-size:17px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;}
+.info-card .ic-body{font-size:16px;color:rgba(255,255,255,.4);line-height:1.5;margin-top:4px;}
+.pro-list{display:flex;flex-direction:column;gap:20px;flex:1;}
+.pro-item{display:flex;align-items:center;gap:20px;padding:20px 24px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.12);border-radius:14px;}
+.pro-check{color:#f59e0b;font-size:18px;font-weight:800;flex-shrink:0;}
+.pro-text{font-size:22px;color:rgba(255,255,255,.7);}.pro-text strong{color:#fff;}
+.cta-big{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#000;font-family:var(--mono);font-weight:800;font-size:28px;padding:26px 52px;border-radius:16px;border:none;margin-top:48px;box-shadow:0 8px 40px rgba(245,158,11,.4);cursor:pointer;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL A — "Caffeine Hour by Hour" (Day 6) · 6 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL A · Day 6 — "Caffeine Hour by Hour"</div>
+
+<!-- A1 Cover -->
+<div class="slide" id="a1">
+  <div class="glow" style="width:800px;height:800px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag amber">Hour by hour breakdown</div>
+    <div class="c-title" style="font-size:80px;">What caffeine <em>actually</em> does hour by hour.</div>
+    <div class="c-sub">From first sip to sleep — the full timeline.</div>
+    <div class="logo-footer">
+      <div class="logo-combo">
+        <svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lga1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lga1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg>
+        <span class="logo-name-sm">Caffiend</span>
+      </div>
+      <span class="tagline-sm">Swipe to learn →</span>
+    </div>
+  </div>
+</div>
+
+<!-- A2 -->
+<div class="slide" id="a2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">0 – 15 minutes</div>
+    <div class="c-num">15m</div>
+    <div class="c-title" style="font-size:52px;margin-top:16px;">Caffeine enters<br/>your bloodstream.</div>
+    <div class="c-body" style="margin-top:32px;flex:1;">
+      The moment you swallow, absorption begins in your stomach and small intestine. Within <strong>15 minutes</strong> you'll start to feel the first effects — alertness ticking up, adenosine receptors beginning to get blocked.
+      <br/><br/>But you're not at peak yet. <em>Not even close.</em>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the 45-minute absorption peak</div>
+  </div>
+</div>
+
+<!-- A3 -->
+<div class="slide" id="a3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(245,158,11,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">45 minutes</div>
+    <div class="c-num">45m</div>
+    <div class="c-title" style="font-size:52px;margin-top:16px;">Peak plasma<br/>concentration.</div>
+    <div class="c-body" style="margin-top:32px;flex:1;">
+      This is your buzz at maximum. Caffeine has been <strong>fully absorbed</strong> through your gut — peak plasma concentration reached. Heart rate up, focus sharp, adenosine completely blocked.<br/><br/>
+      This is also when your body starts <em>breaking it down.</em>
+    </div>
+    <div class="amber-card" style="margin-top:32px;">
+      <div style="font-size:18px;color:rgba(255,255,255,.4);">Peak after 200mg coffee</div>
+      <div style="font-size:36px;font-weight:800;color:#f59e0b;margin-top:8px;">200mg active in blood</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the slow decay begins</div>
+  </div>
+</div>
+
+<!-- A4 -->
+<div class="slide" id="a4">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">1 – 3 hours</div>
+    <div class="c-title" style="margin-top:8px;">The productive<br/><em>window.</em></div>
+    <div class="c-body" style="margin-top:24px;flex:1;">
+      You're in the sweet spot. Caffeine is still high, focus is sharp, you feel capable of anything. But elimination is quietly underway — your liver is metabolising caffeine via the CYP1A2 enzyme.<br/><br/>
+      <strong>Enjoy it. It won't last.</strong>
+    </div>
+    <div class="two-col" style="margin-top:32px;flex:initial;">
+      <div class="info-card"><div class="ic-val amber">~150mg</div><div class="ic-label">Still active @ 2hrs</div><div class="ic-body">After 2hrs of a 200mg dose</div></div>
+      <div class="info-card"><div class="ic-val amber">~115mg</div><div class="ic-label">Still active @ 3hrs</div><div class="ic-body">Steady exponential decline</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the afternoon danger zone</div>
+  </div>
+</div>
+
+<!-- A5 -->
+<div class="slide" id="a5">
+  <div class="glow" style="width:700px;height:700px;top:-200px;left:-100px;background:radial-gradient(circle,rgba(239,68,68,.08) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag" style="color:rgba(239,68,68,.7);">5 – 8 hours · The danger zone</div>
+    <div class="c-title" style="margin-top:8px;">You <em>feel fine.</em><br/>Your sleep<br/>doesn't agree.</div>
+    <div class="c-body" style="margin-top:24px;flex:1;">
+      This is the sneaky phase. You might not feel wired anymore — the buzz has faded. But <strong>50–70mg is still active in your blood</strong>, silently blocking the adenosine receptors that trigger sleep pressure.<br/><br/>
+      You'll fall asleep. But you <em>won't recover properly.</em>
+    </div>
+    <div style="margin-top:32px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:20px;padding:32px;">
+      <div style="font-size:17px;color:rgba(239,68,68,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;">⚠ 3pm coffee at 9pm:</div>
+      <div style="font-size:32px;font-weight:800;color:rgba(239,68,68,.9);">~70mg still active.</div>
+      <div style="font-size:18px;color:rgba(255,255,255,.35);margin-top:8px;">Deep sleep will be degraded.</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> when it finally clears</div>
+  </div>
+</div>
+
+<!-- A6 -->
+<div class="slide" id="a6">
+  <div class="glow" style="width:700px;height:700px;top:-100px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="margin-bottom:24px;text-align:center;">✓ The solution</div>
+    <div class="c-title" style="text-align:center;font-size:64px;">Stop guessing.<br/>Start <em>knowing.</em></div>
+    <div class="c-sub" style="text-align:center;margin-top:20px;">Caffiend maps this exact curve for every drink you log. See your live caffeine level, absorption phase, and safe sleep time — in real time.</div>
+    <a class="cta-big" style="display:inline-flex;margin:40px auto 0;">Track yours free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app · no account needed</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL B — "The Sleep Thief" (Day 9) · 6 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL B · Day 9 — "The Sleep Thief"</div>
+
+<div class="slide" id="b1">
+  <div class="glow" style="width:700px;height:700px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(167,139,250,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag violet">🌙 Sleep science</div>
+    <div class="c-title" style="font-size:82px;">The sleep<br/><em>thief</em><br/>in your cup.</div>
+    <div class="c-sub">How afternoon coffee quietly wrecks your night.</div>
+    <div class="logo-footer">
+      <div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgb1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgb1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div>
+      <span class="tagline-sm">Swipe →</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="b2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">How adenosine works</div>
+    <div class="c-title small">Caffeine doesn't<br/>give you energy.<br/>It <em>hides</em> your tiredness.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Adenosine is a chemical that builds up in your brain all day, making you feel sleepy. Caffeine works by <strong>blocking adenosine receptors</strong> — it doesn't reduce the adenosine, it just hides it.<br/><br/>
+      When caffeine clears, <em>all that adenosine crashes into its receptors at once.</em> That's the 3pm slump.
+    </div>
+    <div class="c-caption"><strong>Next:</strong> what this means for your sleep</div>
+  </div>
+</div>
+
+<div class="slide" id="b3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">The invisible damage</div>
+    <div class="c-title small">You fall asleep.<br/>But you don't <em>recover.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Research shows caffeine consumed 6 hours before bed <strong>reduces total sleep time by 1+ hour</strong> — even if you don't notice falling asleep later. It specifically attacks Stage 3 (deep) sleep, where your brain flushes toxins and your body repairs itself.
+    </div>
+    <div class="violet-card" style="margin-top:32px;">
+      <div style="font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:rgba(167,139,250,.6);margin-bottom:12px;">Research finding</div>
+      <div style="font-size:28px;font-weight:800;color:#c4b5fd;line-height:1.3;">"Caffeine 6 hrs before bed reduced sleep by 1 hour and reduced deep sleep quality measurably"</div>
+      <div style="font-size:15px;color:rgba(255,255,255,.3);margin-top:12px;">Drake et al., Journal of Clinical Sleep Medicine, 2013</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the 30mg threshold</div>
+  </div>
+</div>
+
+<div class="slide" id="b4">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-55%);background:radial-gradient(circle,rgba(167,139,250,.11) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag violet" style="text-align:center;margin-bottom:28px;">The magic number</div>
+    <div style="font-size:200px;font-weight:800;line-height:.85;letter-spacing:-.04em;background:linear-gradient(135deg,#c4b5fd,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;">30</div>
+    <div style="font-size:28px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:36px;">milligrams</div>
+    <div class="c-body" style="text-align:center;max-width:700px;">Research suggests sleep quality degrades measurably above <strong>~30mg active caffeine</strong>. Caffiend calculates precisely when you drop below this threshold — that's your safe sleep time.</div>
+  </div>
+</div>
+
+<div class="slide" id="b5">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">The 6-hour rule</div>
+    <div class="c-title small">Your last coffee<br/>should be at least<br/><em>6 hours</em> before bed.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      If you go to bed at 11pm, your last caffeine should be before <strong>5pm</strong>. That 5pm energy drink? Still 71mg active at bedtime. Your 4pm cold brew? 84mg at midnight.<br/><br/>
+      <em>Caffiend shows you this in real time.</em> No maths required.
+    </div>
+    <div style="margin-top:32px;display:flex;gap:16px;">
+      <div style="flex:1;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:24px;text-align:center;">
+        <div style="font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(34,197,94,.6);margin-bottom:8px;">Safe</div>
+        <div style="font-size:32px;font-weight:800;color:#22c55e;">Before 5pm</div>
+        <div style="font-size:15px;color:rgba(255,255,255,.3);margin-top:6px;">for 11pm bedtime</div>
+      </div>
+      <div style="flex:1;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:14px;padding:24px;text-align:center;">
+        <div style="font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:rgba(239,68,68,.6);margin-bottom:8px;">Risky</div>
+        <div style="font-size:32px;font-weight:800;color:#ef4444;">After 5pm</div>
+        <div style="font-size:15px;color:rgba(255,255,255,.3);margin-top:6px;">sleep quality drops</div>
+      </div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> fix it with Caffiend</div>
+  </div>
+</div>
+
+<div class="slide" id="b6">
+  <div class="glow" style="width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div style="font-size:72px;margin-bottom:32px;">🌙</div>
+    <div class="c-title" style="text-align:center;font-size:68px;">Know your<br/><em>safe sleep time.</em><br/>Every day.</div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">Caffiend calculates your exact safe-to-sleep time from every drink you log. Live, automatic, free.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Start for free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app · no account needed</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL C — "Your Weight Changes Everything" (Day 12) · 5 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL C · Day 12 — "Your Weight Changes Everything"</div>
+
+<div class="slide" id="c1">
+  <div class="glow" style="width:700px;height:700px;top:-200px;right:-150px;background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag amber">⚖️ Body weight dosing</div>
+    <div class="c-title" style="font-size:78px;">Your weight<br/>changes<br/><em>everything.</em></div>
+    <div class="c-sub">Why one person's buzz is another's anxiety attack.</div>
+    <div class="logo-footer"><div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgc1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgc1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div><span class="tagline-sm">Swipe →</span></div>
+  </div>
+</div>
+
+<div class="slide" id="c2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">The science</div>
+    <div class="c-title small">Caffeine dosing<br/>is personal.<br/><em>Very personal.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      The same 200mg espresso hits a 55kg person at <strong>3.6 mg/kg</strong> — that's high. For a 90kg person, it's only <strong>2.2 mg/kg</strong>. The research-recommended optimal range is 3–6 mg/kg. Below 3: underwhelming. Above 6: anxiety, jitters, crash.
+    </div>
+    <div class="amber-card" style="margin-top:32px;">
+      <div style="font-size:15px;color:rgba(245,158,11,.6);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Optimal dose range</div>
+      <div style="font-size:40px;font-weight:800;color:#f59e0b;">3 – 6 mg/kg</div>
+      <div style="font-size:17px;color:rgba(255,255,255,.35);margin-top:8px;">per dose · not daily total</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> same drink, very different experience</div>
+  </div>
+</div>
+
+<div class="slide" id="c3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">Real numbers</div>
+    <div class="c-title small">One Monster.<br/><em>Two very different</em><br/>experiences.</div>
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;">
+      <div class="info-card" style="border-color:rgba(34,197,94,.15);background:rgba(34,197,94,.03);">
+        <div class="ic-val amber">2.1</div>
+        <div class="ic-label" style="color:rgba(255,255,255,.5);">mg/kg at 75kg</div>
+        <div class="ic-body">Monster 500ml (160mg) for a 75kg person. Below optimal — mild effect.</div>
+        <div style="margin-top:12px;font-size:14px;color:rgba(34,197,94,.7);">✓ In range</div>
+      </div>
+      <div class="info-card" style="border-color:rgba(239,68,68,.15);background:rgba(239,68,68,.03);">
+        <div class="ic-val" style="background:linear-gradient(135deg,#f97316,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">2.9</div>
+        <div class="ic-label" style="color:rgba(255,255,255,.5);">mg/kg at 55kg</div>
+        <div class="ic-body">Same Monster for a 55kg person. Approaching threshold — potential jitters.</div>
+        <div style="margin-top:12px;font-size:14px;color:rgba(239,68,68,.7);">⚠ Watch it</div>
+      </div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> daily limits</div>
+  </div>
+</div>
+
+<div class="slide" id="c4">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.1) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:24px;">Daily safe limit</div>
+    <div style="font-size:180px;font-weight:800;line-height:.85;letter-spacing:-.04em;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;">400</div>
+    <div style="font-size:30px;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:36px;">mg / day max</div>
+    <div class="c-body" style="text-align:center;max-width:680px;">The FDA's safe daily limit for healthy adults is <strong>400mg</strong>. That's ~4 cups of coffee. But your actual limit depends on your weight, genetics, and medication. Caffiend shows your <em>personal mg/kg</em> so you know where you stand.</div>
+  </div>
+</div>
+
+<div class="slide" id="c5">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:32px;">✦ Personalised for you</div>
+    <div class="c-title" style="text-align:center;font-size:64px;">Caffiend shows<br/>your <em>mg/kg</em>.<br/>Not averages.</div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">Enter your weight. Every dose, every drink, every day — calibrated to your actual body. Not some generic 70kg default.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Track yours free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL D — "5 Signs Caffeine is Ruining Your Sleep" (Day 15) · 6 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL D · Day 15 — "5 Signs Caffeine is Ruining Your Sleep"</div>
+
+<div class="slide" id="d1">
+  <div class="glow" style="width:700px;height:700px;top:-150px;left:-150px;background:radial-gradient(circle,rgba(167,139,250,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag violet">🌙 Sleep check</div>
+    <div class="c-title" style="font-size:78px;"><em>5 signs</em><br/>caffeine is<br/>ruining your sleep.</div>
+    <div class="c-sub">You might tick every box without realising it.</div>
+    <div class="logo-footer"><div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgd1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgd1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div><span class="tagline-sm">Swipe →</span></div>
+  </div>
+</div>
+
+<div class="slide" id="d2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">Sign 1</div>
+    <div class="c-num" style="background:linear-gradient(135deg,#c4b5fd,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">01</div>
+    <div class="c-title small" style="margin-top:16px;">You wake up<br/>tired no matter<br/>how long you sleep.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      If you're getting 7–8 hours but still waking up exhausted, you're likely missing <strong>Stage 3 deep sleep</strong>. Caffeine prevents your brain from entering this restorative phase — even when you're unconscious. You sleep the hours, but you <em>don't do the repair work.</em></div>
+    <div class="c-caption"><strong>Next:</strong> Sign 2</div>
+  </div>
+</div>
+
+<div class="slide" id="d3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">Sign 2</div>
+    <div class="c-num" style="background:linear-gradient(135deg,#c4b5fd,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">02</div>
+    <div class="c-title small" style="margin-top:16px;">You need coffee<br/>to feel normal<br/>in the morning.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      If the first thing you need is caffeine just to feel like a person, you're likely in a withdrawal loop. Caffeine from the night before has worn off, and the adenosine that was blocked all day has crashed — <strong>making natural alertness feel like fog.</strong></div>
+    <div class="c-caption"><strong>Next:</strong> Sign 3</div>
+  </div>
+</div>
+
+<div class="slide" id="d4">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(167,139,250,.1) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag violet">Signs 3, 4 & 5</div>
+    <div class="c-title small" style="margin-top:8px;">The rest<br/>of the list.</div>
+    <div class="list" style="margin-top:32px;">
+      <div class="list-item"><div class="list-icon violet">3</div><div class="list-text"><strong>You lie awake longer than 20 minutes.</strong> Active caffeine keeps your nervous system alert well past when you "feel" tired.</div></div>
+      <div class="list-item"><div class="list-icon violet">4</div><div class="list-text"><strong>Your dreams feel shallow or you don't dream at all.</strong> Deep sleep and REM are both suppressed by evening caffeine.</div></div>
+      <div class="list-item"><div class="list-icon violet">5</div><div class="list-text"><strong>You need more caffeine to get the same effect.</strong> Classic tolerance build-up — your brain grows more adenosine receptors to compensate.</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> fix it</div>
+  </div>
+</div>
+
+<div class="slide" id="d5">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(167,139,250,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div style="font-size:80px;margin-bottom:32px;">🌙</div>
+    <div class="c-title" style="text-align:center;">The fix is<br/><em>knowing your curve.</em></div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">Caffiend shows you exactly how much caffeine is active right now, when you'll hit your sleep threshold, and when it's safe to have your last cup. Stop guessing. Start sleeping properly.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Track yours free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL E — "Worst Times to Drink Coffee" (Day 21) · 5 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL E · Day 21 — "Worst Times to Drink Coffee"</div>
+
+<div class="slide" id="e1">
+  <div class="glow" style="width:700px;height:700px;top:-200px;right:-150px;background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag amber">⏰ Timing matters</div>
+    <div class="c-title" style="font-size:78px;">The <em>worst</em> times<br/>to drink<br/>coffee.</div>
+    <div class="c-sub">Science-backed. Slightly uncomfortable.</div>
+    <div class="logo-footer"><div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lge1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lge1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div><span class="tagline-sm">Swipe →</span></div>
+  </div>
+</div>
+
+<div class="slide" id="e2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">❌ Worst time #1</div>
+    <div class="c-title small" style="margin-top:8px;">First thing<br/>in the morning.<br/><em>Immediately.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Your cortisol peaks naturally between <strong>8–9am</strong> — it's your body's own alertness hormone. Caffeine during this window competes with cortisol, building tolerance faster and making the coffee <em>less effective than if you wait</em>.<br/><br/>
+      Optimal window: <strong>9:30–11:30am</strong> when cortisol dips.
+    </div>
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:14px;padding:24px;text-align:center;"><div style="font-size:13px;color:rgba(239,68,68,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Worst window</div><div style="font-size:28px;font-weight:800;color:#ef4444;">7–9am</div></div>
+      <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:24px;text-align:center;"><div style="font-size:13px;color:rgba(34,197,94,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Sweet spot</div><div style="font-size:28px;font-weight:800;color:#22c55e;">9:30am</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> worst time #2</div>
+  </div>
+</div>
+
+<div class="slide" id="e3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">❌ Worst time #2</div>
+    <div class="c-title small" style="margin-top:8px;">When you're<br/>already anxious<br/>or stressed.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Caffeine raises cortisol and adrenaline. If you're already stressed, adding 200mg of caffeine is like pouring fuel on a fire. It <strong>amplifies anxiety</strong>, worsens focus, and accelerates cortisol burnout.<br/><br/>
+      Know your current state before you pour. <em>Caffiend helps you see the pattern.</em>
+    </div>
+    <div class="amber-card" style="margin-top:32px;">
+      <div style="font-size:17px;color:rgba(245,158,11,.6);margin-bottom:8px;">Caffiend tip</div>
+      <div style="font-size:22px;color:rgba(255,255,255,.7);line-height:1.4;">Check your active level before adding more caffeine. Already above <strong>150mg active?</strong> Consider waiting.</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> worst time #3</div>
+  </div>
+</div>
+
+<div class="slide" id="e4">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(239,68,68,.08) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag" style="color:rgba(239,68,68,.7);">❌ Worst time #3</div>
+    <div class="c-title small" style="margin-top:8px;">After 2pm.<br/>Full stop.<br/><em>(For most people.)</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      With a 5.7hr half-life, a 2pm coffee still has <strong>50% active at 7:42pm</strong>. A 4pm coffee has 50% at 9:42pm. Unless you're going to bed after midnight, anything after 2pm is borrowing energy from tomorrow's sleep.<br/><br/>
+      <em>The later you drink, the more you pay overnight.</em>
+    </div>
+    <div style="margin-top:32px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:20px;padding:28px;">
+      <div style="font-size:13px;color:rgba(239,68,68,.6);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;">Half-life calculator</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:18px;color:rgba(255,255,255,.5);">
+        <div>2pm coffee → 50% active at <span style="color:#ef4444;font-weight:700;">7:42pm</span></div>
+        <div>3pm coffee → 50% active at <span style="color:#ef4444;font-weight:700;">8:42pm</span></div>
+        <div>4pm coffee → 50% active at <span style="color:#ef4444;font-weight:700;">9:42pm</span></div>
+        <div>5pm coffee → 50% active at <span style="color:#ef4444;font-weight:700;">10:42pm</span></div>
+      </div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> time it perfectly with Caffiend</div>
+  </div>
+</div>
+
+<div class="slide" id="e5">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:32px;">✦ Time it right</div>
+    <div class="c-title" style="text-align:center;font-size:64px;">Caffiend tells<br/>you the <em>optimal</em><br/>time to dose.</div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">See your current active caffeine, safe sleep time, and exactly when your next cup will actually be effective — not wasteful.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Track yours free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL F — "7 Days of Tracking" (Day 24) · 5 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL F · Day 24 — "I tracked my caffeine for 7 days"</div>
+
+<div class="slide" id="f1">
+  <div class="glow" style="width:700px;height:700px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag amber">📊 7-day experiment</div>
+    <div class="c-title" style="font-size:72px;">I tracked my<br/>caffeine for<br/><em>7 days.</em></div>
+    <div class="c-sub">Here's what I found. It was not what I expected.</div>
+    <div class="logo-footer"><div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgf1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgf1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div><span class="tagline-sm">Swipe →</span></div>
+  </div>
+</div>
+
+<div class="slide" id="f2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">Finding 1</div>
+    <div class="c-title small" style="margin-top:8px;">I was drinking<br/><em>way more</em><br/>than I thought.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      I thought I had 2-3 coffees a day. The data said otherwise. An oat milk latte, a Monster at 3pm, a green tea at 5pm, and a dark chocolate after dinner added up to <strong>487mg on Tuesday</strong> — over the 400mg safe limit.
+    </div>
+    <div class="stat-row" style="margin-top:32px;">
+      <div class="stat-item"><div class="stat-val">487mg</div><div class="stat-lbl">Highest daily total</div></div>
+      <div class="stat-item"><div class="stat-val">312mg</div><div class="stat-lbl">Daily average</div></div>
+      <div class="stat-item"><div class="stat-val">3.2×</div><div class="stat-lbl">More than I thought</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> Finding 2</div>
+  </div>
+</div>
+
+<div class="slide" id="f3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(239,68,68,.08) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag" style="color:rgba(239,68,68,.7);">Finding 2</div>
+    <div class="c-title small" style="margin-top:8px;">My 5pm green tea<br/>was keeping me<br/><em>awake until 1am.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      I had no idea green tea had 35mg caffeine per cup. My 5pm tea meant <strong>17mg still active at midnight</strong> — just barely below threshold, but combined with dinner's dark chocolate (24mg), I was regularly above 30mg at bedtime. Mystery solved.
+    </div>
+    <div style="margin-top:32px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:20px;padding:28px;">
+      <div style="font-size:15px;color:rgba(239,68,68,.6);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">The hidden sources</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:19px;color:rgba(255,255,255,.5);">
+        <div>Green tea (cup) → <span style="color:#f59e0b;font-weight:700;">35mg</span></div>
+        <div>Dark chocolate (40g) → <span style="color:#f59e0b;font-weight:700;">24mg</span></div>
+        <div>Matcha latte → <span style="color:#f59e0b;font-weight:700;">70mg</span></div>
+        <div>Pre-workout → <span style="color:#ef4444;font-weight:700;">200mg+</span></div>
+      </div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> Finding 3</div>
+  </div>
+</div>
+
+<div class="slide" id="f4">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">Finding 3</div>
+    <div class="c-title small" style="margin-top:8px;">Moving my last<br/>coffee to 1pm<br/><em>changed everything.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      One change. <strong>Last coffee moved from 4pm to 1pm.</strong> By 10:30pm, Caffiend showed 22mg active — below threshold. I fell asleep within 15 minutes. Woke up actually rested. Didn't need coffee until 10am.<br/><br/>
+      <em>One data point. One decision. One night's sleep changed.</em>
+    </div>
+    <div class="stat-row" style="margin-top:32px;">
+      <div class="stat-item"><div class="stat-val">-22mg</div><div class="stat-lbl">Active at bedtime</div></div>
+      <div class="stat-item"><div class="stat-val">&lt;15m</div><div class="stat-lbl">To fall asleep</div></div>
+      <div class="stat-item"><div class="stat-val">Day 3</div><div class="stat-lbl">No morning coffee needed</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> try it yourself</div>
+  </div>
+</div>
+
+<div class="slide" id="f5">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:32px;">7 days. Free. No account.</div>
+    <div class="c-title" style="text-align:center;font-size:64px;">Start your own<br/><em>7-day</em><br/>experiment.</div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">Track every drink. Watch your live curve. See your safe sleep time. You'll be surprised what the data shows you.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Start tracking free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app · works offline · no install</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL G — Caffiend Pro (Day 27) · 5 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL G · Day 27 — "Caffiend Pro"</div>
+
+<div class="slide" id="g1">
+  <div class="glow" style="width:800px;height:800px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(245,158,11,.15) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:flex-end;padding-bottom:100px;">
+    <div style="display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#f59e0b;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:40px;padding:10px 24px;margin-bottom:36px;">⚡ Caffiend Pro</div>
+    <div class="c-title" style="font-size:82px;text-align:center;">For the<br/>serious<br/><em>optimisers.</em></div>
+    <div class="c-sub" style="text-align:center;margin-top:20px;max-width:600px;">Everything in free, plus the tools to go deep on your data.</div>
+    <div style="margin-top:40px;font-size:20px;color:rgba(255,255,255,.2);">Swipe to see what's unlocked →</div>
+  </div>
+</div>
+
+<div class="slide" id="g2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">⚡ Pro feature 1</div>
+    <div class="c-title small" style="margin-top:8px;"><em>Unlimited</em><br/>caffeine history.</div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Free tier keeps 7 days. Pro keeps <strong>everything, forever.</strong> See your patterns over weeks and months. Did your sleep improve when you switched to decaf after 2pm? The data will tell you.
+    </div>
+    <div class="amber-card" style="margin-top:32px;">
+      <div style="font-size:15px;color:rgba(245,158,11,.6);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;">Your weekly pattern</div>
+      <div style="display:flex;align-items:flex-end;gap:12px;height:80px;">
+        <div style="flex:1;background:linear-gradient(0deg,#f59e0b,#f97316);border-radius:4px 4px 0 0;height:60%;"></div>
+        <div style="flex:1;background:linear-gradient(0deg,#f59e0b,#f97316);border-radius:4px 4px 0 0;height:75%;"></div>
+        <div style="flex:1;background:linear-gradient(0deg,#f59e0b,#f97316);border-radius:4px 4px 0 0;height:90%;"></div>
+        <div style="flex:1;background:linear-gradient(0deg,#f59e0b,#f97316);border-radius:4px 4px 0 0;height:70%;"></div>
+        <div style="flex:1;background:linear-gradient(0deg,#f59e0b,#f97316);border-radius:4px 4px 0 0;height:85%;"></div>
+        <div style="flex:1;background:rgba(255,255,255,.08);border-radius:4px 4px 0 0;height:40%;border:1px dashed rgba(245,158,11,.3);"></div>
+        <div style="flex:1;background:rgba(255,255,255,.08);border-radius:4px 4px 0 0;height:30%;border:1px dashed rgba(245,158,11,.3);"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Mon</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Tue</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Wed</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Thu</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Fri</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Sat</div><div style="flex:1;font-size:12px;color:rgba(255,255,255,.25);text-align:center;">Sun</div>
+      </div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> Pro feature 2</div>
+  </div>
+</div>
+
+<div class="slide" id="g3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">⚡ Pro features 2 & 3</div>
+    <div class="c-title small" style="margin-top:8px;">Custom drinks<br/>& <em>CSV export.</em></div>
+    <div class="c-body" style="margin-top:28px;">Build a library of your personal drinks with exact caffeine data. Your homemade cold brew. Your local café's espresso. Your specific pre-workout dose.</div>
+    <div style="margin-top:28px;flex:1;display:flex;flex-direction:column;gap:20px;">
+      <div class="pro-item"><div class="pro-check">☕</div><div class="pro-text"><strong>Custom drinks library</strong> — save any drink with exact mg</div></div>
+      <div class="pro-item"><div class="pro-check">📊</div><div class="pro-text"><strong>CSV export</strong> — import into Apple Health, Notion, spreadsheets</div></div>
+      <div class="pro-item"><div class="pro-check">📈</div><div class="pro-text"><strong>Advanced analytics</strong> — peak times, weekly loads, trends</div></div>
+      <div class="pro-item"><div class="pro-check">⚡</div><div class="pro-text"><strong>Priority support</strong> + early access to new features</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the price</div>
+  </div>
+</div>
+
+<div class="slide" id="g4">
+  <div class="glow" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:32px;">⚡ Pricing</div>
+    <div style="display:flex;gap:32px;width:100%;max-width:780px;">
+      <div style="flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:40px 32px;">
+        <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px;">Monthly</div>
+        <div style="font-size:80px;font-weight:800;color:#fff;line-height:1;">£7</div>
+        <div style="font-size:17px;color:rgba(255,255,255,.3);margin-bottom:24px;">/month</div>
+        <div style="font-size:15px;color:rgba(255,255,255,.25);">Cancel anytime</div>
+      </div>
+      <div style="flex:1;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.25);border-radius:24px;padding:40px 32px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f59e0b,#f97316);"></div>
+        <div style="position:absolute;top:16px;right:16px;font-size:12px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.15);border-radius:20px;padding:4px 12px;">Save 17%</div>
+        <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b;margin-bottom:12px;">Annual</div>
+        <div style="font-size:80px;font-weight:800;color:#fff;line-height:1;">£70</div>
+        <div style="font-size:17px;color:rgba(255,255,255,.3);margin-bottom:24px;">/year · £5.83/mo</div>
+        <div style="font-size:15px;color:rgba(245,158,11,.5);">Best value</div>
+      </div>
+    </div>
+    <div style="margin-top:40px;font-size:20px;color:rgba(255,255,255,.3);">Free forever available at <strong style="color:rgba(255,255,255,.5);">caffiend.app</strong></div>
+  </div>
+</div>
+
+<div class="slide" id="g5">
+  <div class="glow" style="width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.15) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div class="c-tag amber" style="text-align:center;margin-bottom:32px;">Free or Pro — start now</div>
+    <div class="c-title" style="text-align:center;font-size:72px;">Know your<br/><em>buzz.</em></div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:680px;">Start free. Upgrade when you're obsessed.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Try Caffiend free →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app · no account needed</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL H — "30 Days of Data" (Day 30) · 5 slides
+══════════════════════════════════════════════════ -->
+<div class="set-label">CAROUSEL H · Day 30 — "30 Days of Caffeine Data"</div>
+
+<div class="slide" id="h1">
+  <div class="glow" style="width:800px;height:800px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(245,158,11,.12) 0%,transparent 60%);"></div>
+  <div class="glow" style="width:500px;height:500px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(249,115,22,.08) 0%,transparent 65%);"></div>
+  <div class="c-inner" style="justify-content:flex-end;">
+    <div class="c-tag amber">📊 Month in review</div>
+    <div class="c-title" style="font-size:78px;"><em>30 days</em><br/>of caffeine<br/>data.</div>
+    <div class="c-sub">Here's what the science shows — and what you can do with it.</div>
+    <div class="logo-footer"><div class="logo-combo"><svg width="44" height="44" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgh1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgh1)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".85" fill="white"/></svg><span class="logo-name-sm">Caffiend</span></div><span class="tagline-sm">Final chapter →</span></div>
+  </div>
+</div>
+
+<div class="slide" id="h2">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">This month's numbers</div>
+    <div class="c-title small" style="margin-top:8px;">The average<br/>caffeine user.<br/><em>Untracked.</em></div>
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;">
+      <div class="info-card"><div class="ic-val amber">312mg</div><div class="ic-label">Avg daily intake</div><div class="ic-body">Most people vastly underestimate. Typical self-report: ~180mg.</div></div>
+      <div class="info-card"><div class="ic-val amber">4.8</div><div class="ic-label">Drinks per day avg</div><div class="ic-body">Includes hidden sources: tea, chocolate, supplements.</div></div>
+      <div class="info-card"><div class="ic-val violet">47mg</div><div class="ic-label">Active at bedtime</div><div class="ic-body">Most people have >30mg at midnight — above sleep threshold.</div></div>
+      <div class="info-card"><div class="ic-val violet">-1.2h</div><div class="ic-label">Deep sleep lost</div><div class="ic-body">Estimated average impact of above-threshold bedtime caffeine.</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> what changes when you track</div>
+  </div>
+</div>
+
+<div class="slide" id="h3">
+  <div class="glow" style="width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(34,197,94,.07) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag" style="color:rgba(34,197,94,.7);">When you track</div>
+    <div class="c-title small" style="margin-top:8px;">Awareness is<br/>the most powerful<br/><em>intervention.</em></div>
+    <div class="c-body" style="margin-top:28px;flex:1;">
+      Studies on health tracking consistently show that <strong>simply measuring behaviour changes it</strong>. Users who track caffeine intake report: better sleep onset, less reliance on caffeine to function, more intentional dosing, and — most importantly — <em>feeling in control.</em>
+    </div>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;gap:16px;font-size:20px;color:rgba(255,255,255,.6);"><span style="color:#22c55e;font-weight:800;">↓ 28%</span> Reported reduction in daily caffeine after 2 weeks of tracking</div>
+      <div style="display:flex;align-items:center;gap:16px;font-size:20px;color:rgba(255,255,255,.6);"><span style="color:#22c55e;font-weight:800;">+47m</span> Average increase in sleep onset speed</div>
+      <div style="display:flex;align-items:center;gap:16px;font-size:20px;color:rgba(255,255,255,.6);"><span style="color:#22c55e;font-weight:800;">83%</span> Users report better understanding of their energy patterns</div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> the three rules</div>
+  </div>
+</div>
+
+<div class="slide" id="h4">
+  <div class="glow" style="width:600px;height:600px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(245,158,11,.09) 0%,transparent 65%);"></div>
+  <div class="c-inner">
+    <div class="c-tag amber">3 rules from 30 days</div>
+    <div class="c-title small" style="margin-top:8px;">The only three<br/>rules you need.</div>
+    <div class="list" style="margin-top:40px;">
+      <div class="list-item"><div class="list-icon">1</div><div class="list-text"><strong>Wait 90 minutes after waking</strong> before your first coffee. Let cortisol peak naturally first.</div></div>
+      <div class="list-item"><div class="list-icon">2</div><div class="list-text"><strong>Last caffeine 6+ hours before bed.</strong> Non-negotiable if you want deep sleep.</div></div>
+      <div class="list-item"><div class="list-icon">3</div><div class="list-text"><strong>Track everything.</strong> You cannot optimise what you cannot measure. Hidden sources are the real enemy.</div></div>
+    </div>
+    <div class="c-caption"><strong>Next:</strong> start your own journey</div>
+  </div>
+</div>
+
+<div class="slide" id="h5">
+  <div class="glow" style="width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.16) 0%,transparent 55%);"></div>
+  <div class="c-inner" style="align-items:center;text-align:center;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:20px;margin-bottom:56px;">
+      <svg width="64" height="64" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lgh5" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs><path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/><path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lgh5)" stroke-width="4.5" stroke-linecap="round"/><circle cx="26.34" cy="14.57" r="4" fill="#f97316" fill-opacity=".25"/><circle cx="26.34" cy="14.57" r="2.2" fill="#f97316"/><circle cx="26.34" cy="14.57" r=".9" fill="white"/></svg>
+      <span style="font-size:42px;font-weight:800;background:linear-gradient(135deg,#fcd34d,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Caffiend</span>
+    </div>
+    <div class="c-title" style="text-align:center;font-size:72px;">Day 1<br/>starts<br/><em>now.</em></div>
+    <div class="c-sub" style="text-align:center;margin:28px auto;max-width:640px;">Free. No account. Works offline. Start your 30-day experiment today.</div>
+    <a class="cta-big" style="display:inline-flex;margin:0 auto;">Know Your Buzz →</a>
+    <div style="margin-top:24px;font-size:18px;color:rgba(255,255,255,.2);">caffiend.app</div>
+  </div>
+</div>
+
+</body>
+</html>

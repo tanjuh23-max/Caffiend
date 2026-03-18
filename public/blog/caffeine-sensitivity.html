@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Caffeine Hits You Differently: The Genetics of Caffeine Sensitivity | Caffiend</title>
+  <meta name="description" content="Why does caffeine affect some people so much more than others? The answer is in your genes — CYP1A2 and ADORA2A determine how fast you metabolise caffeine and how anxious it makes you.">
+  <link rel="canonical" href="https://caffiend-one.vercel.app/blog/caffeine-sensitivity.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Why Caffeine Hits You Differently: The Genetics of Caffeine Sensitivity">
+  <meta property="og:description" content="Why does caffeine affect some people so much more than others? CYP1A2 and ADORA2A genes determine how fast you metabolise caffeine and how anxious it makes you.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://caffiend-one.vercel.app/blog/caffeine-sensitivity.html">
+  <meta property="og:site_name" content="Caffiend">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Why Caffeine Hits You Differently: The Genetics of Caffeine Sensitivity">
+  <meta name="twitter:description" content="CYP1A2 and ADORA2A genes explain why the same 200mg espresso floors one person and barely registers for another.">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Caffeine Hits You Differently: The Genetics of Caffeine Sensitivity",
+    "description": "Why does caffeine affect some people so much more than others? The answer is in your genes — CYP1A2 and ADORA2A determine how fast you metabolise caffeine and how anxious it makes you.",
+    "author": { "@type": "Organization", "name": "Caffiend" },
+    "publisher": { "@type": "Organization", "name": "Caffiend", "url": "https://caffiend-one.vercel.app" },
+    "datePublished": "2025-03-18",
+    "dateModified": "2025-03-18",
+    "mainEntityOfPage": "https://caffiend-one.vercel.app/blog/caffeine-sensitivity.html",
+    "keywords": "caffeine sensitivity, CYP1A2 caffeine, why am I sensitive to caffeine, ADORA2A gene, caffeine metabolism genetics"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #060608;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
+      --text: rgba(255,255,255,0.87);
+      --muted: rgba(255,255,255,0.45);
+      --faint: rgba(255,255,255,0.2);
+      --amber: #f59e0b;
+      --orange: #f97316;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--amber); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(6,6,8,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #fcd34d, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-cta {
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Article header */
+    .article-header {
+      padding: 64px 0 48px;
+    }
+
+    .article-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 20px;
+    }
+
+    .article-meta {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Article body */
+    .article-body {
+      padding-bottom: 64px;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.9);
+      margin: 48px 0 16px;
+    }
+
+    h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.8);
+      margin: 32px 0 12px;
+    }
+
+    p { margin-bottom: 20px; color: rgba(255,255,255,0.7); }
+
+    ul, ol {
+      margin: 0 0 20px 24px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    li { margin-bottom: 8px; }
+
+    strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 32px 0;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead th {
+      background: rgba(255,255,255,0.04);
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.7);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .td-highlight {
+      color: var(--amber);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Callout box */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.18);
+      margin: 32px 0;
+    }
+
+    .callout p { color: rgba(255,255,255,0.75); margin-bottom: 0; }
+
+    /* CTA Section */
+    .cta-section {
+      margin: 64px 0;
+      padding: 40px;
+      border-radius: 20px;
+      background: rgba(245,158,11,0.05);
+      border: 1px solid rgba(245,158,11,0.15);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+    }
+
+    .cta-btn:hover {
+      box-shadow: 0 6px 28px rgba(245,158,11,0.45);
+      text-decoration: none;
+    }
+
+    /* Related posts */
+    .related-posts {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .related-card {
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s;
+    }
+
+    .related-card:hover { border-color: rgba(245,158,11,0.25); text-decoration: none; }
+
+    .related-card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+
+    .related-card h3 {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--faint);
+    }
+
+    footer a { color: var(--faint); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Caffiend</a>
+  <a href="https://caffiend-one.vercel.app/app" class="nav-cta">Open App →</a>
+</nav>
+
+<main>
+  <div class="container">
+    <header class="article-header">
+      <div class="article-tag">Genetics</div>
+      <h1>Why Caffeine Hits You Differently: The Genetics of Caffeine Sensitivity</h1>
+      <div class="article-meta">
+        <span>March 2026</span>
+        <span>7 min read</span>
+        <span>by Caffiend</span>
+      </div>
+    </header>
+
+    <article class="article-body">
+
+      <p>
+        Two people drink identical 200mg espressos at the same time. One powers through a productive afternoon with
+        laser focus. The other gets jittery, anxious, and still can't sleep four hours later. Same dose, same drink —
+        completely different experience. This isn't a coincidence or a placebo effect. <strong>Caffeine sensitivity
+        is largely determined by your genetics</strong>, and two genes in particular explain most of the variation.
+      </p>
+
+      <h2>The two genes that control your caffeine response</h2>
+
+      <p>
+        Caffeine works through two distinct biological mechanisms: it is metabolised (broken down) at a speed set
+        by one gene, and it blocks adenosine receptors whose sensitivity is governed by another. Getting your head
+        around both is the key to understanding why you respond to caffeine the way you do.
+      </p>
+
+      <h3>CYP1A2 — your caffeine metabolism engine</h3>
+
+      <p>
+        Once caffeine enters your bloodstream, your liver gets to work breaking it down. The workhorse here is an
+        enzyme called <strong>CYP1A2</strong>, which handles around 95% of caffeine metabolism. How fast that enzyme
+        works is almost entirely determined by a single genetic variant: <strong>rs762551</strong>, a single-nucleotide
+        polymorphism on chromosome 15.
+      </p>
+
+      <p>
+        People who carry two copies of the "A" allele (AA genotype) are <strong>fast metabolisers</strong>. Their
+        CYP1A2 activity is significantly higher, so caffeine is cleared from the bloodstream quickly — a half-life
+        of roughly 3–4 hours. For them, a coffee drunk at 2pm is largely gone by early evening.
+      </p>
+
+      <p>
+        People who carry at least one "C" allele (AC or CC genotype) are <strong>slow metabolisers</strong>. Their
+        CYP1A2 activity is lower, and caffeine lingers — a half-life of 7–9 hours or more. For these people, a
+        2pm coffee still has 50% of its caffeine active at 9–10pm. Roughly <strong>half the population carries this
+        slow-metaboliser variant</strong>.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>Practical implication:</strong> If you feel wired or struggle to sleep even after an "early" coffee,
+          slow CYP1A2 activity is the most likely culprit. It doesn't mean you need to quit caffeine — just that
+          your cutoff time needs to be much earlier than average.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>CYP1A2 Type</th>
+              <th>Genotype</th>
+              <th>Approximate half-life</th>
+              <th>200mg coffee at 2pm — active at 10pm</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fast metaboliser</td>
+              <td class="td-highlight">AA</td>
+              <td>3–4 hours</td>
+              <td class="td-highlight">~15–25mg remaining</td>
+            </tr>
+            <tr>
+              <td>Slow metaboliser</td>
+              <td class="td-highlight">AC or CC</td>
+              <td>7–9 hours</td>
+              <td class="td-highlight">~90–120mg remaining</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>ADORA2A — your anxiety and jitteriness switch</h3>
+
+      <p>
+        Metabolism speed explains how long caffeine stays in your system. But it doesn't explain why some people
+        feel anxious, jittery, and heart-racey even on a small dose — while others feel nothing at all. That's
+        governed by a second gene: <strong>ADORA2A</strong>, which encodes the adenosine A2A receptor.
+      </p>
+
+      <p>
+        Caffeine works by blocking adenosine receptors — the receptors that make you feel sleepy. But those same
+        receptors also interact with dopamine signalling in the brain. A common variant in the ADORA2A gene
+        (rs5751876, the <strong>1976T&gt;C polymorphism</strong>) makes adenosine receptors significantly more
+        sensitive to caffeine's blocking effect.
+      </p>
+
+      <p>
+        People with the <strong>TT genotype</strong> of this variant report substantially higher anxiety after caffeine
+        intake compared to those with the CC genotype. Research published in <em>Neuropsychopharmacology</em> found
+        that TT carriers reported significantly more anxiety after a moderate caffeine challenge (150mg) than
+        CC carriers — despite identical blood caffeine levels. <strong>Same amount of caffeine, same bloodstream
+        concentration, different brain response.</strong>
+      </p>
+
+      <p>
+        It is entirely possible to be a fast CYP1A2 metaboliser (caffeine clears quickly) but have a highly sensitive
+        ADORA2A receptor — meaning caffeine hits hard while it's active, but doesn't linger. Conversely, you could
+        have low receptor sensitivity but be a slow metaboliser: caffeine barely affects you mentally, but it
+        accumulates in your system and disrupts sleep without you realising.
+      </p>
+
+      <h2>Why the same 200mg hits one person lightly and another very hard</h2>
+
+      <p>
+        Combining these two variables creates a spectrum of responses. Consider four archetypes:
+      </p>
+
+      <ul>
+        <li><strong>Fast metaboliser + low receptor sensitivity:</strong> Caffeine has little effect and clears quickly. This person might drink multiple espressos and feel barely anything. They often wonder why others make such a fuss about coffee.</li>
+        <li><strong>Fast metaboliser + high receptor sensitivity:</strong> Caffeine hits hard but burns off fast. Strong focus for 2–3 hours, then a notable crash. These people tend to be responsive to caffeine but don't experience sleep problems from afternoon drinks.</li>
+        <li><strong>Slow metaboliser + low receptor sensitivity:</strong> Caffeine barely perceptible mentally, but silently accumulates in the bloodstream. Sleep quality suffers even though the person doesn't "feel" caffeinated.</li>
+        <li><strong>Slow metaboliser + high receptor sensitivity:</strong> The worst of both worlds. Caffeine causes strong anxiety and stimulation, and it stays in the system for hours. Even small doses can cause palpitations or insomnia. These individuals are the ones who say "I can't drink coffee after noon — or at all."</li>
+      </ul>
+
+      <p>
+        Body weight adds another layer. Caffeine concentration in the blood is a function of dose divided by
+        distribution volume, which scales with body mass. A 60kg person who drinks the same 200mg coffee as
+        a 90kg person will end up with a peak blood concentration roughly 50% higher. This is why caffeine dosing
+        is more meaningfully expressed in <strong>mg per kilogram of body weight</strong> — not just total milligrams.
+      </p>
+
+      <h2>Tolerance — how regular use rewires your adenosine system</h2>
+
+      <p>
+        One reason daily coffee drinkers often report that caffeine "doesn't affect them anymore" is <strong>adenosine
+        receptor upregulation</strong>. When caffeine chronically blocks adenosine receptors, the brain adapts by
+        growing more of them. More receptors means more adenosine signalling capacity — and therefore more
+        dependence on caffeine just to feel normal.
+      </p>
+
+      <p>
+        This is why taking a break from caffeine — even for a few days — temporarily makes coffee feel far more
+        powerful again. The elevated receptor count means a given dose of caffeine blocks a larger proportion of
+        receptors than it did when you were a regular user. The effect feels amplified.
+      </p>
+
+      <p>
+        Tolerance builds within days of regular use and largely dissipates within 1–2 weeks of abstinence.
+        It does not permanently alter your genetic CYP1A2 or ADORA2A profile — it's a behavioural adaptation,
+        not a genetic change.
+      </p>
+
+      <h2>How caffeine sensitivity changes over time</h2>
+
+      <p>
+        Your genetic variants don't change, but the factors that influence how those genes express can shift
+        considerably throughout your life:
+      </p>
+
+      <h3>Age</h3>
+      <p>
+        Liver metabolism generally slows with age. CYP1A2 activity tends to decrease over time, which means
+        caffeine's half-life extends gradually. A cup of coffee that felt manageable at 30 may feel much stronger
+        at 55 — not because you've become weaker, but because your body processes it more slowly.
+      </p>
+
+      <h3>Pregnancy</h3>
+      <p>
+        CYP1A2 activity drops substantially during pregnancy, especially in the third trimester. Caffeine half-life
+        can extend to 15 hours or more. Caffeine also crosses the placenta, and the foetus lacks the enzyme to
+        metabolise it at all. This is the pharmacological basis for official guidance to limit caffeine during
+        pregnancy to under 200mg per day.
+      </p>
+
+      <h3>Hormonal contraceptives</h3>
+      <p>
+        Oestrogen-containing contraceptives inhibit CYP1A2 activity, roughly doubling caffeine's half-life in
+        some individuals. Women on combined oral contraceptives may process caffeine twice as slowly as they
+        would otherwise — a significant but widely underappreciated factor.
+      </p>
+
+      <h3>Medications</h3>
+      <p>
+        Several common drugs inhibit or induce CYP1A2. Fluvoxamine (an antidepressant), ciprofloxacin (an antibiotic),
+        and certain antifungals can substantially reduce caffeine clearance. If you've started a new medication
+        and find caffeine suddenly hitting harder, this mechanism is likely at work.
+      </p>
+
+      <h3>Liver health</h3>
+      <p>
+        Any condition that impairs liver function — hepatitis, fatty liver disease, cirrhosis — will slow caffeine
+        metabolism. In severe liver disease, caffeine's half-life can extend to 60–100 hours. Even moderate
+        liver stress from illness or heavy alcohol use can meaningfully slow clearance.
+      </p>
+
+      <h2>Practical tips for calibrating your personal caffeine sweet spot</h2>
+
+      <ul>
+        <li><strong>Start lower than you think you need.</strong> If you're new to caffeine or returning after a break, 50–100mg is enough to assess your sensitivity. There's no reward for pushing through jitteriness.</li>
+        <li><strong>Track total mg, not cups.</strong> Different drinks vary enormously — a home-brewed filter coffee can be anywhere from 80mg to 200mg depending on grind, dose, and brew time. Track by milligrams, not vessels.</li>
+        <li><strong>Factor in your body weight.</strong> Research suggests the sweet spot for cognitive performance without significant side effects is around <strong>1–3mg/kg</strong>. A 60kg person's "safe" dose is quite different from a 100kg person's.</li>
+        <li><strong>Note your cutoff time carefully.</strong> If you're a slow metaboliser, a 2pm coffee may still have 80–100mg active at midnight. Experiment with progressively earlier cutoffs until your sleep quality improves.</li>
+        <li><strong>Watch for anxiety as a signal.</strong> If you feel anxious, jittery, or notice your heart racing, you may have high ADORA2A sensitivity. The answer isn't necessarily to quit caffeine — it may just mean lowering your dose significantly and spacing it out more.</li>
+        <li><strong>Reassess after life changes.</strong> Starting new medication, becoming pregnant, hitting a new decade of life — any of these can meaningfully shift your response. Don't assume your tolerance from five years ago still applies.</li>
+      </ul>
+
+      <div class="callout">
+        <p>
+          <strong>The genetic tests:</strong> Consumer DNA tests like 23andMe include the CYP1A2 rs762551 variant in their raw data, which you can look up via third-party tools like Promethease. ADORA2A rs5751876 is also commonly reported. These tests won't give you medical advice, but they can confirm whether your lived experience of caffeine matches what the genetics predict.
+        </p>
+      </div>
+
+      <h2>The bottom line</h2>
+
+      <p>
+        Caffeine sensitivity is not a personality trait or a sign of weakness. It is a measurable, genetic, physiological
+        reality. Two genes — CYP1A2 (which sets how fast caffeine is cleared) and ADORA2A (which sets how sensitive
+        your receptors are) — account for the majority of the variation in how people respond to the same dose.
+        These are compounded by body weight, tolerance, age, hormones, medications, and liver health.
+      </p>
+
+      <p>
+        The practical upshot is that there is no universally "correct" amount of caffeine. The right dose for you
+        is the one that produces the effect you want, doesn't cause anxiety or sleep disruption, and makes sense
+        relative to your body weight. That requires tracking — not guessing.
+      </p>
+
+      <div class="cta-section">
+        <h2>Find your personal caffeine sweet spot</h2>
+        <p style="color: rgba(255,255,255,0.55); margin-top: 8px;">
+          Caffiend tracks your caffeine in mg/kg so you can see exactly how each drink affects your personal
+          dose relative to your body weight. Log your drinks, see your real-time metabolism curve, and calibrate
+          the intake that works for your genetics — not someone else's average.
+        </p>
+        <a href="https://caffiend-one.vercel.app/app" class="cta-btn">Start Tracking Free →</a>
+      </div>
+
+    </article>
+
+    <section class="related-posts">
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3);">Related reading</p>
+      <div class="related-grid">
+        <a href="/blog/caffeine-half-life.html" class="related-card">
+          <div class="related-card-tag">Pharmacology</div>
+          <h3>The Caffeine Half-Life Guide: How Long Does Coffee Really Last?</h3>
+        </a>
+        <a href="/blog/caffeine-and-sleep.html" class="related-card">
+          <div class="related-card-tag">Sleep Science</div>
+          <h3>How Caffeine Ruins Your Sleep (Even When You Fall Asleep Fine)</h3>
+        </a>
+        <a href="/blog/caffeine-mg-per-kg.html" class="related-card">
+          <div class="related-card-tag">Dosing</div>
+          <h3>How Much Caffeine Is Right for Your Body Weight?</h3>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <a href="https://caffiend-one.vercel.app">caffiend-one.vercel.app</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/privacy">Privacy</a> &nbsp;·&nbsp;
+  <a href="https://caffiend-one.vercel.app/terms">Terms</a>
+  <br><br>
+  © 2026 Caffiend. Built with actual science.
+</footer>
+
+</body>
+</html>

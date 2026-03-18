@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1a1108"/>
+      <stop offset="100%" stop-color="#0c0c0e"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGlow)"/>
+  <rect width="100" height="100" rx="22" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="1.5"/>
+
+  <!-- Gauge track -->
+  <!-- Center (50,50), R=28, start=-120deg → (25.75,64), end=120deg → (74.25,64) -->
+  <path d="M 25.75 64 A 28 28 0 1 1 74.25 64"
+    fill="none" stroke="#1e1e22" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- Amber progress arc (~68% fill, end at ~43deg) -->
+  <!-- polar(50,50,28,43): x=50+28*cos(-47*PI/180)=50+28*0.6820=69.10, y=50+28*sin(-47*PI/180)=50-28*0.7314=29.52 -->
+  <path d="M 25.75 64 A 28 28 0 1 1 69.10 29.52"
+    fill="none" stroke="url(#grad)" stroke-width="11" stroke-linecap="round"
+    filter="url(#glow)"/>
+
+  <!-- Needle halo -->
+  <circle cx="69.10" cy="29.52" r="9" fill="#f97316" fill-opacity="0.22" filter="url(#glowSoft)"/>
+  <!-- Needle dot -->
+  <circle cx="69.10" cy="29.52" r="4.5" fill="#f97316" filter="url(#glow)"/>
+  <!-- White center -->
+  <circle cx="69.10" cy="29.52" r="1.9" fill="white"/>
+</svg>

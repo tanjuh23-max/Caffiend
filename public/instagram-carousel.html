@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Caffiend — Instagram Carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #060608;
+    --amber: #f59e0b;
+    --orange: #f97316;
+    --violet: #a78bfa;
+    --white: rgba(255,255,255,0.87);
+    --muted: rgba(255,255,255,0.45);
+    --faint: rgba(255,255,255,0.12);
+    --mono: 'JetBrains Mono', monospace;
+    --slide-size: 1080px;
+    --scale: 0.48;
+  }
+
+  html, body {
+    background: #0d0d10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    overflow-x: hidden;
+  }
+
+  /* ── Outer shell ── */
+  .carousel-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 20px;
+  }
+
+  .carousel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: -8px;
+  }
+
+  /* ── Viewport ── */
+  .carousel-viewport {
+    width: calc(var(--slide-size) * var(--scale));
+    height: calc(var(--slide-size) * var(--scale));
+    overflow: hidden;
+    border-radius: 18px;
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 32px 80px rgba(0,0,0,0.7),
+      0 0 60px rgba(245,158,11,0.06);
+  }
+
+  /* ── Track ── */
+  .carousel-track {
+    display: flex;
+    width: calc(var(--slide-size) * 6);
+    height: var(--slide-size);
+    transform-origin: top left;
+    transform: scale(var(--scale));
+    transition: transform 0s; /* position is via JS translateX */
+    will-change: transform;
+  }
+
+  /* ── Slide base ── */
+  .slide {
+    width: var(--slide-size);
+    height: var(--slide-size);
+    background: var(--bg);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Grain overlay ── */
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.035;
+  }
+
+  /* ── Glow blob helper ── */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ── Navigation ── */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .nav-btn:hover {
+    background: rgba(245,158,11,0.12);
+    border-color: rgba(245,158,11,0.3);
+    color: #f59e0b;
+  }
+  .nav-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .dot.active {
+    background: #f59e0b;
+    width: 22px;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(245,158,11,0.6);
+  }
+
+  .slide-counter {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 1 — HOOK
+  ───────────────────────────────────────────────────────── */
+  #s1 { justify-content: flex-end; }
+
+  #s1 .bg-curve {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  #s1 .content {
+    position: relative;
+    z-index: 5;
+    padding: 0 72px 80px;
+  }
+
+  #s1 .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f59e0b;
+    opacity: 0.8;
+    margin-bottom: 28px;
+  }
+  #s1 .eyebrow span { color: rgba(255,255,255,0.3); }
+
+  #s1 .hook {
+    font-size: 86px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 32px;
+  }
+  #s1 .hook em {
+    font-style: normal;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #s1 .sub {
+    font-size: 26px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.45;
+    max-width: 580px;
+    margin-bottom: 64px;
+  }
+
+  #s1 .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #s1 .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  #s1 .logo-name {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fcd34d, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #s1 .tagline {
+    font-size: 18px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.06em;
+  }
+
+  #s1 .swipe-hint {
+    font-size: 14px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 2 — PROBLEM
+  ───────────────────────────────────────────────────────── */
+  #s2 .content {
+    position: relative;
+    z-index: 5;
+    padding: 100px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #s2 .tag {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 20px;
+  }
+
+  #s2 .title {
+    font-size: 88px;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 60px;
+  }
+  #s2 .title em {
+    font-style: normal;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #s2 .bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    flex: 1;
+  }
+
+  #s2 .bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  #s2 .bullet-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(245,158,11,0.12);
+    border: 1.5px solid rgba(245,158,11,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #f59e0b;
+    margin-top: 4px;
+  }
+
+  #s2 .bullet-text {
+    font-size: 30px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.4;
+  }
+
+  #s2 .bullet-text strong {
+    color: #fff;
+    font-weight: 800;
+  }
+
+  #s2 .bottom-bar {
+    margin-top: 60px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #s2 .stat {
+    text-align: center;
+  }
+  #s2 .stat-val {
+    font-size: 36px;
+    font-weight: 800;
+    color: #f59e0b;
+  }
+  #s2 .stat-lbl {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  #s2 .stat-div {
+    width: 1px;
+    height: 48px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 3 — LIVE CURVE
+  ───────────────────────────────────────────────────────── */
+  #s3 .content {
+    position: relative;
+    z-index: 5;
+    padding: 80px 80px 72px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #s3 .tag {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f59e0b;
+    opacity: 0.7;
+    margin-bottom: 16px;
+  }
+
+  #s3 .title {
+    font-size: 66px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin-bottom: 52px;
+  }
+
+  #s3 .curve-wrap {
+    flex: 1;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 40px 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #s3 .curve-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  #s3 .curve-label {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  #s3 .live-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: #f59e0b;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  #s3 .caption {
+    margin-top: 28px;
+    font-size: 22px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+  #s3 .caption strong { color: rgba(255,255,255,0.7); }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 4 — SLEEP PREDICTOR
+  ───────────────────────────────────────────────────────── */
+  #s4 .content {
+    position: relative;
+    z-index: 5;
+    padding: 90px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #s4 .tag {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    opacity: 0.8;
+    margin-bottom: 16px;
+  }
+
+  #s4 .title {
+    font-size: 68px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin-bottom: 52px;
+  }
+
+  #s4 .predictor-card {
+    background: rgba(167,139,250,0.04);
+    border: 1px solid rgba(167,139,250,0.18);
+    border-radius: 28px;
+    padding: 52px 56px;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  #s4 .predictor-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a78bfa, #7c3aed);
+  }
+
+  #s4 .moon-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #s4 .moon-icon {
+    font-size: 56px;
+    filter: drop-shadow(0 0 16px rgba(167,139,250,0.5));
+  }
+
+  #s4 .safe-label {
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(167,139,250,0.7);
+  }
+
+  #s4 .sleep-time {
+    font-size: 92px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #s4 .sleep-sub {
+    font-size: 22px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.5;
+  }
+
+  #s4 .sleep-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  #s4 .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 12px 20px;
+  }
+
+  #s4 .meta-chip .val {
+    color: #a78bfa;
+    font-weight: 700;
+  }
+
+  #s4 .caption {
+    margin-top: 36px;
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+  }
+  #s4 .caption em {
+    font-style: normal;
+    color: #a78bfa;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 5 — BARCODE SCANNER
+  ───────────────────────────────────────────────────────── */
+  #s5 .content {
+    position: relative;
+    z-index: 5;
+    padding: 90px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  #s5 .tag {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f59e0b;
+    opacity: 0.7;
+    margin-bottom: 16px;
+  }
+
+  #s5 .title {
+    font-size: 86px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 52px;
+  }
+
+  #s5 .scanner-wrap {
+    flex: 1;
+    display: flex;
+    gap: 40px;
+    align-items: stretch;
+  }
+
+  #s5 .scanner-ui {
+    flex: 1;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+    padding: 40px;
+  }
+
+  #s5 .scan-frame {
+    width: 220px;
+    height: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scan-corner {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-color: #f59e0b;
+    border-style: solid;
+  }
+  .sc-tl { top: 0; left: 0; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  .sc-tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+  .sc-bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+  .sc-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+  .scan-line {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+    box-shadow: 0 0 8px rgba(245,158,11,0.6);
+    animation: scanLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scanLine {
+    0%, 100% { top: 16px; opacity: 1; }
+    50% { top: calc(100% - 16px); opacity: 0.7; }
+  }
+
+  .barcode-lines {
+    display: flex;
+    gap: 3px;
+    align-items: stretch;
+    height: 80px;
+    opacity: 0.35;
+  }
+  .b-line {
+    background: rgba(255,255,255,0.7);
+    border-radius: 1px;
+  }
+
+  #s5 .scan-status {
+    font-size: 14px;
+    color: #f59e0b;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #s5 .product-card {
+    width: 340px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #s5 .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+  }
+
+  #s5 .product-found {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #f59e0b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #s5 .product-name {
+    font-size: 30px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  #s5 .caffeine-big {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.15);
+    border-radius: 16px;
+    padding: 24px 24px;
+  }
+
+  #s5 .caff-val {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #s5 .caff-unit {
+    font-size: 18px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  #s5 .product-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #s5 .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: rgba(255,255,255,0.4);
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  #s5 .meta-row:last-child { border-bottom: none; }
+  #s5 .meta-row span:last-child { color: rgba(255,255,255,0.75); font-weight: 600; }
+
+  #s5 .caption {
+    margin-top: 28px;
+    font-size: 22px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+  }
+  #s5 .caption strong { color: rgba(255,255,255,0.7); }
+
+  /* ─────────────────────────────────────────────────────────
+     SLIDE 6 — CTA
+  ───────────────────────────────────────────────────────── */
+  #s6 {
+    align-items: center;
+    justify-content: center;
+  }
+
+  #s6 .content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 80px;
+    height: 100%;
+    justify-content: center;
+    gap: 0;
+  }
+
+  #s6 .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 52px;
+  }
+
+  #s6 .logo-name {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fcd34d, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #s6 .headline {
+    font-size: 96px;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+    color: #fff;
+    margin-bottom: 28px;
+  }
+  #s6 .headline em {
+    font-style: normal;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #s6 .sub {
+    font-size: 26px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+    max-width: 600px;
+    margin-bottom: 52px;
+  }
+
+  #s6 .badges-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 52px;
+  }
+
+  #s6 .badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,158,11,0.85);
+    background: rgba(245,158,11,0.07);
+    border: 1px solid rgba(245,158,11,0.18);
+    border-radius: 40px;
+    padding: 12px 24px;
+  }
+
+  #s6 .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: #000;
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    padding: 28px 56px;
+    border-radius: 18px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 40px rgba(245,158,11,0.4);
+    margin-bottom: 36px;
+    text-decoration: none;
+  }
+
+  #s6 .domain {
+    font-size: 22px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 48px;
+    letter-spacing: 0.04em;
+  }
+  #s6 .domain strong { color: rgba(255,255,255,0.5); }
+
+  #s6 .pro-note {
+    font-size: 18px;
+    color: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 18px 36px;
+    letter-spacing: 0.02em;
+  }
+  #s6 .pro-note strong { color: rgba(245,158,11,0.6); }
+</style>
+</head>
+<body>
+<div class="carousel-shell">
+  <div class="carousel-label">Caffiend — Instagram Carousel · 1080×1080</div>
+
+  <div class="carousel-viewport" id="viewport">
+    <div class="carousel-track" id="track">
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 1 — HOOK
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s1">
+        <!-- Ambient glows -->
+        <div class="glow" style="width:900px;height:900px;top:-300px;left:-250px;background:radial-gradient(circle,rgba(245,158,11,0.14) 0%,transparent 65%);"></div>
+        <div class="glow" style="width:500px;height:500px;bottom:-100px;right:-150px;background:radial-gradient(circle,rgba(249,115,22,0.08) 0%,transparent 65%);"></div>
+
+        <!-- Background caffeine curve -->
+        <svg class="bg-curve" viewBox="0 0 1080 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="s1-cg" x1="0" y1="0" x2="1080" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#f97316" stop-opacity="0.4"/>
+            </linearGradient>
+            <linearGradient id="s1-ag" x1="0" y1="300" x2="0" y2="900" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0"/>
+            </linearGradient>
+            <filter id="s1-glow">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Grid -->
+          <line x1="0" y1="500" x2="1080" y2="500" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+          <line x1="0" y1="650" x2="1080" y2="650" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+          <line x1="0" y1="800" x2="1080" y2="800" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+          <!-- Sleep threshold -->
+          <line x1="0" y1="680" x2="1080" y2="680" stroke="rgba(167,139,250,0.3)" stroke-width="1.5" stroke-dasharray="14 8"/>
+          <!-- Area fill -->
+          <path d="M 20,860 C 80,860 200,380 280,260 C 340,170 390,155 430,162 C 570,180 680,420 800,560 C 900,670 980,720 1060,740 L 1060,870 L 20,870 Z" fill="url(#s1-ag)"/>
+          <!-- Glow layer -->
+          <path d="M 20,860 C 80,860 200,380 280,260 C 340,170 390,155 430,162 C 570,180 680,420 800,560 C 900,670 980,720 1060,740" stroke="rgba(245,158,11,0.25)" stroke-width="12" stroke-linecap="round" fill="none" filter="url(#s1-glow)"/>
+          <!-- Main curve (animated) -->
+          <path id="s1-curve" d="M 20,860 C 80,860 200,380 280,260 C 340,170 390,155 430,162 C 570,180 680,420 800,560 C 900,670 980,720 1060,740" stroke="url(#s1-cg)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <!-- Peak marker -->
+          <circle cx="430" cy="162" r="10" fill="#f97316" opacity="0.9"/>
+          <circle cx="430" cy="162" r="22" fill="#f97316" opacity="0.12"/>
+          <circle cx="430" cy="162" r="36" fill="#f97316" opacity="0.05"/>
+          <!-- "now" indicator -->
+          <line x1="700" y1="200" x2="700" y2="870" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <circle cx="700" cy="490" r="9" fill="#fbbf24"/>
+          <circle cx="700" cy="490" r="20" fill="#fbbf24" opacity="0.15"/>
+        </svg>
+
+        <div class="content">
+          <div class="eyebrow">
+            <span>☕</span> Caffiend · Pharmacokinetics
+          </div>
+          <h1 class="hook">
+            Your <em>3pm coffee</em><br/>is still in<br/>your blood<br/>at 9pm.
+          </h1>
+          <p class="sub">And it's quietly ruining your sleep.<br/>Here's the science.</p>
+          <div class="logo-row">
+            <div class="logo-wrap">
+              <svg width="52" height="52" viewBox="0 0 36 36" fill="none">
+                <defs>
+                  <linearGradient id="lg1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+                  <filter id="gf1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lg1)" stroke-width="4.5" stroke-linecap="round" filter="url(#gf1)"/>
+                <circle cx="26.34" cy="14.57" r="3.8" fill="#f97316" fill-opacity="0.25"/>
+                <circle cx="26.34" cy="14.57" r="2" fill="#f97316" filter="url(#gf1)"/>
+                <circle cx="26.34" cy="14.57" r="0.85" fill="white"/>
+              </svg>
+              <span class="logo-name">Caffiend</span>
+            </div>
+            <div>
+              <div class="tagline">Know Your Buzz.</div>
+            </div>
+            <div class="swipe-hint">Swipe →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 2 — PROBLEM
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s2">
+        <div class="glow" style="width:700px;height:700px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(245,158,11,0.07) 0%,transparent 65%);"></div>
+        <div class="glow" style="width:400px;height:400px;bottom:-100px;left:-100px;background:radial-gradient(circle,rgba(249,115,22,0.05) 0%,transparent 65%);"></div>
+        <div class="content">
+          <div class="tag">02 — The problem</div>
+          <h2 class="title">You're<br/>drinking<br/><em>blind.</em></h2>
+          <div class="bullets">
+            <div class="bullet">
+              <div class="bullet-icon">✕</div>
+              <div class="bullet-text"><strong>You don't know</strong> how much is actually in your bloodstream right now</div>
+            </div>
+            <div class="bullet">
+              <div class="bullet-icon">✕</div>
+              <div class="bullet-text">That <strong>'afternoon slump' fix</strong> is blocking your sleep hours later</div>
+            </div>
+            <div class="bullet">
+              <div class="bullet-icon">✕</div>
+              <div class="bullet-text">Generic apps <strong>just count cups.</strong> Cups aren't science.</div>
+            </div>
+          </div>
+          <div class="bottom-bar">
+            <div class="stat">
+              <div class="stat-val">5.7h</div>
+              <div class="stat-lbl">caffeine half-life</div>
+            </div>
+            <div class="stat-div"></div>
+            <div class="stat">
+              <div class="stat-val">~45m</div>
+              <div class="stat-lbl">to peak absorption</div>
+            </div>
+            <div class="stat-div"></div>
+            <div class="stat">
+              <div class="stat-val">~30mg</div>
+              <div class="stat-lbl">sleep threshold</div>
+            </div>
+            <div class="stat-div"></div>
+            <div class="stat">
+              <div class="stat-val">0</div>
+              <div class="stat-lbl">guessing needed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 3 — LIVE CURVE
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s3">
+        <div class="glow" style="width:600px;height:600px;top:-150px;right:-150px;background:radial-gradient(circle,rgba(245,158,11,0.09) 0%,transparent 65%);"></div>
+        <div class="content">
+          <div class="tag">03 — Real-time metabolism</div>
+          <h2 class="title">Watch your<br/>caffeine in<br/>real time.</h2>
+          <div class="curve-wrap">
+            <div class="curve-header">
+              <div class="curve-label">Live caffeine curve — 200mg dose @ 3:00 PM</div>
+              <div class="live-pill"><span class="live-dot"></span> LIVE</div>
+            </div>
+            <svg viewBox="0 0 920 380" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+              <defs>
+                <linearGradient id="s3-cg" x1="0" y1="0" x2="920" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#f59e0b"/>
+                  <stop offset="100%" stop-color="#f97316"/>
+                </linearGradient>
+                <linearGradient id="s3-ag" x1="0" y1="80" x2="0" y2="370" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2"/>
+                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0"/>
+                </linearGradient>
+                <filter id="s3-glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <!-- Grid -->
+              <line x1="0" y1="100" x2="920" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="180" x2="920" y2="180" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="260" x2="920" y2="260" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="160" y1="0" x2="160" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+              <line x1="320" y1="0" x2="320" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+              <line x1="480" y1="0" x2="480" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+              <line x1="640" y1="0" x2="640" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+              <line x1="800" y1="0" x2="800" y2="360" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+              <!-- Sleep threshold -->
+              <line x1="0" y1="258" x2="920" y2="258" stroke="rgba(167,139,250,0.45)" stroke-width="1.5" stroke-dasharray="10 6"/>
+              <text x="910" y="252" fill="rgba(167,139,250,0.7)" font-size="14" text-anchor="end" font-family="JetBrains Mono, monospace">sleep threshold · 30mg</text>
+              <!-- Area fill -->
+              <path d="M 20,340 C 60,340 130,140 160,80 C 185,38 210,30 240,33 C 340,48 440,155 560,220 C 660,270 780,300 910,310 L 910,355 L 20,355 Z" fill="url(#s3-ag)"/>
+              <!-- Curve glow -->
+              <path d="M 20,340 C 60,340 130,140 160,80 C 185,38 210,30 240,33 C 340,48 440,155 560,220 C 660,270 780,300 910,310" stroke="rgba(245,158,11,0.2)" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <!-- Main curve -->
+              <path d="M 20,340 C 60,340 130,140 160,80 C 185,38 210,30 240,33 C 340,48 440,155 560,220 C 660,270 780,300 910,310" stroke="url(#s3-cg)" stroke-width="3" stroke-linecap="round" fill="none" filter="url(#s3-glow)"/>
+              <!-- Peak marker -->
+              <circle cx="240" cy="33" r="7" fill="#f97316" opacity="0.9"/>
+              <circle cx="240" cy="33" r="16" fill="#f97316" opacity="0.15"/>
+              <line x1="240" y1="33" x2="240" y2="355" stroke="rgba(245,158,11,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
+              <!-- Now indicator -->
+              <line x1="500" y1="10" x2="500" y2="355" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <circle cx="500" cy="203" r="7" fill="#fbbf24"/>
+              <circle cx="500" cy="203" r="16" fill="#fbbf24" opacity="0.15"/>
+              <!-- Time labels -->
+              <text x="20" y="375" fill="rgba(255,255,255,0.25)" font-size="13" font-family="JetBrains Mono, monospace">3:00 PM</text>
+              <text x="145" y="375" fill="rgba(255,255,255,0.25)" font-size="13" font-family="JetBrains Mono, monospace">3:45</text>
+              <text x="220" y="20" fill="rgba(245,158,11,0.8)" font-size="13" font-family="JetBrains Mono, monospace" text-anchor="middle">PEAK</text>
+              <text x="470" y="375" fill="rgba(255,255,255,0.4)" font-size="13" font-family="JetBrains Mono, monospace">now</text>
+              <text x="880" y="375" fill="rgba(255,255,255,0.25)" font-size="13" font-family="JetBrains Mono, monospace">11 PM</text>
+              <!-- Phase labels -->
+              <text x="90" y="140" fill="rgba(245,158,11,0.55)" font-size="13" font-family="JetBrains Mono, monospace" text-anchor="middle">absorption</text>
+              <text x="650" y="195" fill="rgba(255,255,255,0.25)" font-size="13" font-family="JetBrains Mono, monospace">elimination →</text>
+            </svg>
+          </div>
+          <p class="caption">Every sip modelled against <strong>your body weight.</strong></p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 4 — SLEEP PREDICTOR
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s4">
+        <div class="glow" style="width:700px;height:700px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(167,139,250,0.1) 0%,transparent 65%);"></div>
+        <div class="glow" style="width:500px;height:500px;bottom:-150px;right:-100px;background:radial-gradient(circle,rgba(124,58,237,0.07) 0%,transparent 65%);"></div>
+        <div class="content">
+          <div class="tag">04 — Sleep predictor</div>
+          <h2 class="title">Finally know<br/>when you'll<br/>wind down.</h2>
+          <div class="predictor-card">
+            <div class="moon-row">
+              <span class="moon-icon">🌙</span>
+              <div>
+                <div class="safe-label">Safe to sleep</div>
+                <div class="sleep-time">10:47 PM</div>
+              </div>
+            </div>
+            <div class="sleep-meta">
+              <div class="meta-chip">Half-life: <span class="val">5.7 hrs</span></div>
+              <div class="meta-chip">Threshold: <span class="val">30mg</span></div>
+              <div class="meta-chip">Active now: <span class="val">94mg</span></div>
+            </div>
+            <div class="sleep-sub">
+              Based on your caffeine curve + your personal sleep threshold. Updated live as you log drinks.
+            </div>
+          </div>
+          <p class="caption">Stop guessing. <em>Start sleeping.</em></p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 5 — BARCODE SCANNER
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s5">
+        <div class="glow" style="width:600px;height:600px;top:-100px;right:-200px;background:radial-gradient(circle,rgba(245,158,11,0.09) 0%,transparent 65%);"></div>
+        <div class="content">
+          <div class="tag">05 — Barcode scanner</div>
+          <h2 class="title">Just<br/>scan<br/>the can.</h2>
+          <div class="scanner-wrap">
+            <div class="scanner-ui">
+              <div class="scan-frame">
+                <div class="scan-corner sc-tl"></div>
+                <div class="scan-corner sc-tr"></div>
+                <div class="scan-corner sc-bl"></div>
+                <div class="scan-corner sc-br"></div>
+                <div class="scan-line"></div>
+                <!-- Barcode graphic -->
+                <div class="barcode-lines" style="width:160px;justify-content:center;">
+                  <div class="b-line" style="width:2px;"></div><div class="b-line" style="width:4px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:6px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:3px;"></div><div class="b-line" style="width:5px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:4px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:3px;"></div><div class="b-line" style="width:6px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:4px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:3px;"></div><div class="b-line" style="width:5px;"></div><div class="b-line" style="width:2px;"></div><div class="b-line" style="width:4px;"></div><div class="b-line" style="width:2px;"></div>
+                </div>
+              </div>
+              <div class="scan-status">
+                <span class="live-dot" style="background:#f59e0b;"></span>
+                Scanning...
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-found">
+                <span class="live-dot" style="background:#22c55e;"></span>
+                Product found
+              </div>
+              <div class="product-name">Monster Energy Original</div>
+              <div class="caffeine-big">
+                <div class="caff-val">160</div>
+                <div class="caff-unit">mg caffeine / 500ml can</div>
+              </div>
+              <div class="product-meta">
+                <div class="meta-row">
+                  <span>Per 100ml</span>
+                  <span>32mg</span>
+                </div>
+                <div class="meta-row">
+                  <span>Source</span>
+                  <span>Open Food Facts</span>
+                </div>
+                <div class="meta-row">
+                  <span>mg/kg (75kg)</span>
+                  <span>2.1 mg/kg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="caption">Instant lookup from <strong>Open Food Facts.</strong> Thousands of drinks covered.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           SLIDE 6 — CTA
+      ══════════════════════════════════════════════════ -->
+      <div class="slide" id="s6">
+        <div class="glow" style="width:900px;height:900px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(245,158,11,0.16) 0%,transparent 60%);"></div>
+        <div class="glow" style="width:500px;height:500px;bottom:-100px;left:-100px;background:radial-gradient(circle,rgba(249,115,22,0.07) 0%,transparent 65%);"></div>
+        <div class="content">
+          <div class="logo-wrap">
+            <svg width="64" height="64" viewBox="0 0 36 36" fill="none">
+              <defs>
+                <linearGradient id="lg6" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+                <filter id="gf6" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <path d="M 7.16 24.25 A 12.5 12.5 0 1 1 28.84 24.25" stroke="#1e1e24" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M 7.16 24.25 A 12.5 12.5 0 0 1 26.34 14.57" stroke="url(#lg6)" stroke-width="4.5" stroke-linecap="round" filter="url(#gf6)"/>
+              <circle cx="26.34" cy="14.57" r="5" fill="#f97316" fill-opacity="0.25"/>
+              <circle cx="26.34" cy="14.57" r="2.5" fill="#f97316" filter="url(#gf6)"/>
+              <circle cx="26.34" cy="14.57" r="1" fill="white"/>
+            </svg>
+            <span class="logo-name">Caffiend</span>
+          </div>
+
+          <h2 class="headline">Track<br/><em>yours</em><br/>free.</h2>
+          <p class="sub">No account. No sign-up.<br/>Works offline. Start in 10 seconds.</p>
+
+          <div class="badges-row">
+            <div class="badge">✦ Free forever</div>
+            <div class="badge">✦ No account</div>
+            <div class="badge">✦ Works offline</div>
+          </div>
+
+          <a class="cta-btn" href="https://caffiend.app">
+            Start for free →
+          </a>
+
+          <div class="domain">caffiend.app — <strong>open in browser, no install</strong></div>
+
+          <div class="pro-note">
+            <strong>Caffiend Pro from £7/mo</strong> — unlimited history, advanced analytics &amp; custom drinks
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+  </div><!-- /viewport -->
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev" onclick="go(-1)" disabled>←</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="next" onclick="go(1)">→</button>
+    <div class="slide-counter" id="counter">1 / 6</div>
+  </div>
+</div><!-- /shell -->
+
+<script>
+  const TOTAL = 6;
+  let current = 0;
+
+  const track = document.getElementById('track');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const counter = document.getElementById('counter');
+  const dotsEl = document.getElementById('dots');
+
+  // Build dots
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(idx) {
+    current = Math.max(0, Math.min(TOTAL - 1, idx));
+    const SLIDE = 1080;
+    const SCALE = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale').trim());
+    // The track is scaled, but we translate in original (pre-scale) coordinates
+    track.style.transform = `scale(${SCALE}) translateX(${-current * SLIDE}px)`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === TOTAL - 1;
+    counter.textContent = `${current + 1} / ${TOTAL}`;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function go(dir) { goTo(current + dir); }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+  });
+
+  // Touch/swipe
+  let touchStartX = 0;
+  const vp = document.getElementById('viewport');
+  vp.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener('touchend', e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) go(dx > 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Curve draw animation on slide 1
+  const curve = document.getElementById('s1-curve');
+  if (curve) {
+    const len = curve.getTotalLength();
+    curve.style.strokeDasharray = len;
+    curve.style.strokeDashoffset = len;
+    setTimeout(() => {
+      curve.style.transition = 'stroke-dashoffset 2.6s cubic-bezier(0.4,0,0.2,1)';
+      curve.style.strokeDashoffset = '0';
+    }, 400);
+  }
+
+  // Init position (reset scale transform properly)
+  goTo(0);
+</script>
+</body>
+</html>

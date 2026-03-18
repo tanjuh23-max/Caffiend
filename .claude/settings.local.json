@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell.exe -Command \"Get-ChildItem -Recurse ''C:\\\\Users\\\\Anisa\\\\Caffiend App'' | Select-Object FullName | Sort-Object FullName\")",
+      "mcp__b558938a-fb77-43d4-8b27-c8e8b00d11c8__list_products",
+      "mcp__b558938a-fb77-43d4-8b27-c8e8b00d11c8__list_prices",
+      "mcp__b558938a-fb77-43d4-8b27-c8e8b00d11c8__create_payment_link",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__list_projects",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__list_organizations",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__get_cost",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__confirm_cost",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__create_project",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__get_project_url",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__get_publishable_keys",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__apply_migration",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__deploy_edge_function",
+      "Bash(node \"C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js\" run build)",
+      "mcp__57b65dc1-e2b8-44b2-aaa7-8c799ac6befe__deploy_to_vercel",
+      "Bash(\"/c/Users/Anisa/AppData/Roaming/npm/vercel.cmd\" deploy:*)",
+      "Bash(ls \"C:\\\\Users\\\\Anisa\\\\Caffiend App\\\\public\"\" && ls \"C:UsersAnisaCaffiend Appsrcpages\"\")",
+      "Bash(npx vercel:*)",
+      "Read(//c/Users/Anisa/.claude/skills/canvas-design/**)",
+      "Bash(python generate_caffiend_kit.py)",
+      "WebFetch(domain:www.reddit.com)",
+      "WebSearch",
+      "mcp__6a56d2e9-519e-481b-a090-e1fc69ae1693__execute_sql",
+      "WebFetch(domain:caffiend-one.vercel.app)"
+    ]
+  }
+}
