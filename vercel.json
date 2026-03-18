@@ -3,6 +3,6 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/((?!blog/|favicon|manifest|icon|logo|sitemap|robots|og-image|google).*)", "destination": "/index.html" }
+    { "source": "/((?!blog/|favicon|manifest|icon|logo|sitemap|robots|og-image|google|BingSiteAuth).*)", "destination": "/index.html" }
   ]
 }

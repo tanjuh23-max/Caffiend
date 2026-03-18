@@ -28,7 +28,9 @@
       "WebFetch(domain:caffiend-one.vercel.app)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git status; git log --oneline -5\")",
       "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git config user.email ''tanjuhassan@hotmail.com''; git config user.name ''tanjuh23-max''; git commit -m ''Initial commit — full Caffiend app''; git push -u origin main\")",
-      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git add .; git commit -m ''Add FAQ, comparison table, money-back guarantee, all 10 blog posts, share curve button''; git push origin main; Write-Host ''done''\")"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git add .; git commit -m ''Add FAQ, comparison table, money-back guarantee, all 10 blog posts, share curve button''; git push origin main; Write-Host ''done''\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"Copy-Item ''C:\\\\Users\\\\Anisa\\\\Downloads\\\\BingSiteAuth.xml'' ''C:\\\\Users\\\\Anisa\\\\Caffiend App\\\\public\\\\BingSiteAuth.xml''; Write-Host ''done''\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -Command \"cd ''C:\\\\Users\\\\Anisa\\\\Caffiend App''; git add .; git commit -m ''Add Bing site verification file''; git push origin main; Write-Host ''done''\")"
     ]
   }
 }
