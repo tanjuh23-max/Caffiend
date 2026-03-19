@@ -173,6 +173,13 @@ don't sleep on this. (well, actually — finally do.)
 
 
 def get_carousel_for_now() -> dict | None:
+    # Allow manual override via env var (workflow_dispatch)
+    index_override = os.environ.get("CAROUSEL_INDEX", "").strip()
+    if index_override != "":
+        idx = int(index_override)
+        print(f"Manual override: posting carousel {idx}")
+        return CAROUSELS[idx]
+
     now = datetime.now(timezone.utc)
     for c in CAROUSELS:
         if c["utc_hour"] == now.hour and abs(c["utc_minute"] - now.minute) <= 10:
