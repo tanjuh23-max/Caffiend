@@ -181,9 +181,18 @@ def get_carousel_for_now() -> dict | None:
         return CAROUSELS[idx]
 
     now = datetime.now(timezone.utc)
+    now_minutes = now.hour * 60 + now.minute
+    closest = None
+    closest_diff = 999
     for c in CAROUSELS:
-        if c["utc_hour"] == now.hour and abs(c["utc_minute"] - now.minute) <= 10:
-            return c
+        scheduled_minutes = c["utc_hour"] * 60 + c["utc_minute"]
+        diff = abs(now_minutes - scheduled_minutes)
+        if diff < closest_diff:
+            closest_diff = diff
+            closest = c
+    # Post if within 30 minutes of any scheduled time
+    if closest_diff <= 30:
+        return closest
     return None
 
 
