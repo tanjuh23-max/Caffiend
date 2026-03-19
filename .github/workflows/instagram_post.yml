@@ -1,16 +1,7 @@
 name: Caffiend Instagram Auto-Post
 
 on:
-  schedule:
-    - cron: '15 15 * * *'   # 15:15 UTC — Carousel 1 Relatable
-    - cron: '45 16 * * *'   # 16:45 UTC — Carousel 2 Education
-    - cron: '15 18 * * *'   # 18:15 UTC — Carousel 3 Humor
-    - cron: '45 19 * * *'   # 19:45 UTC — Carousel 4 Tips
-    - cron: '15 21 * * *'   # 21:15 UTC — Carousel 5 Health
-    - cron: '0 7 * * *'     # 07:00 UTC — Carousel 6 Social Proof
-    - cron: '30 8 * * *'    # 08:30 UTC — Carousel 7 Challenge
-    - cron: '0 10 * * *'    # 10:00 UTC — Carousel 8 Mindset
-    - cron: '0 12 * * *'    # 12:00 UTC — Carousel 9 FOMO
+  # Schedule paused — re-enable when content is ready
   workflow_dispatch:
     inputs:
       carousel_index:
