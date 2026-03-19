@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       carousel_index:
-        description: 'Carousel index to post (0-8). Leave empty to auto-detect by time.'
+        description: 'Carousel index to post (0-8)'
         required: false
         default: ''
 
@@ -31,15 +31,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install composio composio-claude-agent-sdk claude-agent-sdk "moviepy==1.0.3" pillow
+        run: |
+          pip install playwright "moviepy==1.0.3" pillow
+          playwright install chromium --with-deps
+
+      - name: Restore Instagram session
+        run: |
+          echo "$INSTAGRAM_SESSION" | base64 -d > scripts/../instagram_session.json
+        env:
+          INSTAGRAM_SESSION: ${{ secrets.INSTAGRAM_SESSION }}
 
       - name: Convert carousels to Reels
         run: python scripts/convert_to_reels.py
 
-      - name: Post carousel
+      - name: Post Reel to Instagram
         env:
-          COMPOSIO_API_KEY: ${{ secrets.COMPOSIO_API_KEY }}
-          COMPOSIO_USER_ID: ${{ secrets.COMPOSIO_USER_ID }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CAROUSEL_INDEX: ${{ github.event.inputs.carousel_index }}
-        run: python scripts/post_carousel.py
+        run: python scripts/post_reel.py
