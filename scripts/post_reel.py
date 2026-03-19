@@ -1,49 +1,50 @@
 """
-Caffiend Instagram Reel Poster — Playwright browser automation
-Posts a video to Instagram as a Reel using stored credentials (no session file needed).
-Usage: python scripts/post_reel.py
-Or called directly by the scheduler.
+Caffiend Instagram Reel Poster — Instagrapi mobile API
+Posts a video to Instagram as a Reel using Instagram's mobile API.
+No browser needed — works reliably from GitHub Actions.
 """
 
 import os
 import sys
+import base64
+from pathlib import Path
 from datetime import datetime, timezone
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
 IG_USERNAME = os.environ.get("INSTAGRAM_USERNAME", "")
 IG_PASSWORD = os.environ.get("INSTAGRAM_PASSWORD", "")
-SLIDES_ROOT  = os.path.join(os.path.dirname(__file__), "..", "slides")
+INSTAGRAM_SESSION = os.environ.get("INSTAGRAM_SESSION", "")  # base64 session (optional)
+SLIDES_ROOT = os.path.join(os.path.dirname(__file__), "..", "slides")
 
 CAROUSELS = [
     {
         "folder": "Carousel_01_Relatable",
         "utc_hour": 15, "utc_minute": 15,
-        "caption": """you drank coffee at 3pm. it's midnight. you're staring at the ceiling. shocker. 😐
+        "caption": """you drank coffee at 3pm. it's midnight. you're staring at the ceiling. shocker. \U0001f610
 
 caffeine has a 5-6 hour half-life. that 3pm coffee? still 50% active at 9pm.
 
 I built an app that shows you exactly when you're safe to sleep based on what you actually drank.
 
-free to use 👇 caffiend-one.vercel.app
+free to use \U0001f447 caffiend-one.vercel.app
 
-save this for tonight when you can't sleep 💀
+save this for tonight when you can't sleep \U0001f480
 
 #caffeine #cantsleeep #coffeelover #sleephacks #relatable #coffeeproblems #productivity #realsleep #coffeetime #healthtips""",
     },
     {
         "folder": "Carousel_02_Education",
         "utc_hour": 16, "utc_minute": 45,
-        "caption": """no one told you caffeine has a 5.7 hour half-life. here's what that actually means 👇
+        "caption": """no one told you caffeine has a 5.7 hour half-life. here's what that actually means \U0001f447
 
 if you drink 200mg at 2pm:
-→ 9:42pm — still 100mg in your system
-→ 3:24am — still 50mg in your system
+\u2192 9:42pm \u2014 still 100mg in your system
+\u2192 3:24am \u2014 still 50mg in your system
 
 most people's sleep threshold is ~100mg.
 
 you're not bad at sleeping. you're bad at timing caffeine.
 
-free app that tracks this in real time 👉 caffiend-one.vercel.app
+free app that tracks this in real time \U0001f449 caffiend-one.vercel.app
 
 #caffeinehalflife #sleepscience #biohacking #coffeeaddict #healthfacts #sleepdeprivation #caffeinetracker #productivityhacks #coffeegeek #sleeptips""",
     },
@@ -51,45 +52,45 @@ free app that tracks this in real time 👉 caffiend-one.vercel.app
         "folder": "Carousel_03_Humor",
         "utc_hour": 18, "utc_minute": 15,
         "caption": """me at 11pm: why am i like this
-my 4pm coffee: hi bestie 👋
+my 4pm coffee: hi bestie \U0001f44b
 
 turns out caffeine doesn't care about your bedtime. it's still very much awake at midnight having a great time.
 
-free app 👉 caffiend-one.vercel.app
+free app \U0001f449 caffiend-one.vercel.app
 
 #coffeehumor #relatable #coffeememes #cantsleeep #coffeeproblems #coffeeaddict #sleepdeprivation #coffeelover #funnybutreal #morningcoffee""",
     },
     {
         "folder": "Carousel_04_Tips_Productivity",
         "utc_hour": 19, "utc_minute": 45,
-        "caption": """4 caffeine timing rules that will actually fix your sleep tonight 👇
+        "caption": """4 caffeine timing rules that will actually fix your sleep tonight \U0001f447
 
-1. stop caffeine 10 hours before bed (not 6, not 8 — 10)
+1. stop caffeine 10 hours before bed (not 6, not 8 \u2014 10)
 2. your last coffee should be before 1pm if you sleep at 11pm
-3. energy drinks hit harder — 160mg is not the same as espresso
-4. the afternoon crash isn't caffeine wearing off — it's the peak dropping
+3. energy drinks hit harder \u2014 160mg is not the same as espresso
+4. the afternoon crash isn't caffeine wearing off \u2014 it's the peak dropping
 
-free app 👉 caffiend-one.vercel.app
+free app \U0001f449 caffiend-one.vercel.app
 
 #productivitytips #caffeinetips #sleephacks #biohacking #morningroutine #coffeelovers #healthyhabits #sleepbetter #focushacks #caffeinetracker""",
     },
     {
         "folder": "Carousel_05_Health",
         "utc_hour": 21, "utc_minute": 15,
-        "caption": """what 400mg of caffeine actually does to your body over 24 hours 👇
+        "caption": """what 400mg of caffeine actually does to your body over 24 hours \U0001f447
 
 that's roughly 4 espressos, 2 energy drinks, or 1 large Starbucks + 2 coffees.
 
 peak hits 45 mins after each drink. half-life is 5.7 hours. can take 16 hours to fully clear.
 
-track it free 👉 caffiend-one.vercel.app
+track it free \U0001f449 caffiend-one.vercel.app
 
 #caffeinehealth #healthfacts #bodyhealth #coffeeeffects #biohacking #wellnesstips #sleephealth #healthylifestyle #caffeinetracker #knowyourbody""",
     },
     {
         "folder": "Carousel_06_Social_Proof",
         "utc_hour": 7, "utc_minute": 0,
-        "caption": """i tracked my caffeine for 7 days. here's what i found 👇
+        "caption": """i tracked my caffeine for 7 days. here's what i found \U0001f447
 
 day 1: drank coffee at 4pm. didn't sleep until 2am.
 day 3: moved last coffee to 12pm. asleep by 11:30pm.
@@ -102,11 +103,11 @@ free at caffiend-one.vercel.app
     {
         "folder": "Carousel_07_Challenge",
         "utc_hour": 8, "utc_minute": 30,
-        "caption": """i bet you don't know how much caffeine is in your system right now 🤔
+        "caption": """i bet you don't know how much caffeine is in your system right now \U0001f914
 
 there's a free app that calculates your exact active caffeine level based on what you drank, when, and your bodyweight.
 
-go check. drop your number below 👇
+go check. drop your number below \U0001f447
 
 caffiend-one.vercel.app
 
@@ -115,24 +116,24 @@ caffiend-one.vercel.app
     {
         "folder": "Carousel_08_Mindset",
         "utc_hour": 10, "utc_minute": 0,
-        "caption": """stop blaming your phone for bad sleep. it's the coffee. 📵☕
+        "caption": """stop blaming your phone for bad sleep. it's the coffee. \U0001f4f5\u2615
 
 the 200mg of caffeine still active at 11pm from your 3pm coffee does more damage than any screen.
 
-free app 👇 caffiend-one.vercel.app
+free app \U0001f447 caffiend-one.vercel.app
 
 #sleepmindset #sleephacks #caffeinevssleep #biohacking #morningroutine #digitaldetox #healthymindset #sleepbetter #caffeinetracker #realitycheckk""",
     },
     {
         "folder": "Carousel_09_FOMO",
         "utc_hour": 12, "utc_minute": 0,
-        "caption": """everyone optimising their sleep is doing this one thing you're not 👇
+        "caption": """everyone optimising their sleep is doing this one thing you're not \U0001f447
 
 tracking caffeine timing, not just quantity.
 
-free app that shows your personal caffeine window 👉 caffiend-one.vercel.app
+free app that shows your personal caffeine window \U0001f449 caffiend-one.vercel.app
 
-don't sleep on this. (well, actually — finally do.)
+don't sleep on this. (well, actually \u2014 finally do.)
 
 #sleeproutine #caffeinewindow #biohacking #morningperson #sleepoptimization #healthyhabits #caffeinetracker #productivitymindset #coffeetime #fomo""",
     },
@@ -153,236 +154,65 @@ def get_carousel_for_now():
     return closest if closest_diff <= 30 else None
 
 
-def login(page):
-    """Log in to Instagram fresh using INSTAGRAM_USERNAME + INSTAGRAM_PASSWORD."""
-    print("Logging in to Instagram...")
-    page.goto("https://www.instagram.com/accounts/login/", wait_until="domcontentloaded", timeout=60000)
-    page.wait_for_timeout(3000)
-    page.screenshot(path="instagram_debug_login_page.png")
-    print(f"Page URL: {page.url}")
-    print(f"Page title: {page.title()}")
+def get_client():
+    from instagrapi import Client
 
-    # Accept cookie consent wall (GDPR banner blocks the login form)
-    for cookie_btn in [
-        "Allow all cookies", "Accept All", "Accept all",
-        "Allow essential and optional cookies", "Only allow essential cookies",
-        "Accept", "OK",
-    ]:
+    cl = Client()
+    cl.delay_range = [1, 3]
+
+    session_file = Path("/tmp/ig_session.json")
+
+    # Try restoring saved session first (avoids triggering login challenges)
+    if INSTAGRAM_SESSION:
         try:
-            page.click(f"text={cookie_btn}", timeout=3000)
-            print(f"  Accepted cookies: {cookie_btn}")
-            page.wait_for_timeout(2000)
-            break
-        except PlaywrightTimeout:
-            continue
+            session_data = base64.b64decode(INSTAGRAM_SESSION).decode()
+            session_file.write_text(session_data)
+            cl.load_settings(str(session_file))
+            cl.login(IG_USERNAME, IG_PASSWORD)
+            print("Logged in using saved session")
+            return cl
+        except Exception as e:
+            print(f"Session restore failed ({e}), trying fresh login...")
 
-    page.screenshot(path="instagram_debug_after_cookies.png")
-    print("Screenshot saved: instagram_debug_after_cookies.png")
+    # Fresh login via mobile API
+    print("Logging in fresh...")
+    cl.login(IG_USERNAME, IG_PASSWORD)
+    print("Login successful")
 
-    # Fill username
-    try:
-        page.fill("input[name='username']", IG_USERNAME, timeout=15000)
-    except PlaywrightTimeout:
-        page.screenshot(path="instagram_debug_login_blocked.png")
-        print("ERROR: Username field not found after cookie handling")
-        print(f"Page title: {page.title()}")
-        print(f"Page URL: {page.url}")
-        raise
-    page.wait_for_timeout(500)
+    # Dump session so we can see it in logs (user can save as INSTAGRAM_SESSION secret)
+    cl.dump_settings(str(session_file))
+    session_b64 = base64.b64encode(session_file.read_bytes()).decode()
+    print("=== SESSION (save as INSTAGRAM_SESSION secret to avoid re-login) ===")
+    print(session_b64[:80] + "..." if len(session_b64) > 80 else session_b64)
+    print("=== END SESSION ===")
 
-    # Fill password
-    page.fill("input[name='password']", IG_PASSWORD, timeout=10000)
-    page.wait_for_timeout(500)
-
-    # Click Log In
-    page.click("button[type='submit']", timeout=10000)
-    print("  Submitted login form, waiting...")
-    page.wait_for_timeout(8000)
-
-    page.screenshot(path="instagram_debug_login.png")
-    print("Screenshot saved: instagram_debug_login.png")
-
-    # Dismiss "Save your login info?" — click "Not now" if present
-    for dismiss in ["Not now", "Not Now", "Skip", "Cancel"]:
-        try:
-            page.click(f"text={dismiss}", timeout=5000)
-            print(f"  Dismissed: {dismiss}")
-            page.wait_for_timeout(2000)
-            break
-        except PlaywrightTimeout:
-            continue
-
-    # Dismiss "Turn on Notifications" if present
-    for dismiss in ["Not Now", "Not now", "Skip", "Cancel"]:
-        try:
-            page.click(f"text={dismiss}", timeout=5000)
-            print(f"  Dismissed notifications prompt: {dismiss}")
-            page.wait_for_timeout(2000)
-            break
-        except PlaywrightTimeout:
-            continue
-
-    print("  Login complete.")
+    return cl
 
 
 def post_reel(video_path: str, caption: str):
     if not IG_USERNAME or not IG_PASSWORD:
-        print("ERROR: INSTAGRAM_USERNAME and INSTAGRAM_PASSWORD environment variables must be set.")
+        print("ERROR: INSTAGRAM_USERNAME and INSTAGRAM_PASSWORD must be set")
         sys.exit(1)
 
     print(f"Posting Reel: {os.path.basename(video_path)}")
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-blink-features=AutomationControlled",
-                "--disable-features=IsolateOrigins,site-per-process",
-                "--lang=en-US,en",
-            ]
-        )
-        context = browser.new_context(
-            viewport={"width": 1280, "height": 900},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-            locale="en-US",
-        )
-        page = context.new_page()
-        # Mask automation signals so Instagram doesn't detect headless browser
-        page.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
-            Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']});
-            Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3]});
-            window.chrome = { runtime: {} };
-        """)
+    cl = get_client()
 
-        # Log in fresh every time — no session file needed
-        login(page)
-
-        # Go to Instagram home
-        print("Loading feed...")
-        page.goto("https://www.instagram.com/", wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(5000)
-
-        page.screenshot(path="instagram_debug_1.png")
-        print("Screenshot saved: instagram_debug_1.png")
-
-        # Click Create (+ button) — try multiple selectors
-        print("Clicking Create...")
-        for selector in [
-            "svg[aria-label='New post']",
-            "svg[aria-label='Create']",
-            "[aria-label='New post']",
-            "[aria-label='Create']",
-            "a[href='/create/style/']",
-        ]:
-            try:
-                page.click(selector, timeout=5000)
-                print(f"  Clicked: {selector}")
-                break
-            except PlaywrightTimeout:
-                continue
-        page.wait_for_timeout(3000)
-        page.screenshot(path="instagram_debug_2.png")
-        print("Screenshot saved: instagram_debug_2.png")
-
-        # Instagram shows Post/Story/Reel dropdown — click Post (last match)
-        print("Selecting Post...")
-        try:
-            page.get_by_role("link", name="Post").last.click(timeout=5000)
-            print("  Clicked Post (dropdown)")
-        except PlaywrightTimeout:
-            try:
-                page.locator("a[href='/create/style/']").click(timeout=5000)
-                print("  Clicked Post (href)")
-            except PlaywrightTimeout:
-                print("  Could not click Post, proceeding...")
-        page.wait_for_timeout(4000)
-        page.screenshot(path="instagram_debug_3.png")
-        print("Screenshot saved: instagram_debug_3.png")
-
-        # Upload video — wait for "Select from computer" button
-        print("Uploading video...")
-        page.wait_for_selector("text=Select from computer", timeout=15000)
-        with page.expect_file_chooser(timeout=15000) as fc_info:
-            page.click("text=Select from computer", timeout=10000)
-        fc_info.value.set_files(video_path)
-        print("  Video file set, waiting for upload...")
-        page.wait_for_timeout(10000)
-        page.screenshot(path="instagram_debug_4.png")
-        print("Screenshot saved: instagram_debug_4.png")
-
-        # Dismiss "Video posts are now shared as reels" popup
-        try:
-            page.click("text=OK", timeout=8000)
-            print("  Dismissed Reels info popup")
-            page.wait_for_timeout(2000)
-        except PlaywrightTimeout:
-            pass
-
-        # Click through Next buttons (crop → filters → caption)
-        for step in ["crop", "filters", "caption"]:
-            print(f"Clicking Next ({step})...")
-            try:
-                page.click("text=Next", timeout=10000)
-                page.wait_for_timeout(2500)
-            except PlaywrightTimeout:
-                print(f"  Next button not found at {step} step, continuing...")
-
-        # Add caption
-        print("Adding caption...")
-        for caption_selector in [
-            "div[aria-label='Write a caption...']",
-            "textarea[aria-label='Write a caption...']",
-            "[aria-label='Write a caption']",
-            "div[contenteditable='true']",
-        ]:
-            try:
-                caption_box = page.locator(caption_selector).first
-                caption_box.click(timeout=5000)
-                print(f"  Caption box found: {caption_selector}")
-                break
-            except PlaywrightTimeout:
-                continue
-
-        for chunk in [caption[i:i+100] for i in range(0, len(caption), 100)]:
-            page.keyboard.type(chunk, delay=15)
-        page.wait_for_timeout(2000)
-
-        # Share
-        page.screenshot(path="instagram_debug_5.png")
-        print("Screenshot saved: instagram_debug_5.png")
-        print("Sharing...")
-        shared = False
-        for share_sel in [
-            "[aria-label='Share']",
-            "button:has-text('Share')",
-            "div[role='button']:has-text('Share')",
-            "text=Share >> visible=true",
-        ]:
-            try:
-                page.click(share_sel, timeout=8000)
-                shared = True
-                print(f"  Clicked Share via: {share_sel}")
-                break
-            except PlaywrightTimeout:
-                continue
-        if not shared:
-            page.locator("text=Share").last.click(timeout=10000)
-
-        page.wait_for_timeout(12000)
-        page.screenshot(path="instagram_debug_6.png")
-        print("Screenshot saved: instagram_debug_6.png")
-        print("Reel posted successfully!")
-        browser.close()
+    print("Uploading Reel to Instagram...")
+    media = cl.clip_upload(
+        path=Path(video_path),
+        caption=caption,
+    )
+    print(f"Reel posted successfully!")
+    print(f"Media ID: {media.id}")
+    print(f"URL: https://www.instagram.com/reel/{media.code}/")
 
 
 def main():
     carousel = get_carousel_for_now()
     if not carousel:
         now = datetime.now(timezone.utc)
-        print(f"No carousel scheduled for {now.strftime('%H:%M')} UTC")
+        print(f"No carousel scheduled for {now.strftime('%H:%M')} UTC. Skipping.")
         return
 
     reels_dir = os.path.join(SLIDES_ROOT, "reels")
