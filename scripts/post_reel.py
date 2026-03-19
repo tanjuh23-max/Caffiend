@@ -157,16 +157,34 @@ def login(page):
     """Log in to Instagram fresh using INSTAGRAM_USERNAME + INSTAGRAM_PASSWORD."""
     print("Logging in to Instagram...")
     page.goto("https://www.instagram.com/accounts/login/", wait_until="domcontentloaded", timeout=60000)
-    page.wait_for_timeout(4000)
+    page.wait_for_timeout(3000)
     page.screenshot(path="instagram_debug_login_page.png")
-    print("Screenshot saved: instagram_debug_login_page.png")
+    print(f"Page URL: {page.url}")
+    print(f"Page title: {page.title()}")
+
+    # Accept cookie consent wall (GDPR banner blocks the login form)
+    for cookie_btn in [
+        "Allow all cookies", "Accept All", "Accept all",
+        "Allow essential and optional cookies", "Only allow essential cookies",
+        "Accept", "OK",
+    ]:
+        try:
+            page.click(f"text={cookie_btn}", timeout=3000)
+            print(f"  Accepted cookies: {cookie_btn}")
+            page.wait_for_timeout(2000)
+            break
+        except PlaywrightTimeout:
+            continue
+
+    page.screenshot(path="instagram_debug_after_cookies.png")
+    print("Screenshot saved: instagram_debug_after_cookies.png")
 
     # Fill username
     try:
         page.fill("input[name='username']", IG_USERNAME, timeout=15000)
     except PlaywrightTimeout:
         page.screenshot(path="instagram_debug_login_blocked.png")
-        print("ERROR: Username field not found - Instagram may be blocking the headless browser")
+        print("ERROR: Username field not found after cookie handling")
         print(f"Page title: {page.title()}")
         print(f"Page URL: {page.url}")
         raise
@@ -229,7 +247,6 @@ def post_reel(video_path: str, caption: str):
             viewport={"width": 1280, "height": 900},
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
             locale="en-US",
-            timezone_id="Europe/London",
         )
         page = context.new_page()
         # Mask automation signals so Instagram doesn't detect headless browser
