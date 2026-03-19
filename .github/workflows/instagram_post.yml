@@ -31,7 +31,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install composio composio-claude-agent-sdk claude-agent-sdk
+        run: pip install composio composio-claude-agent-sdk claude-agent-sdk "moviepy==1.0.3" pillow
+
+      - name: Convert carousels to Reels
+        run: python scripts/convert_to_reels.py
 
       - name: Post carousel
         env:

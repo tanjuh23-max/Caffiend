@@ -188,27 +188,39 @@ def get_carousel_for_now() -> dict | None:
 
 
 async def post_carousel(carousel: dict):
-    folder_path = os.path.join(SLIDES_ROOT, carousel["folder"])
-    images = sorted([
-        os.path.abspath(os.path.join(folder_path, f))
-        for f in os.listdir(folder_path)
-        if f.endswith(".png")
-    ])
-
-    print(f"Posting {carousel['folder']} — {len(images)} slides")
-    print(f"Images: {images}")
+    folder = carousel["folder"]
+    reels_dir = os.path.join(SLIDES_ROOT, "reels")
+    reel_path = os.path.abspath(os.path.join(reels_dir, f"{folder}.mp4"))
+    use_reel = os.path.exists(reel_path)
 
     composio = Composio(
         api_key=COMPOSIO_API_KEY,
         provider=ClaudeAgentSDKProvider()
     )
-
     session = composio.create(user_id=EXTERNAL_USER_ID)
     tools = session.tools()
     custom_server = create_sdk_mcp_server(name="composio", version="1.0.0", tools=tools)
 
-    images_list = "\n".join(images)
-    prompt = f"""Post an Instagram carousel with these images in order:
+    if use_reel:
+        print(f"Posting {folder} as Reel: {reel_path}")
+        prompt = f"""Post the following video to Instagram as a Reel:
+
+Video file: {reel_path}
+
+Caption:
+{carousel['caption']}
+
+Post this now as an Instagram Reel."""
+    else:
+        folder_path = os.path.join(SLIDES_ROOT, folder)
+        images = sorted([
+            os.path.abspath(os.path.join(folder_path, f))
+            for f in os.listdir(folder_path)
+            if f.endswith(".png")
+        ])
+        print(f"Posting {folder} as carousel ({len(images)} slides)")
+        images_list = "\n".join(images)
+        prompt = f"""Post an Instagram carousel with these images in order:
 
 {images_list}
 
@@ -228,7 +240,7 @@ Post this now as an Instagram carousel."""
         async for msg in client.receive_response():
             print(msg)
 
-    print(f"✅ Done — {carousel['folder']} posted!")
+    print(f"Done posting {folder}")
 
 
 async def main():
