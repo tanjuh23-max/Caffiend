@@ -44,3 +44,11 @@ jobs:
           INSTAGRAM_PASSWORD: ${{ secrets.INSTAGRAM_PASSWORD }}
           CAROUSEL_INDEX: ${{ github.event.inputs.carousel_index }}
         run: python scripts/post_reel.py
+
+      - name: Upload debug screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-debug-screenshots
+          path: instagram_debug_*.png
+          retention-days: 3
