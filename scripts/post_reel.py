@@ -160,32 +160,17 @@ def get_client():
     cl = Client()
     cl.delay_range = [1, 3]
 
+    if not INSTAGRAM_SESSION:
+        print("ERROR: INSTAGRAM_SESSION secret is not set.")
+        print("Run scripts/save_session.py on your local machine to generate it.")
+        sys.exit(1)
+
     session_file = Path("/tmp/ig_session.json")
-
-    # Try restoring saved session first (avoids triggering login challenges)
-    if INSTAGRAM_SESSION:
-        try:
-            session_data = base64.b64decode(INSTAGRAM_SESSION).decode()
-            session_file.write_text(session_data)
-            cl.load_settings(str(session_file))
-            cl.login(IG_USERNAME, IG_PASSWORD)
-            print("Logged in using saved session")
-            return cl
-        except Exception as e:
-            print(f"Session restore failed ({e}), trying fresh login...")
-
-    # Fresh login via mobile API
-    print("Logging in fresh...")
+    session_data = base64.b64decode(INSTAGRAM_SESSION).decode()
+    session_file.write_text(session_data)
+    cl.load_settings(str(session_file))
     cl.login(IG_USERNAME, IG_PASSWORD)
-    print("Login successful")
-
-    # Dump session so we can see it in logs (user can save as INSTAGRAM_SESSION secret)
-    cl.dump_settings(str(session_file))
-    session_b64 = base64.b64encode(session_file.read_bytes()).decode()
-    print("=== SESSION (save as INSTAGRAM_SESSION secret to avoid re-login) ===")
-    print(session_b64[:80] + "..." if len(session_b64) > 80 else session_b64)
-    print("=== END SESSION ===")
-
+    print("Logged in using saved session")
     return cl
 
 
