@@ -1,0 +1,36 @@
+name: Caffiend Instagram Auto-Post
+
+on:
+  schedule:
+    - cron: '0 7 * * *'    # 7:00 UTC  — Carousel 1 Relatable
+    - cron: '30 8 * * *'   # 8:30 UTC  — Carousel 2 Education
+    - cron: '0 10 * * *'   # 10:00 UTC — Carousel 3 Humor
+    - cron: '0 12 * * *'   # 12:00 UTC — Carousel 4 Tips
+    - cron: '0 14 * * *'   # 14:00 UTC — Carousel 5 Health
+    - cron: '0 16 * * *'   # 16:00 UTC — Carousel 6 Social Proof
+    - cron: '0 18 * * *'   # 18:00 UTC — Carousel 7 Challenge
+    - cron: '30 19 * * *'  # 19:30 UTC — Carousel 8 Mindset
+    - cron: '0 21 * * *'   # 21:00 UTC — Carousel 9 FOMO
+  workflow_dispatch:        # manual trigger from GitHub UI
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install composio composio-claude-agent-sdk claude-agent-sdk
+
+      - name: Post carousel
+        env:
+          COMPOSIO_API_KEY: ${{ secrets.COMPOSIO_API_KEY }}
+          COMPOSIO_USER_ID: ${{ secrets.COMPOSIO_USER_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/post_carousel.py
