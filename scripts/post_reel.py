@@ -175,52 +175,120 @@ def post_reel(video_path: str, caption: str):
 
         # Go to Instagram
         print("Opening Instagram...")
-        page.goto("https://www.instagram.com/", wait_until="networkidle")
-        page.wait_for_timeout(3000)
-
-        # Click Create (+ button)
-        print("Clicking Create...")
-        page.click("svg[aria-label='New post']", timeout=10000)
-        page.wait_for_timeout(2000)
-
-        # Upload video file
-        print("Uploading video...")
-        with page.expect_file_chooser() as fc_info:
-            page.click("text=Select from computer")
-        file_chooser = fc_info.value
-        file_chooser.set_files(video_path)
+        page.goto("https://www.instagram.com/", wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(5000)
 
-        # Click OK on crop dialog if it appears
+        # Take screenshot to see current state
+        page.screenshot(path="instagram_debug_1.png")
+        print("Screenshot saved: instagram_debug_1.png")
+
+        # Click Create (+ button) — try multiple selectors
+        print("Clicking Create...")
+        created = False
+        for selector in [
+            "svg[aria-label='New post']",
+            "svg[aria-label='Create']",
+            "[aria-label='New post']",
+            "[aria-label='Create']",
+            "a[href='/create/style/']",
+        ]:
+            try:
+                page.click(selector, timeout=5000)
+                created = True
+                print(f"  Clicked: {selector}")
+                break
+            except PlaywrightTimeout:
+                continue
+        page.wait_for_timeout(3000)
+        page.screenshot(path="instagram_debug_2.png")
+        print("Screenshot saved: instagram_debug_2.png")
+
+        # Instagram shows Post/Story/Reel dropdown — click Post (last match)
+        print("Selecting Post...")
         try:
-            page.click("text=OK", timeout=5000)
+            # Use last() to get the dropdown "Post" item, not the create button
+            page.get_by_role("link", name="Post").last.click(timeout=5000)
+            print("  Clicked Post (dropdown)")
+        except PlaywrightTimeout:
+            try:
+                page.locator("a[href='/create/style/']").click(timeout=5000)
+                print("  Clicked Post (href)")
+            except PlaywrightTimeout:
+                print("  Could not click Post, proceeding...")
+        page.wait_for_timeout(4000)
+        page.screenshot(path="instagram_debug_3.png")
+        print("Screenshot saved: instagram_debug_3.png")
+
+        # Upload video — wait for "Select from computer" button then click it
+        print("Uploading video...")
+        page.wait_for_selector("text=Select from computer", timeout=15000)
+        with page.expect_file_chooser(timeout=15000) as fc_info:
+            page.click("text=Select from computer", timeout=10000)
+        fc_info.value.set_files(video_path)
+        print("  Video file set, waiting for upload...")
+        page.wait_for_timeout(8000)
+        page.screenshot(path="instagram_debug_4.png")
+        print("Screenshot saved: instagram_debug_4.png")
+
+        # Dismiss "Video posts are now shared as reels" popup
+        try:
+            page.click("text=OK", timeout=8000)
+            print("  Dismissed Reels info popup")
             page.wait_for_timeout(2000)
         except PlaywrightTimeout:
             pass
 
-        # Click Next (aspect ratio / trim screen)
-        print("Clicking Next (trim)...")
-        page.click("text=Next", timeout=15000)
-        page.wait_for_timeout(3000)
-
-        # Click Next (filters screen)
-        print("Clicking Next (filters)...")
-        page.click("text=Next", timeout=10000)
-        page.wait_for_timeout(2000)
+        # Click through Next buttons (trim → filters → caption)
+        for step in ["trim", "filters", "caption"]:
+            print(f"Clicking Next ({step})...")
+            try:
+                page.click("text=Next", timeout=10000)
+                page.wait_for_timeout(2500)
+            except PlaywrightTimeout:
+                print(f"  Next button not found at {step} step, continuing...")
 
         # Add caption
         print("Adding caption...")
-        caption_box = page.locator("div[aria-label='Write a caption...']")
-        caption_box.click()
-        # Type caption in chunks to avoid issues
+        for caption_selector in [
+            "div[aria-label='Write a caption...']",
+            "textarea[aria-label='Write a caption...']",
+            "[aria-label='Write a caption']",
+            "div[contenteditable='true']",
+        ]:
+            try:
+                caption_box = page.locator(caption_selector).first
+                caption_box.click(timeout=5000)
+                break
+            except PlaywrightTimeout:
+                continue
+
         for chunk in [caption[i:i+100] for i in range(0, len(caption), 100)]:
-            page.keyboard.type(chunk, delay=20)
+            page.keyboard.type(chunk, delay=15)
         page.wait_for_timeout(2000)
 
         # Share
+        page.screenshot(path="instagram_debug_5.png")
+        print("Screenshot saved: instagram_debug_5.png")
         print("Sharing...")
-        page.click("text=Share", timeout=10000)
-        page.wait_for_timeout(8000)
+        # Try multiple Share button selectors
+        shared = False
+        for share_sel in [
+            "[aria-label='Share']",
+            "button:has-text('Share')",
+            "div[role='button']:has-text('Share')",
+            "text=Share >> visible=true",
+        ]:
+            try:
+                page.click(share_sel, timeout=8000)
+                shared = True
+                print(f"  Clicked Share via: {share_sel}")
+                break
+            except PlaywrightTimeout:
+                continue
+        if not shared:
+            # Last resort — find by text among visible elements
+            page.locator("text=Share").last.click(timeout=10000)
+        page.wait_for_timeout(10000)
 
         print("Reel posted successfully!")
         browser.close()
