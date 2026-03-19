@@ -35,16 +35,12 @@ jobs:
           pip install playwright "moviepy==1.0.3" pillow
           playwright install chromium --with-deps
 
-      - name: Restore Instagram session
-        run: |
-          echo "$INSTAGRAM_SESSION" | base64 -d > scripts/../instagram_session.json
-        env:
-          INSTAGRAM_SESSION: ${{ secrets.INSTAGRAM_SESSION }}
-
       - name: Convert carousels to Reels
         run: python scripts/convert_to_reels.py
 
       - name: Post Reel to Instagram
         env:
+          INSTAGRAM_USERNAME: ${{ secrets.INSTAGRAM_USERNAME }}
+          INSTAGRAM_PASSWORD: ${{ secrets.INSTAGRAM_PASSWORD }}
           CAROUSEL_INDEX: ${{ github.event.inputs.carousel_index }}
         run: python scripts/post_reel.py

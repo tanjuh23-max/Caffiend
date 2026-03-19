@@ -1,18 +1,17 @@
 """
 Caffiend Instagram Reel Poster — Playwright browser automation
-Posts a video to Instagram as a Reel using a saved login session.
-Usage: python scripts/post_reel.py <video_path> <caption>
+Posts a video to Instagram as a Reel using stored credentials (no session file needed).
+Usage: python scripts/post_reel.py
 Or called directly by the scheduler.
 """
 
 import os
 import sys
-import time
-import json
 from datetime import datetime, timezone
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
-SESSION_FILE = os.path.join(os.path.dirname(__file__), "..", "instagram_session.json")
+IG_USERNAME = os.environ.get("INSTAGRAM_USERNAME", "")
+IG_PASSWORD = os.environ.get("INSTAGRAM_PASSWORD", "")
 SLIDES_ROOT  = os.path.join(os.path.dirname(__file__), "..", "slides")
 
 CAROUSELS = [
@@ -154,9 +153,54 @@ def get_carousel_for_now():
     return closest if closest_diff <= 30 else None
 
 
+def login(page):
+    """Log in to Instagram fresh using INSTAGRAM_USERNAME + INSTAGRAM_PASSWORD."""
+    print("Logging in to Instagram...")
+    page.goto("https://www.instagram.com/accounts/login/", wait_until="domcontentloaded", timeout=60000)
+    page.wait_for_timeout(4000)
+
+    # Fill username
+    page.fill("input[name='username']", IG_USERNAME, timeout=15000)
+    page.wait_for_timeout(500)
+
+    # Fill password
+    page.fill("input[name='password']", IG_PASSWORD, timeout=10000)
+    page.wait_for_timeout(500)
+
+    # Click Log In
+    page.click("button[type='submit']", timeout=10000)
+    print("  Submitted login form, waiting...")
+    page.wait_for_timeout(8000)
+
+    page.screenshot(path="instagram_debug_login.png")
+    print("Screenshot saved: instagram_debug_login.png")
+
+    # Dismiss "Save your login info?" — click "Not now" if present
+    for dismiss in ["Not now", "Not Now", "Skip", "Cancel"]:
+        try:
+            page.click(f"text={dismiss}", timeout=5000)
+            print(f"  Dismissed: {dismiss}")
+            page.wait_for_timeout(2000)
+            break
+        except PlaywrightTimeout:
+            continue
+
+    # Dismiss "Turn on Notifications" if present
+    for dismiss in ["Not Now", "Not now", "Skip", "Cancel"]:
+        try:
+            page.click(f"text={dismiss}", timeout=5000)
+            print(f"  Dismissed notifications prompt: {dismiss}")
+            page.wait_for_timeout(2000)
+            break
+        except PlaywrightTimeout:
+            continue
+
+    print("  Login complete.")
+
+
 def post_reel(video_path: str, caption: str):
-    if not os.path.exists(SESSION_FILE):
-        print("ERROR: No session file found. Run instagram_login.py first.")
+    if not IG_USERNAME or not IG_PASSWORD:
+        print("ERROR: INSTAGRAM_USERNAME and INSTAGRAM_PASSWORD environment variables must be set.")
         sys.exit(1)
 
     print(f"Posting Reel: {os.path.basename(video_path)}")
@@ -167,24 +211,24 @@ def post_reel(video_path: str, caption: str):
             args=["--no-sandbox", "--disable-dev-shm-usage"]
         )
         context = browser.new_context(
-            storage_state=SESSION_FILE,
             viewport={"width": 1280, "height": 900},
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         )
         page = context.new_page()
 
-        # Go to Instagram
-        print("Opening Instagram...")
+        # Log in fresh every time — no session file needed
+        login(page)
+
+        # Go to Instagram home
+        print("Loading feed...")
         page.goto("https://www.instagram.com/", wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(5000)
 
-        # Take screenshot to see current state
         page.screenshot(path="instagram_debug_1.png")
         print("Screenshot saved: instagram_debug_1.png")
 
         # Click Create (+ button) — try multiple selectors
         print("Clicking Create...")
-        created = False
         for selector in [
             "svg[aria-label='New post']",
             "svg[aria-label='Create']",
@@ -194,7 +238,6 @@ def post_reel(video_path: str, caption: str):
         ]:
             try:
                 page.click(selector, timeout=5000)
-                created = True
                 print(f"  Clicked: {selector}")
                 break
             except PlaywrightTimeout:
@@ -206,7 +249,6 @@ def post_reel(video_path: str, caption: str):
         # Instagram shows Post/Story/Reel dropdown — click Post (last match)
         print("Selecting Post...")
         try:
-            # Use last() to get the dropdown "Post" item, not the create button
             page.get_by_role("link", name="Post").last.click(timeout=5000)
             print("  Clicked Post (dropdown)")
         except PlaywrightTimeout:
@@ -219,14 +261,14 @@ def post_reel(video_path: str, caption: str):
         page.screenshot(path="instagram_debug_3.png")
         print("Screenshot saved: instagram_debug_3.png")
 
-        # Upload video — wait for "Select from computer" button then click it
+        # Upload video — wait for "Select from computer" button
         print("Uploading video...")
         page.wait_for_selector("text=Select from computer", timeout=15000)
         with page.expect_file_chooser(timeout=15000) as fc_info:
             page.click("text=Select from computer", timeout=10000)
         fc_info.value.set_files(video_path)
         print("  Video file set, waiting for upload...")
-        page.wait_for_timeout(8000)
+        page.wait_for_timeout(10000)
         page.screenshot(path="instagram_debug_4.png")
         print("Screenshot saved: instagram_debug_4.png")
 
@@ -238,8 +280,8 @@ def post_reel(video_path: str, caption: str):
         except PlaywrightTimeout:
             pass
 
-        # Click through Next buttons (trim → filters → caption)
-        for step in ["trim", "filters", "caption"]:
+        # Click through Next buttons (crop → filters → caption)
+        for step in ["crop", "filters", "caption"]:
             print(f"Clicking Next ({step})...")
             try:
                 page.click("text=Next", timeout=10000)
@@ -258,6 +300,7 @@ def post_reel(video_path: str, caption: str):
             try:
                 caption_box = page.locator(caption_selector).first
                 caption_box.click(timeout=5000)
+                print(f"  Caption box found: {caption_selector}")
                 break
             except PlaywrightTimeout:
                 continue
@@ -270,7 +313,6 @@ def post_reel(video_path: str, caption: str):
         page.screenshot(path="instagram_debug_5.png")
         print("Screenshot saved: instagram_debug_5.png")
         print("Sharing...")
-        # Try multiple Share button selectors
         shared = False
         for share_sel in [
             "[aria-label='Share']",
@@ -286,10 +328,11 @@ def post_reel(video_path: str, caption: str):
             except PlaywrightTimeout:
                 continue
         if not shared:
-            # Last resort — find by text among visible elements
             page.locator("text=Share").last.click(timeout=10000)
-        page.wait_for_timeout(10000)
 
+        page.wait_for_timeout(12000)
+        page.screenshot(path="instagram_debug_6.png")
+        print("Screenshot saved: instagram_debug_6.png")
         print("Reel posted successfully!")
         browser.close()
 
