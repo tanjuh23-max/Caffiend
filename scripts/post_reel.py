@@ -158,9 +158,18 @@ def login(page):
     print("Logging in to Instagram...")
     page.goto("https://www.instagram.com/accounts/login/", wait_until="domcontentloaded", timeout=60000)
     page.wait_for_timeout(4000)
+    page.screenshot(path="instagram_debug_login_page.png")
+    print("Screenshot saved: instagram_debug_login_page.png")
 
     # Fill username
-    page.fill("input[name='username']", IG_USERNAME, timeout=15000)
+    try:
+        page.fill("input[name='username']", IG_USERNAME, timeout=15000)
+    except PlaywrightTimeout:
+        page.screenshot(path="instagram_debug_login_blocked.png")
+        print("ERROR: Username field not found - Instagram may be blocking the headless browser")
+        print(f"Page title: {page.title()}")
+        print(f"Page URL: {page.url}")
+        raise
     page.wait_for_timeout(500)
 
     # Fill password
