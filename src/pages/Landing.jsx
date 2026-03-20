@@ -307,6 +307,21 @@ export default function Landing() {
       `}</style>
 
       {/* ── NAVBAR ── */}
+      {/* Product Hunt launch banner — visible from 24 March 2026 */}
+      {new Date() >= new Date('2026-03-24') && (
+        <a
+          href="https://www.producthunt.com/products/caffiend?launch=caffiend"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold w-full"
+          style={{ background: 'linear-gradient(90deg, #ff6154, #ff4500)', color: '#fff', textDecoration: 'none' }}
+        >
+          <span>🚀</span>
+          <span>We're live on Product Hunt today — support us with an upvote!</span>
+          <span style={{ opacity: 0.7 }}>→</span>
+        </a>
+      )}
+
       <nav
         className="sticky top-0 z-50 flex items-center justify-between px-6 py-4"
         style={{
