@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Moon, Zap, AlertTriangle, Trash2, ChevronRight, Info, Crown, Check, ExternalLink, Mail, Loader } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
-const STRIPE_URL = 'https://buy.stripe.com/fZu9AS30FeZ4fAe8M42Ji03';
+const STRIPE_URL = 'https://buy.stripe.com/8x28wO0Sx4kqco27I02Ji04';
 
 function SettingRow({ icon: Icon, label, description, children }) {
   return (
@@ -139,7 +139,7 @@ export default function Settings() {
                   className="flex-1 h-11 rounded-2xl font-bold text-sm text-black flex items-center justify-center gap-1.5"
                   style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)', boxShadow: '0 4px 20px rgba(245,158,11,0.35)' }}
                 >
-                  Upgrade — £7/mo
+                  Upgrade — £9.99/mo
                 </button>
                 <button
                   onClick={() => setShowVerify(true)}

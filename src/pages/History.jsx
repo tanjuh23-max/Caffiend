@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine
 } from 'recharts';
 
-const STRIPE_URL = 'https://buy.stripe.com/fZu9AS30FeZ4fAe8M42Ji03';
+const STRIPE_URL = 'https://buy.stripe.com/8x28wO0Sx4kqco27I02Ji04';
 
 function formatDayLabel(isoDate) {
   const d = new Date(isoDate);
@@ -239,7 +239,7 @@ export default function History() {
                         style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)', boxShadow: '0 4px 20px rgba(245,158,11,0.4)' }}
                       >
                         <Zap size={15} strokeWidth={2.5} />
-                        Upgrade to Pro — £7/mo
+                        Upgrade to Pro — £9.99/mo
                       </button>
                       <button onClick={() => setActivating(true)}
                         className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>

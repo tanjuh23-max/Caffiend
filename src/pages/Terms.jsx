@@ -38,7 +38,7 @@ export default function Terms() {
           <h2 className="text-white font-semibold text-base mb-2">4. Pro Subscription</h2>
           <p className="mb-2">The Pro tier unlocks additional features including barcode scanning and unlimited history.</p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Pro is billed at £7/month or £70/year via Stripe</li>
+            <li>Pro is billed at £9.99/month or £59.99/year via Stripe</li>
             <li>You may cancel at any time through your Stripe billing portal</li>
             <li>Refunds are handled on a case-by-case basis — contact us within 14 days of purchase</li>
             <li>Pro status is stored locally on your device. If you clear your data, use the "Restore Purchase" option in Settings</li>

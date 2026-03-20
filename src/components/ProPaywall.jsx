@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Zap, Check, Lock, X, Mail, Loader } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
-const STRIPE_URL = 'https://buy.stripe.com/fZu9AS30FeZ4fAe8M42Ji03';
+const STRIPE_MONTHLY = 'https://buy.stripe.com/8x28wO0Sx4kqco27I02Ji04';
+const STRIPE_ANNUAL  = 'https://buy.stripe.com/aFa8wO8kZ8AG2Ns4vO2Ji05';
 
 const PRO_FEATURES = [
   { text: 'Barcode scanner — instant product lookup' },
@@ -19,8 +20,9 @@ export default function ProPaywall({ featureName = 'This feature', onClose }) {
   const [error, setError] = useState('');
   const [activated, setActivated] = useState(false);
 
-  const handleUpgrade = () => {
-    window.open(STRIPE_URL, '_blank', 'noopener,noreferrer');
+  const handleUpgrade = (plan = 'monthly') => {
+    const url = plan === 'annual' ? STRIPE_ANNUAL : STRIPE_MONTHLY;
+    window.open(url, '_blank', 'noopener,noreferrer');
     setTimeout(() => setShowVerify(true), 1500);
   };
 
@@ -118,27 +120,38 @@ export default function ProPaywall({ featureName = 'This feature', onClose }) {
             <div>
               <p className="text-[10px] uppercase tracking-widest font-semibold mb-1"
                 style={{ color: 'rgba(245,158,11,0.7)' }}>Monthly</p>
-              <p className="text-white text-2xl font-black">£7<span className="text-sm font-normal" style={{ color: 'rgba(255,255,255,0.4)' }}>/mo</span></p>
+              <p className="text-white text-2xl font-black">£9.99<span className="text-sm font-normal" style={{ color: 'rgba(255,255,255,0.4)' }}>/mo</span></p>
             </div>
             <div className="text-right">
               <p className="text-[10px] uppercase tracking-widest font-semibold mb-1"
                 style={{ color: 'rgba(245,158,11,0.7)' }}>Annual</p>
-              <p className="text-white text-2xl font-black">£70<span className="text-sm font-normal" style={{ color: 'rgba(255,255,255,0.4)' }}>/yr</span></p>
-              <p className="text-[10px] font-semibold" style={{ color: '#22c55e' }}>Save £14</p>
+              <p className="text-white text-2xl font-black">£59.99<span className="text-sm font-normal" style={{ color: 'rgba(255,255,255,0.4)' }}>/yr</span></p>
+              <p className="text-[10px] font-semibold" style={{ color: '#22c55e' }}>2 months free</p>
             </div>
           </div>
         </div>
 
         <button
-          onClick={handleUpgrade}
-          className="w-full h-14 rounded-2xl font-black text-base text-black flex items-center justify-center gap-2 mb-4"
+          onClick={() => handleUpgrade('annual')}
+          className="w-full h-14 rounded-2xl font-black text-base text-black flex items-center justify-center gap-2 mb-3"
           style={{
             background: 'linear-gradient(135deg, #f59e0b, #f97316)',
             boxShadow: '0 6px 28px rgba(245,158,11,0.45)',
           }}
         >
           <Zap size={18} strokeWidth={2.5} />
-          Upgrade to Pro
+          Get Annual — £59.99/yr
+        </button>
+        <button
+          onClick={() => handleUpgrade('monthly')}
+          className="w-full h-11 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 mb-2"
+          style={{
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'rgba(255,255,255,0.5)',
+          }}
+        >
+          Monthly — £9.99/mo
         </button>
 
         {!showVerify ? (
