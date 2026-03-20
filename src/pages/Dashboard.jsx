@@ -7,6 +7,7 @@ import { DRINKS, QUICK_ADD_IDS } from '../data/drinks';
 import CaffeineGauge from '../components/CaffeineGauge';
 import CaffeineCurve from '../components/CaffeineCurve';
 import AddDrinkModal from '../components/AddDrinkModal';
+import FirstRunModal from '../components/FirstRunModal';
 import { LogoMark } from '../components/Logo';
 
 function SleepCard({ sleepSafeIn }) {
@@ -278,6 +279,7 @@ export default function Dashboard() {
       </div>
 
       <AddDrinkModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <FirstRunModal />
     </div>
   );
 }
