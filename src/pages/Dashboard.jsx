@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Plus, Trash2, Moon, TrendingUp, Share2 } from 'lucide-react';
+import { Plus, Trash2, Moon, TrendingUp, Share2, Loader } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { ZONE_INFO, formatHours, getMgPerKg } from '../utils/caffeineCalc';
 import { DRINKS, QUICK_ADD_IDS } from '../data/drinks';
@@ -9,6 +9,7 @@ import CaffeineCurve from '../components/CaffeineCurve';
 import AddDrinkModal from '../components/AddDrinkModal';
 import FirstRunModal from '../components/FirstRunModal';
 import { LogoMark } from '../components/Logo';
+import { generateShareCard } from '../utils/shareCard';
 
 function SleepCard({ sleepSafeIn }) {
   const isReady = sleepSafeIn === 0;
@@ -104,6 +105,33 @@ export default function Dashboard() {
     sleepSafeIn, caffeineCurve, settings, addEntry, removeEntry,
   } = useApp();
   const [modalOpen, setModalOpen] = useState(false);
+  const [sharing, setSharing] = useState(false);
+
+  const handleShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    try {
+      const blob = await generateShareCard({ currentCaffeine, sleepSafeIn, caffeineZone, todayTotal, caffeineCurve });
+      const file = new File([blob], 'caffiend-level.png', { type: 'image/png' });
+      const url = URL.createObjectURL(blob);
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], text: `My caffeine level right now: ${Math.round(currentCaffeine)}mg ☕\ncaffiend-one.vercel.app` });
+      } else if (navigator.share) {
+        await navigator.share({ text: `My caffeine level: ${Math.round(currentCaffeine)}mg active right now ☕\ncaffiend-one.vercel.app` });
+      } else {
+        // Fallback: download the image
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'caffiend-level.png';
+        a.click();
+      }
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      if (e.name !== 'AbortError') console.error(e);
+    } finally {
+      setSharing(false);
+    }
+  };
 
   const zoneInfo = ZONE_INFO[caffeineZone] || ZONE_INFO.clear;
   const quickDrinks = QUICK_ADD_IDS.map(id => DRINKS.find(d => d.id === id)).filter(Boolean);
@@ -224,20 +252,15 @@ export default function Dashboard() {
             <p className="text-white font-semibold text-sm">Caffeine Curve</p>
             <span className="ml-auto text-[10px]" style={{ color: 'rgba(255,255,255,0.25)' }}>Next 10h</span>
             <button
-              onClick={() => {
-                const sleepMsg = sleepSafeIn === 0 ? 'safe to sleep now' : sleepSafeIn ? `safe to sleep in ${formatHours(sleepSafeIn)}` : 'heavy load';
-                const text = `My caffeine level right now: ${Math.round(currentCaffeine)}mg (${mgPerKg} mg/kg) — ${sleepMsg} ☕\n\nTracking with Caffiend 👇\nhttps://caffiend-one.vercel.app`;
-                if (navigator.share) {
-                  navigator.share({ text }).catch(() => {});
-                } else {
-                  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
-                }
-              }}
+              onClick={handleShare}
+              disabled={sharing}
               className="w-7 h-7 rounded-xl flex items-center justify-center ml-1 active:scale-95 transition-transform"
-              style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.2)' }}
-              title="Share your caffeine curve"
+              style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.2)', opacity: sharing ? 0.6 : 1 }}
+              title="Share your caffeine card"
             >
-              <Share2 size={13} style={{ color: '#fbbf24' }} />
+              {sharing
+                ? <Loader size={13} style={{ color: '#fbbf24' }} className="animate-spin" />
+                : <Share2 size={13} style={{ color: '#fbbf24' }} />}
             </button>
           </div>
           <div className="px-2 pb-3">

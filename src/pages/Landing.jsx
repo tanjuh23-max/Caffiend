@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogoFull, LogoMark } from '../components/Logo';
+import EmailCapture from '../components/EmailCapture';
 
 // ─── Animated Hero Curve ────────────────────────────────────────────────────
 function HeroCurve() {
@@ -857,6 +858,23 @@ export default function Landing() {
               Start Tracking Free →
             </button>
           </div>
+        </div>
+      </section>
+
+      {/* ── EMAIL CAPTURE ── */}
+      <section className="px-6 py-20" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="max-w-xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-xs font-semibold uppercase tracking-widest"
+            style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', color: '#fbbf24' }}>
+            ☕ Free Caffeine Tips
+          </div>
+          <h2 className="font-black text-3xl sm:text-4xl mb-4" style={{ color: '#ffffff', lineHeight: 1.15 }}>
+            Get smarter about caffeine
+          </h2>
+          <p className="text-base mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            Weekly science-backed tips on caffeine timing, sleep optimisation, and getting the most from your buzz. No spam, unsubscribe anytime.
+          </p>
+          <EmailCapture />
         </div>
       </section>
 
