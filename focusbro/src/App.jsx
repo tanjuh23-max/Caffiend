@@ -186,7 +186,9 @@ export default function App() {
     typeof Notification !== 'undefined' && Notification.permission === 'granted'
   );
 
-  const celebTimer = useRef(null);
+  const celebTimer   = useRef(null);
+  const [caughtYou, setCaughtYou] = useState(false);
+  const caughtPenaltyRef = useRef(false);
 
   const workS  = WORK_OPTIONS[workIdx].s;
   const breakS = BREAK_OPTIONS[breakIdx].s;
@@ -195,6 +197,23 @@ export default function App() {
   useEffect(() => {
     saveState({ sessions, goblinHp, streak });
   }, [sessions, goblinHp, streak]);
+
+  /* Tab-switch detection — Brainrot's core mechanic */
+  useEffect(() => {
+    if (phase !== 'working') { setCaughtYou(false); return; }
+    const handle = () => {
+      if (document.hidden && !caughtPenaltyRef.current) {
+        caughtPenaltyRef.current = true;
+        setCaughtYou(true);
+        setGoblinHp(h => clamp(h - 8, 0, MAX_HP));
+      } else if (!document.hidden) {
+        setCaughtYou(false);
+        caughtPenaltyRef.current = false;
+      }
+    };
+    document.addEventListener('visibilitychange', handle);
+    return () => { document.removeEventListener('visibilitychange', handle); setCaughtYou(false); caughtPenaltyRef.current = false; };
+  }, [phase]);
 
   /* Countdown */
   useEffect(() => {
@@ -301,6 +320,29 @@ export default function App() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center"
       style={{ background:'linear-gradient(180deg,#07070a 0%,#0c0a12 100%)' }}>
+
+      {/* ── Caught-you overlay (Brainrot mechanic) ── */}
+      {caughtYou && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6"
+          style={{ background:'rgba(7,7,10,0.96)', backdropFilter:'blur(10px)' }}>
+          <GoblinMascot mascotState="overdue" size={200}/>
+          <div className="mt-4 text-center">
+            <p className="text-2xl font-black text-white mb-2">OI! WHERE D'YOU GO?</p>
+            <p className="text-sm leading-relaxed" style={{ color:'rgba(255,255,255,0.45)' }}>
+              You left mid-session — goblin lost <span style={{ color:'#f87171', fontWeight:800 }}>8hp</span> while you were gone 😤
+            </p>
+          </div>
+          <button onClick={() => { setCaughtYou(false); caughtPenaltyRef.current = false; }}
+            className="mt-6 px-8 py-3.5 rounded-2xl font-black text-lg text-black transition-all active:scale-95"
+            style={{ background:'linear-gradient(135deg,#f59e0b,#fbbf24)', boxShadow:'0 4px 24px rgba(251,191,36,0.45)' }}>
+            🧌 Back to Goblin Mode
+          </button>
+          <p className="mt-3 text-xs" style={{ color:'rgba(255,255,255,0.2)' }}>
+            don't make goblin lose all his HP fr
+          </p>
+        </div>
+      )}
+
       <div className="w-full max-w-sm flex flex-col min-h-screen px-4 pb-10">
 
         {/* ── Header ── */}
@@ -336,7 +378,7 @@ export default function App() {
 
         {/* ── Mascot ── */}
         <div className="flex flex-col items-center py-2">
-          <GoblinMascot mascotState={mascotState} size={175}/>
+          <GoblinMascot mascotState={mascotState} size={220}/>
         </div>
 
         {/* ── Timer ring ── */}

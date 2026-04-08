@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import gsap from 'gsap';
 
 /* ─── State config ────────────────────────────────────────────────────────── */
 const STATE = {
@@ -118,25 +119,21 @@ function Defs() {
 
 /* ─── Static body parts ───────────────────────────────────────────────────── */
 
-function Ears() {
+function LeftEar() {
   return (
     <>
-      {/* LEFT ear — organic curved shape */}
-      <path d="M 42 60 Q 34 52 22 38 Q 14 26 18 16 Q 26 10 36 22 Q 44 34 44 52 Z"
-        fill="url(#g-skin-dark)"/>
-      <path d="M 40 58 Q 34 50 24 38 Q 18 28 22 20 Q 28 16 34 26 Q 40 38 42 54 Z"
-        fill="url(#g-skin)" opacity="0.7"/>
-      {/* inner ear line */}
-      <path d="M 32 24 Q 36 34 38 50" stroke="#1a5010" strokeWidth="1.2"
-        fill="none" strokeLinecap="round" opacity="0.5"/>
-
-      {/* RIGHT ear */}
-      <path d="M 158 60 Q 166 52 178 38 Q 186 26 182 16 Q 174 10 164 22 Q 156 34 156 52 Z"
-        fill="url(#g-skin-dark)"/>
-      <path d="M 160 58 Q 166 50 176 38 Q 182 28 178 20 Q 172 16 166 26 Q 160 38 158 54 Z"
-        fill="url(#g-skin)" opacity="0.7"/>
-      <path d="M 168 24 Q 164 34 162 50" stroke="#1a5010" strokeWidth="1.2"
-        fill="none" strokeLinecap="round" opacity="0.5"/>
+      <path d="M 42 60 Q 34 52 22 38 Q 14 26 18 16 Q 26 10 36 22 Q 44 34 44 52 Z" fill="url(#g-skin-dark)"/>
+      <path d="M 40 58 Q 34 50 24 38 Q 18 28 22 20 Q 28 16 34 26 Q 40 38 42 54 Z" fill="url(#g-skin)" opacity="0.7"/>
+      <path d="M 32 24 Q 36 34 38 50" stroke="#1a5010" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5"/>
+    </>
+  );
+}
+function RightEar() {
+  return (
+    <>
+      <path d="M 158 60 Q 166 52 178 38 Q 186 26 182 16 Q 174 10 164 22 Q 156 34 156 52 Z" fill="url(#g-skin-dark)"/>
+      <path d="M 160 58 Q 166 50 176 38 Q 182 28 178 20 Q 172 16 166 26 Q 160 38 158 54 Z" fill="url(#g-skin)" opacity="0.7"/>
+      <path d="M 168 24 Q 164 34 162 50" stroke="#1a5010" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5"/>
     </>
   );
 }
@@ -325,15 +322,6 @@ function EyeUnit({ cx, clipId, state }) {
   );
 }
 
-function Eyes({ type }) {
-  return (
-    <>
-      <EyeUnit cx={72}  clipId="cp-eyeL" state={type}/>
-      <EyeUnit cx={128} clipId="cp-eyeR" state={type}/>
-    </>
-  );
-}
-
 /* ─── Mouths ──────────────────────────────────────────────────────────────── */
 function Mouth({ type }) {
   const lip = 'rgba(20,80,10,0.75)';
@@ -501,51 +489,163 @@ function Extra({ type, glowColor }) {
   }
 }
 
-/* ─── Main component ──────────────────────────────────────────────────────── */
+/* ─── Main component (GSAP-powered) ──────────────────────────────────────── */
 export default function GoblinMascot({ mascotState = 'idle', size = 180 }) {
   const cfg = STATE[mascotState] ?? STATE.idle;
-  const [captionIdx, setCaptionIdx] = useState(0);
-  const intervalRef = useRef(null);
 
+  // SVG group refs for per-part GSAP animation
+  const goblinRef   = useRef(null);
+  const headGrpRef  = useRef(null);
+  const bodyGrpRef  = useRef(null);
+  const earLGrpRef  = useRef(null);
+  const earRGrpRef  = useRef(null);
+  const eyeLGrpRef  = useRef(null);
+  const eyeRGrpRef  = useRef(null);
+  const blinkTlRef  = useRef(null);
+  const mountedRef  = useRef(true);
+
+  const [captionIdx, setCaptionIdx] = useState(0);
+  const captionRef = useRef(null);
+
+  // Caption cycling
   useEffect(() => {
     setCaptionIdx(0);
-    intervalRef.current = setInterval(() => {
+    captionRef.current = setInterval(() => {
       setCaptionIdx(i => (i + 1) % cfg.captions.length);
     }, 4500);
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(captionRef.current);
   }, [mascotState, cfg.captions.length]);
+
+  // Mount tracking
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
+  // Eye blink — scheduled recursively with random delay
+  const scheduleBlink = useCallback((baseDelay = 3.5) => {
+    if (!mountedRef.current) return;
+    if (blinkTlRef.current) blinkTlRef.current.kill();
+    if (!eyeLGrpRef.current || !eyeRGrpRef.current) return;
+    const delay = baseDelay + Math.random() * 2.5;
+    blinkTlRef.current = gsap.timeline({ delay })
+      .to([eyeLGrpRef.current, eyeRGrpRef.current], {
+        scaleY: 0.05, duration: 0.07, ease: 'power2.in', transformOrigin: 'center center'
+      })
+      .to([eyeLGrpRef.current, eyeRGrpRef.current], {
+        scaleY: 1, duration: 0.1, ease: 'power1.out', transformOrigin: 'center center'
+      })
+      .then(() => { if (mountedRef.current) scheduleBlink(baseDelay); });
+  }, []);
+
+  // Main animation — runs on every mascotState change
+  useEffect(() => {
+    const grps = [goblinRef, headGrpRef, bodyGrpRef, earLGrpRef, earRGrpRef, eyeLGrpRef, eyeRGrpRef];
+    grps.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
+    if (blinkTlRef.current) blinkTlRef.current.kill();
+    grps.forEach(r => { if (r.current) gsap.set(r.current, { clearProps: 'all' }); });
+    if (!goblinRef.current) return;
+
+    switch (mascotState) {
+
+      case 'idle':
+        gsap.to(goblinRef.current, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(bodyGrpRef.current, { scaleY: 1.018, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        gsap.to(headGrpRef.current, { rotation: -1.5, duration: 3.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
+        scheduleBlink(3.5);
+        break;
+
+      case 'working':
+        gsap.to(goblinRef.current, { y: -6, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(bodyGrpRef.current, { scaleY: 1.03, scaleX: 0.99, duration: 0.65, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        gsap.to(headGrpRef.current, { y: 3, rotation: 2, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
+        gsap.to([eyeLGrpRef.current, eyeRGrpRef.current], { scale: 1.07, duration: 0.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center center' });
+        break;
+
+      case 'break':
+        gsap.to(goblinRef.current, { y: -14, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(goblinRef.current, { rotation: -2.5, duration: 4.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
+        gsap.to(earLGrpRef.current, { rotation: 5, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '44px 52px' });
+        gsap.to(earRGrpRef.current, { rotation: -5, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '156px 52px' });
+        scheduleBlink(5);
+        break;
+
+      case 'overdue':
+        gsap.to(goblinRef.current, { x: 5, duration: 0.065, yoyo: true, repeat: -1, ease: 'none' });
+        gsap.to(headGrpRef.current, { x: 4, duration: 0.055, yoyo: true, repeat: -1, ease: 'none' });
+        gsap.to(bodyGrpRef.current, { scaleY: 1.04, duration: 0.32, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        break;
+
+      case 'celebrate': {
+        // Professional squash & stretch jump with elastic landing
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.28 });
+        tl.to(goblinRef.current, { y: -32, scaleX: 0.84, scaleY: 1.22, duration: 0.3, ease: 'power2.out', transformOrigin: '100px 220px' })
+          .to(goblinRef.current, { y: 0, scaleX: 1.28, scaleY: 0.78, duration: 0.17, ease: 'power3.in', transformOrigin: '100px 220px' })
+          .to(goblinRef.current, { scaleX: 1, scaleY: 1, duration: 0.7, ease: 'elastic.out(1.2, 0.4)', transformOrigin: '100px 220px' })
+          .to(goblinRef.current, { rotation: -8, duration: 0.18, ease: 'power2.inOut', transformOrigin: '100px 220px' })
+          .to(goblinRef.current, { rotation: 8, duration: 0.18, ease: 'power2.inOut', transformOrigin: '100px 220px' })
+          .to(goblinRef.current, { rotation: 0, duration: 0.14, ease: 'power1.out', transformOrigin: '100px 220px' });
+        break;
+      }
+
+      case 'good':
+        gsap.to(goblinRef.current, { scale: 1.04, y: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
+        gsap.to(headGrpRef.current, { rotation: 2, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
+        scheduleBlink(4.5);
+        break;
+
+      case 'great':
+        gsap.to(goblinRef.current, { scale: 1.06, y: -6, duration: 1.4, yoyo: true, repeat: -1, ease: 'power1.inOut', transformOrigin: '100px 220px' });
+        gsap.to(earLGrpRef.current, { rotation: 9, duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '44px 52px' });
+        gsap.to(earRGrpRef.current, { rotation: -9, duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '156px 52px' });
+        scheduleBlink(4);
+        break;
+
+      case 'done':
+        gsap.to(goblinRef.current, { y: -10, duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(goblinRef.current, { rotation: -1.5, duration: 5.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
+        scheduleBlink(5.5);
+        break;
+
+      default:
+        gsap.to(goblinRef.current, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        scheduleBlink(4);
+    }
+
+    return () => {
+      grps.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
+      if (blinkTlRef.current) blinkTlRef.current.kill();
+    };
+  }, [mascotState, scheduleBlink]);
 
   return (
     <div className="flex flex-col items-center gap-3 select-none">
       <div className="relative flex items-center justify-center">
-        {/* Ambient glow ring */}
         <div className="absolute rounded-full animate-ring" style={{
-          width: size + 28, height: size + 28,
+          width: size + 32, height: size + 32,
           background: `radial-gradient(circle, ${cfg.glow} 0%, transparent 68%)`,
         }}/>
-
         <svg viewBox="0 0 200 220" width={size} height={size}
-          className={cfg.anim} aria-label="Goblin mascot"
-          style={{ filter: `drop-shadow(0 0 20px ${cfg.glow}) drop-shadow(0 0 6px ${cfg.glow})` }}>
+          aria-label="Goblin mascot"
+          style={{ filter: `drop-shadow(0 0 24px ${cfg.glow}) drop-shadow(0 0 8px ${cfg.glow})`, overflow: 'visible' }}>
           <Defs/>
-          {/* Render order: ears → body → head → hair → face features */}
-          <Extra type={cfg.extra} glowColor={cfg.ringColor}/>
-          <Ears/>
-          <Body/>
-          <Head/>
-          <Hair/>
-          <Cheeks/>
-          <Nose/>
-          <Brows type={cfg.brows}/>
-          <Eyes  type={cfg.eyes}/>
-          <Mouth type={cfg.mouth}/>
+          <g ref={goblinRef}>
+            <Extra type={cfg.extra} glowColor={cfg.ringColor}/>
+            <g ref={earLGrpRef}><LeftEar/></g>
+            <g ref={earRGrpRef}><RightEar/></g>
+            <g ref={bodyGrpRef}><Body/></g>
+            <g ref={headGrpRef}>
+              <Head/><Hair/><Cheeks/><Nose/>
+            </g>
+            <Brows type={cfg.brows}/>
+            <g ref={eyeLGrpRef}><EyeUnit cx={72}  clipId="cp-eyeL" state={cfg.eyes}/></g>
+            <g ref={eyeRGrpRef}><EyeUnit cx={128} clipId="cp-eyeR" state={cfg.eyes}/></g>
+            <Mouth type={cfg.mouth}/>
+          </g>
         </svg>
       </div>
-
-      {/* Caption */}
       <div key={`${mascotState}-${captionIdx}`} className="animate-caption px-4 py-2 rounded-2xl text-center"
-        style={{ background:'rgba(255,255,255,0.05)', border:`1px solid ${cfg.glow}`,
-          backdropFilter:'blur(12px)', maxWidth:270 }}>
+        style={{ background:'rgba(255,255,255,0.05)', border:`1px solid ${cfg.glow}`, backdropFilter:'blur(12px)', maxWidth:270 }}>
         <p className="text-sm font-semibold leading-snug" style={{ color: cfg.ringColor }}>
           {cfg.captions[captionIdx]}
         </p>
