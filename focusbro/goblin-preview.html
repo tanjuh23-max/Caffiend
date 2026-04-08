@@ -450,7 +450,7 @@ function render(stateKey) {
   const svg = document.getElementById('goblinSvg');
   svg.className.baseVal = 'goblin-svg ' + cfg.anim;
   svg.style.filter = `drop-shadow(0 0 22px ${cfg.glow}) drop-shadow(0 0 8px ${cfg.glow})`;
-  svg.innerHTML = extra(cfg.extra, cfg.color) + body() + brows(cfg.brows) + eyes(cfg.eyes) + mouth(cfg.mouth);
+  svg.innerHTML = defs() + extra(cfg.extra, cfg.color) + body() + brows(cfg.brows) + eyes(cfg.eyes) + mouth(cfg.mouth);
 
   // Caption cycling
   clearInterval(captionInterval);
