@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import BrainMascot from './components/BrainMascot';
+import GoblinMascot from './components/GoblinMascot';
 
 /* ─── Constants ───────────────────────────────────────────────────────────── */
 
@@ -322,7 +322,7 @@ export default function App() {
         <div className="flex flex-col items-center gap-6 py-4">
 
           {/* Mascot */}
-          <BrainMascot mascotState={mascotState} size={170} />
+          <GoblinMascot mascotState={mascotState} size={170} />
 
           {/* Timer ring + display */}
           <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
