@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FocusBro — Goblin Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #07070a;
+    color: #f5f5f5;
+    font-family: Inter, system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 48px;
+    gap: 28px;
+  }
+
+  h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+  h1 span { color: #fbbf24; }
+  .subtitle { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+  /* ── State buttons ── */
+  .states {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 480px;
+  }
+  .states button {
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .states button:hover  { border-color: rgba(255,255,255,0.3); color: white; }
+  .states button.active {
+    background: rgba(251,191,36,0.15);
+    border-color: rgba(251,191,36,0.5);
+    color: #fbbf24;
+  }
+
+  /* ── Mascot stage ── */
+  .stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .glow-ring {
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -56%);
+    pointer-events: none;
+    animation: ring-pulse 1.4s ease-out infinite;
+  }
+  .goblin-svg {
+    position: relative;
+    z-index: 1;
+  }
+  .caption {
+    padding: 10px 20px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    max-width: 280px;
+    backdrop-filter: blur(12px);
+    animation: caption-swap 4.5s ease-in-out infinite;
+    line-height: 1.4;
+  }
+  .state-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ── Animations ── */
+  @keyframes ring-pulse {
+    0%   { transform: translate(-50%,-56%) scale(1);   opacity: 0.6; }
+    100% { transform: translate(-50%,-56%) scale(1.55); opacity: 0; }
+  }
+  @keyframes caption-swap {
+    0%   { opacity:0; transform:translateY(6px); }
+    12%  { opacity:1; transform:translateY(0); }
+    88%  { opacity:1; transform:translateY(0); }
+    100% { opacity:0; transform:translateY(-6px); }
+  }
+  @keyframes mascot-float {
+    0%,100% { transform:translateY(0px); }
+    50%     { transform:translateY(-12px); }
+  }
+  @keyframes mascot-pulse {
+    0%,100% { transform:scale(1); }
+    50%     { transform:scale(1.06); }
+  }
+  @keyframes mascot-pulse-slow {
+    0%,100% { transform:scale(1); }
+    50%     { transform:scale(1.025); }
+  }
+  @keyframes mascot-work {
+    0%,100% { transform:translateY(0) scale(1); }
+    35%     { transform:translateY(-5px) scale(1.03); }
+    65%     { transform:translateY(-2px) scale(1.01); }
+  }
+  @keyframes mascot-shake {
+    0%,100% { transform:translateX(0) rotate(0deg); }
+    20%     { transform:translateX(-4px) rotate(-2deg); }
+    40%     { transform:translateX(4px) rotate(2deg); }
+    60%     { transform:translateX(-3px) rotate(-1deg); }
+    80%     { transform:translateX(3px) rotate(1deg); }
+  }
+  @keyframes mascot-celebrate {
+    0%,100% { transform:scale(1) rotate(0deg); }
+    25%     { transform:scale(1.1) rotate(-4deg); }
+    50%     { transform:scale(1.12) rotate(4deg); }
+    75%     { transform:scale(1.08) rotate(-2deg); }
+  }
+  @keyframes zzz-drift {
+    0%   { transform:translate(0,0) scale(0.7); opacity:0.9; }
+    100% { transform:translate(10px,-40px) scale(1.1); opacity:0; }
+  }
+  @keyframes spark-pop {
+    0%   { transform:scale(0); opacity:0; }
+    40%  { opacity:1; }
+    100% { transform:scale(1.5) translateY(-20px); opacity:0; }
+  }
+
+  .anim-float      { animation: mascot-float 3.2s ease-in-out infinite; }
+  .anim-pulse      { animation: mascot-pulse 2s ease-in-out infinite; }
+  .anim-pulse-slow { animation: mascot-pulse-slow 4.5s ease-in-out infinite; }
+  .anim-work       { animation: mascot-work 1.9s ease-in-out infinite; }
+  .anim-shake      { animation: mascot-shake 0.55s ease-in-out infinite; }
+  .anim-celebrate  { animation: mascot-celebrate 0.8s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<div>
+  <h1>Focus<span>Bro</span></h1>
+  <p class="subtitle">goblin mascot preview — click a state to switch</p>
+</div>
+
+<div class="states" id="stateBtns"></div>
+
+<div class="stage">
+  <div class="glow-ring" id="glowRing" style="width:220px;height:220px;"></div>
+  <svg id="goblinSvg" viewBox="0 0 100 105" width="190" height="190"
+    class="goblin-svg" aria-label="Goblin mascot"></svg>
+  <div class="caption" id="caption"></div>
+  <div class="state-label" id="stateLabel"></div>
+</div>
+
+<script>
+/* ── State definitions ──────────────────────────────────────────────────── */
+const STATES = {
+  idle: {
+    glow: 'rgba(59,130,246,0.38)',
+    color: '#3b82f6',
+    anim: 'anim-pulse-slow',
+    brows: 'droopy', eyes: 'sleepy', mouth: 'flat', extra: 'phone',
+    captions: [
+      'doomscrolling instead of working 📱',
+      'what even is productivity fr',
+      'goblin cannot be bothered rn',
+    ],
+  },
+  working: {
+    glow: 'rgba(251,191,36,0.55)',
+    color: '#fbbf24',
+    anim: 'anim-work',
+    brows: 'determined', eyes: 'manic', mouth: 'grin', extra: 'laptop',
+    captions: [
+      'GOBLIN MODE ACTIVATED 🧌',
+      'locked in no cap fr fr',
+      'feral grind commencing',
+    ],
+  },
+  break: {
+    glow: 'rgba(34,197,94,0.4)',
+    color: '#22c55e',
+    anim: 'anim-float',
+    brows: 'relaxed', eyes: 'content', mouth: 'smile', extra: 'flower',
+    captions: [
+      'experiencing nature?? weird 🌸',
+      'take a breather frfr 🌊',
+      'fr fr you earned this bestie',
+    ],
+  },
+  good: {
+    glow: 'rgba(251,191,36,0.4)',
+    color: '#fbbf24',
+    anim: 'anim-pulse',
+    brows: 'smug', eyes: 'smug', mouth: 'smirk', extra: null,
+    captions: [
+      'W goblin behavior fr 🔥',
+      'on track no cap bestie',
+      'the bag is being secured',
+    ],
+  },
+  great: {
+    glow: 'rgba(251,191,36,0.65)',
+    color: '#f59e0b',
+    anim: 'anim-pulse',
+    brows: 'raised', eyes: 'stars', mouth: 'bigGrin', extra: 'crown',
+    captions: [
+      'GOBLIN KING STATUS 👑',
+      'absolutely cooked the tasks fr',
+      'all hail the sigma goblin',
+    ],
+  },
+  overdue: {
+    glow: 'rgba(251,146,60,0.6)',
+    color: '#f97316',
+    anim: 'anim-shake',
+    brows: 'panicked', eyes: 'spiral', mouth: 'openScream', extra: 'papers',
+    captions: [
+      'bro you NEED a break 😵‍💫',
+      'goblin is tweaking rn',
+      'this is NOT it chief',
+    ],
+  },
+  done: {
+    glow: 'rgba(167,139,250,0.42)',
+    color: '#a78bfa',
+    anim: 'anim-float',
+    brows: 'relaxed', eyes: 'content', mouth: 'smile', extra: 'crownTilt',
+    captions: [
+      "day's grind complete fr 🎉",
+      "that's W goblin behavior all day",
+      'sigma goblin signing off',
+    ],
+  },
+  celebrate: {
+    glow: 'rgba(251,191,36,0.72)',
+    color: '#fbbf24',
+    anim: 'anim-celebrate',
+    brows: 'raised', eyes: 'stars', mouth: 'bigGrin', extra: 'sparkles',
+    captions: [
+      'SESSION COMPLETE 🏆',
+      "THAT'S GOBLIN MODE FR",
+      'no cap you absolutely cooked it',
+    ],
+  },
+};
+
+/* ── SVG builder ─────────────────────────────────────────────────────────── */
+const S = '#5ab84a', SD = '#3f8a30', HAIR = '#2a1a08', RAG = '#5a3a18', RAGD = '#3d2610';
+
+function body() {
+  return `
+    <polygon points="23,36 10,20 21,53" fill="${S}"/>
+    <polygon points="77,36 90,20 79,53" fill="${S}"/>
+    <polygon points="22,38 14,24 21,49" fill="${SD}" opacity="0.6"/>
+    <polygon points="78,38 86,24 79,49" fill="${SD}" opacity="0.6"/>
+    <ellipse cx="50" cy="47" rx="27" ry="29" fill="${S}"/>
+    <path d="M36 19 Q33 8 28 15"  stroke="${HAIR}" stroke-width="4"   fill="none" stroke-linecap="round"/>
+    <path d="M43 16 Q41 5 37 11"  stroke="${HAIR}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M50 15 Q50 3 46 9"   stroke="${HAIR}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M57 16 Q59 5 55 10"  stroke="${HAIR}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M65 20 Q70 9 64 15"  stroke="${HAIR}" stroke-width="4"   fill="none" stroke-linecap="round"/>
+    <ellipse cx="50" cy="57" rx="6" ry="5.5" fill="${SD}"/>
+    <circle cx="47.5" cy="59.5" r="2" fill="#2d6020"/>
+    <circle cx="52.5" cy="59.5" r="2" fill="#2d6020"/>
+    <ellipse cx="50" cy="71" rx="18" ry="7" fill="${SD}" opacity="0.25"/>
+    <path d="M23,78 Q36,75 50,74 Q64,75 77,78 L80,105 L20,105 Z" fill="${RAGD}"/>
+    <path d="M35,78 L39,71 L43,78 L47,69 L50,75 L53,69 L57,78 L61,71 L65,78"
+      stroke="${RAG}" stroke-width="2.5" fill="${RAG}" stroke-linejoin="round"/>
+    <path d="M34,88 Q50,85 66,88" stroke="rgba(255,255,255,0.06)" stroke-width="1.2" fill="none"/>
+  `;
+}
+
+function brows(type) {
+  const s = 'stroke="#2a1a08" stroke-width="2.2" fill="none" stroke-linecap="round"';
+  const sb = 'stroke="#1a0e04" stroke-width="2.8" fill="none" stroke-linecap="round"';
+  switch(type) {
+    case 'droopy':     return `<path d="M30 34 Q38 37 45 35" ${s}/><path d="M55 35 Q62 37 70 34" ${s}/>`;
+    case 'determined': return `<path d="M29 32 Q38 36 45 34" ${sb}/><path d="M55 34 Q62 36 71 32" ${sb}/>`;
+    case 'relaxed':    return `<path d="M30 33 Q38 30 45 32" ${s}/><path d="M55 32 Q62 30 70 33" ${s}/>`;
+    case 'smug':       return `<path d="M30 31 Q38 27 45 30" ${sb}/><path d="M55 33 Q62 31 70 33" ${sb}/>`;
+    case 'raised':     return `<path d="M30 30 Q38 26 45 28" ${sb}/><path d="M55 28 Q62 26 70 30" ${sb}/>`;
+    case 'panicked':   return `<path d="M29 30 Q38 35 45 31" ${sb}/><path d="M55 31 Q62 35 71 30" ${sb}/>`;
+    default: return '';
+  }
+}
+
+function eyes(type) {
+  switch(type) {
+    case 'sleepy':
+      return `
+        <circle cx="38" cy="44" r="8.5" fill="white"/>
+        <circle cx="62" cy="44" r="8.5" fill="white"/>
+        <circle cx="39" cy="46" r="4.5" fill="#1a0f00"/>
+        <circle cx="63" cy="46" r="4.5" fill="#1a0f00"/>
+        <rect x="29" y="36" width="19" height="10" rx="5" fill="${S}"/>
+        <rect x="53" y="36" width="19" height="10" rx="5" fill="${S}"/>`;
+    case 'manic':
+      return `
+        <circle cx="38" cy="44" r="11" fill="white"/>
+        <circle cx="62" cy="44" r="11" fill="white"/>
+        <circle cx="39" cy="44" r="6.5" fill="#1a0f00"/>
+        <circle cx="63" cy="44" r="6.5" fill="#1a0f00"/>
+        <circle cx="42" cy="41" r="2.2" fill="white"/>
+        <circle cx="66" cy="41" r="2.2" fill="white"/>`;
+    case 'content':
+      return `
+        <path d="M29 44 Q38 37 47 44" stroke="rgba(0,0,0,0.75)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <path d="M53 44 Q62 37 71 44" stroke="rgba(0,0,0,0.75)" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+    case 'smug':
+      return `
+        <circle cx="38" cy="44" r="8.5" fill="white"/>
+        <circle cx="62" cy="44" r="8.5" fill="white"/>
+        <circle cx="40" cy="45" r="4.5" fill="#1a0f00"/>
+        <circle cx="64" cy="45" r="4.5" fill="#1a0f00"/>
+        <circle cx="42" cy="43" r="1.5" fill="white"/>
+        <circle cx="66" cy="43" r="1.5" fill="white"/>
+        <rect x="29" y="36" width="19" height="7" rx="4" fill="${S}"/>
+        <rect x="53" y="36" width="19" height="7" rx="4" fill="${S}"/>`;
+    case 'stars':
+      return `
+        <circle cx="38" cy="44" r="10" fill="white"/>
+        <circle cx="62" cy="44" r="10" fill="white"/>
+        <text x="29.5" y="49" font-size="12">⭐</text>
+        <text x="53.5" y="49" font-size="12">⭐</text>`;
+    case 'spiral':
+      return `
+        <circle cx="38" cy="44" r="8.5" fill="white"/>
+        <circle cx="62" cy="44" r="8.5" fill="white"/>
+        <line x1="31" y1="37" x2="45" y2="51" stroke="#1a0f00" stroke-width="3" stroke-linecap="round"/>
+        <line x1="45" y1="37" x2="31" y2="51" stroke="#1a0f00" stroke-width="3" stroke-linecap="round"/>
+        <line x1="55" y1="37" x2="69" y2="51" stroke="#1a0f00" stroke-width="3" stroke-linecap="round"/>
+        <line x1="69" y1="37" x2="55" y2="51" stroke="#1a0f00" stroke-width="3" stroke-linecap="round"/>`;
+    default: // normal
+      return `
+        <circle cx="38" cy="44" r="8.5" fill="white"/>
+        <circle cx="62" cy="44" r="8.5" fill="white"/>
+        <circle cx="39" cy="44" r="4.5" fill="#1a0f00"/>
+        <circle cx="63" cy="44" r="4.5" fill="#1a0f00"/>
+        <circle cx="41" cy="42" r="1.6" fill="white"/>
+        <circle cx="65" cy="42" r="1.6" fill="white"/>`;
+  }
+}
+
+function mouth(type) {
+  switch(type) {
+    case 'flat':      return `<line x1="40" y1="67" x2="60" y2="67" stroke="rgba(0,0,0,0.55)" stroke-width="2.2" stroke-linecap="round"/>`;
+    case 'smile':     return `<path d="M37 65 Q50 74 63 65" stroke="rgba(0,0,0,0.7)" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+    case 'smirk':     return `<path d="M39 65 Q50 70 60 64" stroke="rgba(0,0,0,0.7)" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+    case 'grin':      return `
+      <path d="M33 64 Q50 78 67 64" fill="#1a0f00"/>
+      <rect x="36" y="64" width="7" height="6" rx="1" fill="white"/>
+      <rect x="44" y="63" width="7" height="7" rx="1" fill="white"/>
+      <rect x="52" y="63" width="7" height="7" rx="1" fill="white"/>
+      <rect x="60" y="64" width="6" height="6" rx="1" fill="white"/>`;
+    case 'bigGrin':   return `
+      <path d="M30 63 Q50 80 70 63" fill="#1a0f00"/>
+      <rect x="33" y="63" width="7" height="7" rx="1" fill="white"/>
+      <rect x="41" y="61" width="8" height="9" rx="1" fill="white"/>
+      <rect x="50" y="61" width="8" height="9" rx="1" fill="white"/>
+      <rect x="59" y="62" width="8" height="8" rx="1" fill="white"/>`;
+    case 'openScream': return `
+      <ellipse cx="50" cy="69" rx="13" ry="9" fill="#1a0f00"/>
+      <ellipse cx="50" cy="66" rx="13" ry="4" fill="#cc3333"/>`;
+    default: return '';
+  }
+}
+
+function extra(type, color) {
+  switch(type) {
+    case 'phone': return `
+      <rect x="62" y="68" width="11" height="17" rx="2.5" fill="#111827" stroke="#374151" stroke-width="1"/>
+      <rect x="63.5" y="70" width="8" height="10" rx="1" fill="#3b82f6" opacity="0.7"/>
+      <ellipse cx="62" cy="70" rx="10" ry="7" fill="rgba(59,130,246,0.15)"/>
+      <text style="animation:zzz-drift 2.2s ease-out infinite 0s"    x="76" y="56" font-size="10" font-weight="bold" fill="#93c5fd" opacity="0.8">z</text>
+      <text style="animation:zzz-drift 2.2s ease-out infinite 0.8s"  x="81" y="44" font-size="13" font-weight="bold" fill="#93c5fd" opacity="0.6">z</text>
+      <text style="animation:zzz-drift 2.2s ease-out infinite 1.5s"  x="85" y="32" font-size="17" font-weight="bold" fill="#93c5fd" opacity="0.4">Z</text>`;
+    case 'laptop': return `
+      <ellipse cx="50" cy="90" rx="26" ry="8" fill="rgba(96,165,250,0.2)"/>
+      <path d="M9 22 L4 36 L11 36 L5 52 L17 32 L10 32 Z" fill="${color}" opacity="0.7" style="animation:spark-pop 2.1s ease-out infinite 0.2s"/>
+      <path d="M87 18 L83 30 L89 30 L84 43 L95 26 L88 26 Z" fill="${color}" opacity="0.6" style="animation:spark-pop 2.1s ease-out infinite 1.1s"/>`;
+    case 'flower': return `<text x="66" y="74" font-size="20" style="animation:spark-pop 3s ease-out infinite 0.5s">🌸</text>`;
+    case 'crown': return `
+      <path d="M30 18 L37 6 L50 14 L63 6 L70 18 L66 22 L34 22 Z" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="50" cy="8"  r="3" fill="#f87171"/>
+      <circle cx="37" cy="10" r="2" fill="#34d399"/>
+      <circle cx="63" cy="10" r="2" fill="#60a5fa"/>`;
+    case 'crownTilt': return `
+      <g transform="rotate(12,50,14)">
+        <path d="M30 18 L37 6 L50 14 L63 6 L70 18 L66 22 L34 22 Z" fill="#a78bfa" stroke="#7c3aed" stroke-width="1.5"/>
+        <circle cx="50" cy="8" r="3" fill="#f9a8d4"/>
+      </g>`;
+    case 'papers': return `
+      <rect x="6"  y="28" width="14" height="18" rx="2" fill="white" stroke="#e5e7eb" stroke-width="1" transform="rotate(-20,13,37)" style="animation:spark-pop 1.6s ease-out infinite 0s"/>
+      <rect x="80" y="22" width="13" height="16" rx="2" fill="white" stroke="#e5e7eb" stroke-width="1" transform="rotate(18,86,30)"  style="animation:spark-pop 1.6s ease-out infinite 0.6s"/>
+      <rect x="72" y="50" width="11" height="14" rx="2" fill="white" stroke="#e5e7eb" stroke-width="1" transform="rotate(-10,77,57)" style="animation:spark-pop 1.6s ease-out infinite 1.1s"/>`;
+    case 'sparkles': return `
+      <text x="4"  y="28" font-size="16" style="animation:spark-pop 2.2s ease-out infinite 0s">✨</text>
+      <text x="80" y="22" font-size="14" style="animation:spark-pop 2.2s ease-out infinite 0.7s">✨</text>
+      <text x="74" y="55" font-size="11" style="animation:spark-pop 2.2s ease-out infinite 1.3s">⭐</text>
+      <text x="8"  y="55" font-size="11" style="animation:spark-pop 2.2s ease-out infinite 1.8s">⭐</text>`;
+    default: return '';
+  }
+}
+
+/* ── Render ──────────────────────────────────────────────────────────────── */
+let captionInterval = null;
+let captionIdx = 0;
+
+function render(stateKey) {
+  const cfg = STATES[stateKey];
+
+  // Glow ring
+  const ring = document.getElementById('glowRing');
+  ring.style.background = `radial-gradient(circle, ${cfg.glow} 0%, transparent 68%)`;
+
+  // SVG
+  const svg = document.getElementById('goblinSvg');
+  svg.className.baseVal = 'goblin-svg ' + cfg.anim;
+  svg.style.filter = `drop-shadow(0 0 22px ${cfg.glow}) drop-shadow(0 0 8px ${cfg.glow})`;
+  svg.innerHTML = extra(cfg.extra, cfg.color) + body() + brows(cfg.brows) + eyes(cfg.eyes) + mouth(cfg.mouth);
+
+  // Caption cycling
+  clearInterval(captionInterval);
+  captionIdx = 0;
+  const cap = document.getElementById('caption');
+  cap.style.background = 'rgba(255,255,255,0.05)';
+  cap.style.border = `1px solid ${cfg.glow}`;
+  cap.style.color = cfg.color;
+  function showCaption() {
+    cap.style.animation = 'none';
+    cap.offsetHeight; // reflow
+    cap.style.animation = 'caption-swap 4.5s ease-in-out infinite';
+    cap.textContent = cfg.captions[captionIdx % cfg.captions.length];
+    captionIdx++;
+  }
+  showCaption();
+  captionInterval = setInterval(showCaption, 4500);
+
+  // Label
+  document.getElementById('stateLabel').textContent = stateKey.toUpperCase();
+
+  // Buttons
+  document.querySelectorAll('.states button').forEach(b => {
+    b.classList.toggle('active', b.dataset.state === stateKey);
+  });
+}
+
+/* ── Build buttons ───────────────────────────────────────────────────────── */
+const labels = {
+  idle: '😴 Idle', working: '🧌 Working', break: '🌊 Break',
+  good: '🔥 Good', great: '👑 Great', overdue: '😵‍💫 Overdue',
+  done: '✅ Done', celebrate: '🏆 Celebrate',
+};
+const container = document.getElementById('stateBtns');
+Object.keys(STATES).forEach(key => {
+  const btn = document.createElement('button');
+  btn.textContent = labels[key] || key;
+  btn.dataset.state = key;
+  btn.onclick = () => render(key);
+  container.appendChild(btn);
+});
+
+// Start on idle
+render('idle');
+</script>
+</body>
+</html>
