@@ -4,649 +4,494 @@ import gsap from 'gsap';
 /* ─── State config ────────────────────────────────────────────────────────── */
 const STATE = {
   idle: {
-    glow: 'rgba(99,102,241,0.45)', ringColor: '#818cf8', anim: 'mascot-pulse-slow',
-    brows: 'droopy', eyes: 'sleepy', mouth: 'flat', extra: 'phone',
-    captions: ['doomscrolling instead of working 📱','what even is productivity fr','goblin cannot be bothered rn','tap start or stay cooked forever'],
+    glow: 'rgba(34,197,94,0.3)', ringColor: '#22c55e',
+    brows: 'relaxed', eyes: 'normal', mouth: 'smile', extra: null,
+    captions: ['ready when you are 👀','tap start to lock in','goblin is waiting...','you got this fr'],
   },
   working: {
-    glow: 'rgba(251,191,36,0.55)', ringColor: '#fbbf24', anim: 'mascot-work',
-    brows: 'determined', eyes: 'manic', mouth: 'grin', extra: 'laptop',
+    glow: 'rgba(21,128,61,0.45)', ringColor: '#15803d',
+    brows: 'determined', eyes: 'manic', mouth: 'grin', extra: 'sparks',
     captions: ['GOBLIN MODE ACTIVATED 🧌','locked in no cap fr fr','feral grind commencing','W goblin behavior detected'],
   },
   break: {
-    glow: 'rgba(34,197,94,0.4)', ringColor: '#22c55e', anim: 'mascot-float',
-    brows: 'relaxed', eyes: 'content', mouth: 'smile', extra: 'flower',
-    captions: ['experiencing nature?? weird 🌸','take a breather frfr 🌊','goblin resting arc begins','fr fr you earned this bestie'],
+    glow: 'rgba(132,204,22,0.35)', ringColor: '#84cc16',
+    brows: 'happy', eyes: 'content', mouth: 'smile', extra: null,
+    captions: ['take a breather frfr 🌊','goblin resting arc begins','fr fr you earned this bestie','eyes off screen pls'],
   },
   good: {
-    glow: 'rgba(251,191,36,0.4)', ringColor: '#fbbf24', anim: 'mascot-pulse',
-    brows: 'smug', eyes: 'smug', mouth: 'smirk', extra: null,
-    captions: ['W goblin behavior fr 🔥','on track no cap bestie','the bag is being secured','keep going goblin king'],
+    glow: 'rgba(34,197,94,0.4)', ringColor: '#22c55e',
+    brows: 'happy', eyes: 'normal', mouth: 'smile', extra: null,
+    captions: ['W goblin behavior fr 🔥','on track no cap bestie','keep going goblin king','the bag is being secured'],
   },
   great: {
-    glow: 'rgba(251,191,36,0.65)', ringColor: '#f59e0b', anim: 'mascot-pulse',
+    glow: 'rgba(21,128,61,0.55)', ringColor: '#15803d',
     brows: 'raised', eyes: 'stars', mouth: 'bigGrin', extra: 'crown',
-    captions: ['GOBLIN KING STATUS 👑','absolutely cooked the tasks fr','no cap this is legendary','all hail the sigma goblin'],
+    captions: ['GOBLIN KING STATUS 👑','absolutely cooked the tasks fr','all hail the sigma goblin','no cap this is legendary'],
   },
   overdue: {
-    glow: 'rgba(251,146,60,0.6)', ringColor: '#f97316', anim: 'mascot-shake',
-    brows: 'panicked', eyes: 'spiral', mouth: 'openScream', extra: 'papers',
-    captions: ['bro you NEED a break 😵‍💫','goblin is tweaking rn','this is NOT it chief','unhinged behavior — dial it back'],
+    glow: 'rgba(220,38,38,0.5)', ringColor: '#dc2626',
+    brows: 'worried', eyes: 'spiral', mouth: 'open', extra: null,
+    captions: ['bro you NEED a break 😵','goblin is tweaking rn','this is NOT it chief','dial it back fr'],
   },
   done: {
-    glow: 'rgba(167,139,250,0.42)', ringColor: '#a78bfa', anim: 'mascot-float',
-    brows: 'relaxed', eyes: 'content', mouth: 'smile', extra: 'crownTilt',
-    captions: ["day's grind complete fr 🎉","that's W goblin behavior all day",'rest mode: ACTIVATED','sigma goblin signing off'],
+    glow: 'rgba(124,58,237,0.4)', ringColor: '#7c3aed',
+    brows: 'happy', eyes: 'content', mouth: 'smile', extra: 'crownTilt',
+    captions: ["day's grind complete fr 🎉","sigma goblin signing off",'rest mode: ACTIVATED',"that's W behavior all day"],
   },
   celebrate: {
-    glow: 'rgba(251,191,36,0.72)', ringColor: '#fbbf24', anim: 'mascot-celebrate',
+    glow: 'rgba(132,204,22,0.6)', ringColor: '#84cc16',
     brows: 'raised', eyes: 'stars', mouth: 'bigGrin', extra: 'sparkles',
-    captions: ['SESSION COMPLETE 🏆',"THAT'S GOBLIN MODE FR",'W W W W W W W','no cap you absolutely cooked it'],
+    captions: ['SESSION COMPLETE 🏆',"THAT'S GOBLIN MODE FR",'W W W W W W W','you absolutely cooked it'],
   },
 };
 
-/* ─── SVG Defs (gradients + filters) ─────────────────────────────────────── */
+/* ─── Gradients & Filters ─────────────────────────────────────────────────── */
 function Defs() {
   return (
     <defs>
-      {/* Skin — radial, light source top-left */}
-      <radialGradient id="g-skin" cx="38%" cy="28%" r="68%">
-        <stop offset="0%"   stopColor="#a8e070"/>
-        <stop offset="42%"  stopColor="#5dba48"/>
-        <stop offset="78%"  stopColor="#3a8c28"/>
-        <stop offset="100%" stopColor="#1f5c12"/>
+      <radialGradient id="gm-skin" cx="35%" cy="28%" r="70%">
+        <stop offset="0%"   stopColor="#b4e87a"/>
+        <stop offset="40%"  stopColor="#6aba3c"/>
+        <stop offset="75%"  stopColor="#3e9020"/>
+        <stop offset="100%" stopColor="#245c10"/>
       </radialGradient>
-
-      {/* Skin — darker variant for ears/neck */}
-      <radialGradient id="g-skin-dark" cx="30%" cy="25%" r="75%">
-        <stop offset="0%"   stopColor="#6dc850"/>
-        <stop offset="100%" stopColor="#1a5010"/>
+      <radialGradient id="gm-skin-dark" cx="30%" cy="25%" r="75%">
+        <stop offset="0%"   stopColor="#80c44e"/>
+        <stop offset="100%" stopColor="#1e5c0c"/>
       </radialGradient>
-
-      {/* Eye iris — warm amber */}
-      <radialGradient id="g-iris" cx="38%" cy="32%" r="65%">
+      <radialGradient id="gm-iris" cx="35%" cy="28%" r="68%">
         <stop offset="0%"   stopColor="#fde68a"/>
         <stop offset="45%"  stopColor="#f59e0b"/>
         <stop offset="100%" stopColor="#78350f"/>
       </radialGradient>
-
-      {/* Cloth — linen brown */}
-      <linearGradient id="g-cloth" x1="0%" y1="0%" x2="0%" y2="100%">
+      <linearGradient id="gm-cloth" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%"   stopColor="#7c4522"/>
         <stop offset="100%" stopColor="#2e1508"/>
       </linearGradient>
-
-      {/* Cloth highlight */}
-      <linearGradient id="g-cloth-hi" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"   stopColor="rgba(255,200,140,0.18)"/>
-        <stop offset="100%" stopColor="rgba(255,200,140,0)"/>
-      </linearGradient>
-
-      {/* Teeth */}
-      <linearGradient id="g-teeth" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%"   stopColor="#fffff0"/>
-        <stop offset="100%" stopColor="#d4d4a0"/>
-      </linearGradient>
-
-      {/* Drop shadow on whole character */}
-      <filter id="f-shadow" x="-15%" y="-10%" width="130%" height="130%">
-        <feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="rgba(0,0,0,0.45)"/>
-      </filter>
-
-      {/* Soft blur for cheek blush */}
-      <filter id="f-blush" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="5"/>
-      </filter>
-
-      {/* Soft inner highlight on head */}
-      <radialGradient id="g-head-hi" cx="38%" cy="28%" r="45%">
-        <stop offset="0%"   stopColor="rgba(255,255,255,0.28)"/>
+      <radialGradient id="gm-head-hi" cx="35%" cy="25%" r="50%">
+        <stop offset="0%"   stopColor="rgba(255,255,255,0.32)"/>
         <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
       </radialGradient>
-
-      {/* Eye white gradient */}
-      <radialGradient id="g-sclera" cx="35%" cy="30%" r="65%">
-        <stop offset="0%"   stopColor="#ffffff"/>
-        <stop offset="100%" stopColor="#dde8d0"/>
-      </radialGradient>
-
-      {/* Clip paths for sleepy/smug eyelids */}
-      <clipPath id="cp-eyeL"><ellipse cx="72" cy="86" rx="19" ry="17"/></clipPath>
-      <clipPath id="cp-eyeR"><ellipse cx="128" cy="86" rx="19" ry="17"/></clipPath>
+      <filter id="gm-shadow" x="-20%" y="-10%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="rgba(0,0,0,0.22)"/>
+      </filter>
+      <filter id="gm-blush" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="5"/>
+      </filter>
     </defs>
   );
 }
 
-/* ─── Static body parts ───────────────────────────────────────────────────── */
-
+/* ─── Ears ────────────────────────────────────────────────────────────────── */
 function LeftEar() {
   return (
     <>
-      <path d="M 42 60 Q 34 52 22 38 Q 14 26 18 16 Q 26 10 36 22 Q 44 34 44 52 Z" fill="url(#g-skin-dark)"/>
-      <path d="M 40 58 Q 34 50 24 38 Q 18 28 22 20 Q 28 16 34 26 Q 40 38 42 54 Z" fill="url(#g-skin)" opacity="0.7"/>
-      <path d="M 32 24 Q 36 34 38 50" stroke="#1a5010" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5"/>
+      <path d="M 30 85 Q 12 62 22 44 Q 36 28 56 54 Q 47 68 44 88 Z" fill="url(#gm-skin-dark)"/>
+      <path d="M 34 81 Q 20 62 28 48 Q 38 36 52 58 Q 44 70 42 84 Z" fill="url(#gm-skin)" opacity="0.65"/>
     </>
   );
 }
 function RightEar() {
   return (
     <>
-      <path d="M 158 60 Q 166 52 178 38 Q 186 26 182 16 Q 174 10 164 22 Q 156 34 156 52 Z" fill="url(#g-skin-dark)"/>
-      <path d="M 160 58 Q 166 50 176 38 Q 182 28 178 20 Q 172 16 166 26 Q 160 38 158 54 Z" fill="url(#g-skin)" opacity="0.7"/>
-      <path d="M 168 24 Q 164 34 162 50" stroke="#1a5010" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5"/>
+      <path d="M 170 85 Q 188 62 178 44 Q 164 28 144 54 Q 153 68 156 88 Z" fill="url(#gm-skin-dark)"/>
+      <path d="M 166 81 Q 180 62 172 48 Q 162 36 148 58 Q 156 70 158 84 Z" fill="url(#gm-skin)" opacity="0.65"/>
     </>
   );
 }
 
+/* ─── Head ────────────────────────────────────────────────────────────────── */
 function Head() {
   return (
     <>
-      {/* Main head — organic rounded path */}
-      <path
-        d="M 100 16 C 146 16 172 40 172 76 C 172 110 152 132 126 140 C 116 146 100 150 100 150 C 100 150 84 146 74 140 C 48 132 28 110 28 76 C 28 40 54 16 100 16 Z"
-        fill="url(#g-skin)" filter="url(#f-shadow)"/>
-
-      {/* Specular highlight — soft oval top-left of head */}
-      <ellipse cx="78" cy="44" rx="24" ry="18"
-        fill="url(#g-head-hi)" opacity="0.9"/>
-
-      {/* Chin ambient occlusion shadow */}
-      <ellipse cx="100" cy="144" rx="30" ry="8"
-        fill="rgba(0,0,0,0.12)" opacity="0.6"/>
+      <ellipse cx="100" cy="108" rx="82" ry="78"
+        fill="url(#gm-skin)" filter="url(#gm-shadow)"/>
+      {/* specular highlight */}
+      <ellipse cx="72" cy="72" rx="30" ry="22" fill="url(#gm-head-hi)" opacity="0.9"/>
+      {/* chin shadow */}
+      <ellipse cx="100" cy="182" rx="34" ry="8" fill="rgba(0,0,0,0.08)" opacity="0.7"/>
     </>
   );
 }
 
+/* ─── Hair tufts ──────────────────────────────────────────────────────────── */
 function Hair() {
   const c = '#1e0e04';
-  const hi = 'rgba(120,60,20,0.5)';
   return (
     <>
-      {/* Five unruly tufts with varying thickness */}
-      <path d="M 66 18 Q 60 4  52 10 Q 58 16 62 24"    fill={c}/>
-      <path d="M 80 14 Q 76 1  68 6  Q 72 14 76 20"    fill={c}/>
-      <path d="M 100 12 Q 98 -1 92 4  Q 95 12 98 18"   fill={c}/>
-      <path d="M 118 14 Q 122 1 130 6 Q 126 14 122 20"  fill={c}/>
-      <path d="M 133 18 Q 140 4 148 10 Q 142 16 137 24" fill={c}/>
-
-      {/* Highlight on each tuft */}
-      <path d="M 63 12 Q 60 7 56 11"  stroke={hi} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M 78 8  Q 76 4 72 7"   stroke={hi} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M 99 6  Q 98 2 95 5"   stroke={hi} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M 121 8  Q 123 4 127 7" stroke={hi} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M 136 12 Q 140 7 144 10"stroke={hi} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M 70 32 Q 64 16 56 22 Q 62 28 66 36" fill={c}/>
+      <path d="M 88 26 Q 84 10 76 16 Q 80 24 84 30" fill={c}/>
+      <path d="M 100 24 Q 98 8 90 14 Q 94 22 98 28"  fill={c}/>
+      <path d="M 112 26 Q 116 10 124 16 Q 120 24 116 30" fill={c}/>
+      <path d="M 130 32 Q 136 16 144 22 Q 138 28 134 36" fill={c}/>
     </>
   );
 }
 
-function Nose() {
-  return (
-    <>
-      {/* Nose bump with shading */}
-      <ellipse cx="100" cy="112" rx="10" ry="9" fill="#2e7a1a" opacity="0.85"/>
-      <ellipse cx="97" cy="110" rx="6" ry="5" fill="#3d9a22" opacity="0.6"/>
-      {/* Nostrils */}
-      <ellipse cx="95.5" cy="116" rx="3" ry="2.5" fill="#144010" opacity="0.9"/>
-      <ellipse cx="104.5" cy="116" rx="3" ry="2.5" fill="#144010" opacity="0.9"/>
-      {/* Nostril highlight */}
-      <circle cx="94" cy="115" r="1" fill="rgba(255,255,255,0.2)"/>
-      <circle cx="103" cy="115" r="1" fill="rgba(255,255,255,0.2)"/>
-    </>
-  );
-}
-
-function Cheeks() {
-  return (
-    <>
-      <ellipse cx="52" cy="102" rx="16" ry="11"
-        fill="rgba(255,130,130,0.32)" filter="url(#f-blush)"/>
-      <ellipse cx="148" cy="102" rx="16" ry="11"
-        fill="rgba(255,130,130,0.32)" filter="url(#f-blush)"/>
-    </>
-  );
-}
-
+/* ─── Body ────────────────────────────────────────────────────────────────── */
 function Body() {
   return (
     <>
-      {/* Shoulders / torso */}
-      <path d="M 22 158 Q 50 148 100 146 Q 150 148 178 158 L 184 220 L 16 220 Z"
-        fill="url(#g-cloth)"/>
-      {/* Cloth highlight */}
-      <path d="M 22 158 Q 50 148 100 146 Q 150 148 178 158 L 170 190 Q 100 182 30 190 Z"
-        fill="url(#g-cloth-hi)"/>
-      {/* Ragged neckline */}
-      <path d="M 64 150 L 70 140 L 76 150 L 82 138 L 88 149 L 94 142 L 100 150 L 106 142 L 112 149 L 118 138 L 124 150 L 130 140 L 136 150"
-        stroke="#5a3010" strokeWidth="2.5" fill="#5a3010" strokeLinejoin="round"/>
-      {/* Cloth fold lines */}
-      <path d="M 55 175 Q 80 170 100 172 Q 120 170 145 175"
-        stroke="rgba(0,0,0,0.15)" strokeWidth="1.5" fill="none"/>
-      <path d="M 40 192 Q 70 186 100 188 Q 130 186 160 192"
-        stroke="rgba(0,0,0,0.1)" strokeWidth="1.2" fill="none"/>
-      {/* Ground shadow */}
-      <ellipse cx="100" cy="220" rx="62" ry="7"
-        fill="rgba(0,0,0,0.22)"/>
+      <path d="M 28 170 Q 56 158 100 156 Q 144 158 172 170 L 176 224 L 24 224 Z"
+        fill="url(#gm-cloth)"/>
+      <path d="M 28 170 Q 56 158 100 156 Q 144 158 172 170 L 162 196 Q 100 188 38 196 Z"
+        fill="rgba(255,200,140,0.12)"/>
+      <ellipse cx="100" cy="224" rx="65" ry="8" fill="rgba(0,0,0,0.15)"/>
+    </>
+  );
+}
+
+/* ─── Cheeks ──────────────────────────────────────────────────────────────── */
+function Cheeks() {
+  return (
+    <>
+      <ellipse cx="46" cy="118" rx="18" ry="13"
+        fill="rgba(255,120,100,0.3)" filter="url(#gm-blush)"/>
+      <ellipse cx="154" cy="118" rx="18" ry="13"
+        fill="rgba(255,120,100,0.3)" filter="url(#gm-blush)"/>
     </>
   );
 }
 
 /* ─── Eyebrows ────────────────────────────────────────────────────────────── */
 function Brows({ type }) {
-  const brow = (d, w = 4) => (
-    <path d={d} fill="#1e0e04" stroke="#1e0e04"
+  const b = (d, w = 4.5) => (
+    <path d={d} fill="#1a0a02" stroke="#1a0a02"
       strokeWidth={w} strokeLinecap="round" strokeLinejoin="round"/>
   );
-  switch (type) {
-    case 'droopy':    return <>{brow("M 56 68 Q 68 73 80 71")}{brow("M 120 71 Q 132 73 144 68")}</>;
-    case 'determined':return <>{brow("M 54 64 Q 68 70 80 67",4.5)}{brow("M 120 67 Q 132 70 146 64",4.5)}</>;
-    case 'relaxed':   return <>{brow("M 56 65 Q 68 60 80 63")}{brow("M 120 63 Q 132 60 144 65")}</>;
-    case 'smug':      return <>{brow("M 56 62 Q 68 56 80 60")}{brow("M 120 63 Q 132 61 144 64")}</>;
-    case 'raised':    return <>{brow("M 56 60 Q 68 53 80 57")}{brow("M 120 57 Q 132 53 144 60")}</>;
-    case 'panicked':  return <>{brow("M 54 62 Q 68 70 80 64",4.5)}{brow("M 120 64 Q 132 70 146 62",4.5)}</>;
-    default:          return null;
-  }
+  if (type === 'relaxed')   return <>{b("M 52 72 Q 68 67 82 70")}{b("M 118 70 Q 132 67 148 72")}</>;
+  if (type === 'determined')return <>{b("M 50 68 Q 68 74 82 70",5)}{b("M 118 70 Q 132 74 150 68",5)}</>;
+  if (type === 'happy')     return <>{b("M 52 68 Q 68 62 82 66")}{b("M 118 66 Q 132 62 148 68")}</>;
+  if (type === 'raised')    return <>{b("M 52 62 Q 68 55 82 60")}{b("M 118 60 Q 132 55 148 62")}</>;
+  if (type === 'worried')   return <>{b("M 50 66 Q 68 74 82 68",5)}{b("M 118 68 Q 132 74 150 66",5)}</>;
+  return null;
 }
 
 /* ─── Eyes ────────────────────────────────────────────────────────────────── */
-function EyeUnit({ cx, clipId, state }) {
-  const rx = 19, ry = 17;
+function EyeUnit({ cx, state }) {
+  const cy = 104;
 
-  if (state === 'content' || state === 'happy') {
+  if (state === 'content') {
     return (
-      <path
-        d={`M ${cx - rx} 86 Q ${cx} ${86 - ry - 4} ${cx + rx} 86`}
-        stroke="#1a0a00" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <path d={`M ${cx-22} ${cy} Q ${cx} ${cy-20} ${cx+22} ${cy}`}
+        stroke="#1a0a00" strokeWidth="4" fill="none" strokeLinecap="round"/>
     );
   }
-
   if (state === 'stars') {
     return (
       <>
-        <ellipse cx={cx} cy="86" rx={rx} ry={ry} fill="url(#g-sclera)"/>
-        <text x={cx - 14} y={92} fontSize="18">⭐</text>
+        <ellipse cx={cx} cy={cy} rx="26" ry="24" fill="white" stroke="rgba(0,0,0,0.08)" strokeWidth="0.8"/>
+        <text x={cx - 16} y={cy + 10} fontSize="22">⭐</text>
       </>
     );
   }
-
   if (state === 'spiral') {
     return (
       <>
-        <ellipse cx={cx} cy="86" rx={rx} ry={ry} fill="url(#g-sclera)"/>
-        <line x1={cx-12} y1="74" x2={cx+12} y2="98" stroke="#1a0a00" strokeWidth="3.5" strokeLinecap="round"/>
-        <line x1={cx+12} y1="74" x2={cx-12} y2="98" stroke="#1a0a00" strokeWidth="3.5" strokeLinecap="round"/>
-        <circle cx={cx} cy="86" r="4" fill="#cc2222"/>
+        <ellipse cx={cx} cy={cy} rx="26" ry="24" fill="white" stroke="rgba(0,0,0,0.08)" strokeWidth="0.8"/>
+        <line x1={cx-14} y1={cy-14} x2={cx+14} y2={cy+14} stroke="#1a0a00" strokeWidth="4" strokeLinecap="round"/>
+        <line x1={cx+14} y1={cy-14} x2={cx-14} y2={cy+14} stroke="#1a0a00" strokeWidth="4" strokeLinecap="round"/>
+        <circle cx={cx} cy={cy} r="5" fill="#dc2626"/>
       </>
     );
   }
 
-  // All variants that show the eyeball
-  const pupilR = state === 'manic' ? 10 : state === 'smug' ? 7 : 8;
-  const irisR  = state === 'manic' ? 14 : state === 'smug' ? 10 : 12;
-  const pupilOx = state === 'smug' ? 2 : 1;
-
-  // Eyelid fraction — how much is covered from top
-  const lidFrac = state === 'sleepy' ? 0.65 : state === 'smug' ? 0.40 : 0;
+  const isManic = state === 'manic';
+  const irisR   = isManic ? 18 : 15;
+  const pupilR  = isManic ? 12 : 9;
+  const lidFrac = state === 'sleepy' ? 0.55 : 0;
+  const ry      = 24;
   const lidH    = ry * 2 * lidFrac;
 
   return (
     <g>
       {/* Sclera */}
-      <ellipse cx={cx} cy="86" rx={rx} ry={ry} fill="url(#g-sclera)"
-        stroke="rgba(0,0,0,0.12)" strokeWidth="0.8"/>
-
+      <ellipse cx={cx} cy={cy} rx="26" ry={ry} fill="white" stroke="rgba(0,0,0,0.08)" strokeWidth="0.8"/>
       {/* Iris */}
-      <ellipse cx={cx + pupilOx} cy="86" rx={irisR} ry={irisR * 0.92}
-        fill="url(#g-iris)" clipPath={`url(#${clipId})`}/>
-
+      <ellipse cx={cx} cy={cy} rx={irisR} ry={irisR * 0.92} fill="url(#gm-iris)"/>
       {/* Pupil */}
-      <ellipse cx={cx + pupilOx} cy="87" rx={pupilR * 0.62} ry={pupilR * 0.72}
-        fill="#0a0600" clipPath={`url(#${clipId})`}/>
-
-      {/* Primary specular highlight */}
-      <ellipse cx={cx + pupilOx + 4} cy="80" rx="5" ry="3.5"
-        fill="white" opacity="0.95" clipPath={`url(#${clipId})`}/>
-      {/* Secondary tiny specular */}
-      <circle cx={cx + pupilOx - 3} cy="91" r="1.8"
-        fill="white" opacity="0.55" clipPath={`url(#${clipId})`}/>
-
-      {/* Eyelid overlay (for sleepy / smug) */}
+      <ellipse cx={cx} cy={cy + 1} rx={pupilR * 0.65} ry={pupilR * 0.78} fill="#0a0600"/>
+      {/* Primary shine */}
+      <ellipse cx={cx + 6} cy={cy - 8} rx="7" ry="5" fill="white" opacity="0.96"/>
+      {/* Secondary shine */}
+      <circle cx={cx - 5} cy={cy + 10} r="3" fill="white" opacity="0.5"/>
+      {/* Eyelid for sleepy */}
       {lidFrac > 0 && (
-        <rect x={cx - rx - 1} y={86 - ry - 1} width={rx * 2 + 2} height={lidH + 1}
-          rx="8" fill="url(#g-skin)"/>
+        <rect x={cx - 27} y={cy - ry - 1} width={54} height={lidH + 1}
+          rx="10" fill="url(#gm-skin)"/>
       )}
-
       {/* Eye outline */}
-      <ellipse cx={cx} cy="86" rx={rx} ry={ry}
-        fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1.2"/>
+      <ellipse cx={cx} cy={cy} rx="26" ry={ry}
+        fill="none" stroke="rgba(0,0,0,0.12)" strokeWidth="1.2"/>
     </g>
   );
 }
 
-/* ─── Mouths ──────────────────────────────────────────────────────────────── */
+/* ─── Nose ────────────────────────────────────────────────────────────────── */
+function Nose() {
+  return (
+    <>
+      <ellipse cx="100" cy="130" rx="12" ry="9" fill="#2e7a1a" opacity="0.7"/>
+      <ellipse cx="95" cy="133"  rx="4.5" ry="3.5" fill="#154010" opacity="0.85"/>
+      <ellipse cx="105" cy="133" rx="4.5" ry="3.5" fill="#154010" opacity="0.85"/>
+      <circle cx="94" cy="132"  r="1.2" fill="rgba(255,255,255,0.22)"/>
+      <circle cx="104" cy="132" r="1.2" fill="rgba(255,255,255,0.22)"/>
+    </>
+  );
+}
+
+/* ─── Mouth ───────────────────────────────────────────────────────────────── */
 function Mouth({ type }) {
-  const lip = 'rgba(20,80,10,0.75)';
-  switch (type) {
-    case 'flat':
-      return <path d="M 82 128 Q 100 130 118 128"
-        stroke={lip} strokeWidth="2.5" fill="none" strokeLinecap="round"/>;
-
-    case 'smile':
-      return (
-        <>
-          <path d="M 78 126 Q 100 140 122 126"
-            fill="rgba(10,50,5,0.6)" stroke={lip} strokeWidth="1.5"/>
-          {/* lower lip highlight */}
-          <path d="M 84 136 Q 100 140 116 136"
-            stroke="rgba(120,200,80,0.35)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        </>
-      );
-
-    case 'smirk':
-      return <path d="M 82 126 Q 96 134 114 126"
-        fill="rgba(10,50,5,0.55)" stroke={lip} strokeWidth="1.5"/>;
-
-    case 'grin': {
-      return (
-        <g>
-          {/* Outer mouth shape */}
-          <path d="M 68 124 Q 100 148 132 124"
-            fill="#0a2808"/>
-          {/* Teeth row */}
-          {[68,80,92,104,116].map((x,i) => (
-            <rect key={i} x={x + 2} y="124" width="10" height="10"
-              rx="2" fill="url(#g-teeth)"/>
-          ))}
-          {/* Gum line */}
-          <path d="M 68 124 Q 100 136 132 124"
-            fill="none" stroke="rgba(255,180,180,0.6)" strokeWidth="1.5"/>
-          {/* Lip curve */}
-          <path d="M 68 124 Q 100 148 132 124"
-            fill="none" stroke={lip} strokeWidth="1.8"/>
-        </g>
-      );
-    }
-
-    case 'bigGrin': {
-      return (
-        <g>
-          <path d="M 62 122 Q 100 152 138 122" fill="#0a2808"/>
-          {[62,74,87,100,113,126].map((x,i) => (
-            <rect key={i} x={x + 2} y="122" width="11" height="12"
-              rx="2.5" fill="url(#g-teeth)"/>
-          ))}
-          <path d="M 62 122 Q 100 138 138 122"
-            fill="none" stroke="rgba(255,180,180,0.5)" strokeWidth="1.5"/>
-          <path d="M 62 122 Q 100 152 138 122"
-            fill="none" stroke={lip} strokeWidth="2"/>
-        </g>
-      );
-    }
-
-    case 'openScream':
-      return (
-        <g>
-          <ellipse cx="100" cy="134" rx="20" ry="14" fill="#0a2808"/>
-          <ellipse cx="100" cy="130" rx="20" ry="8" fill="#cc4444" opacity="0.8"/>
-          {/* Tongue tip */}
-          <ellipse cx="100" cy="140" rx="10" ry="6" fill="#e05050" opacity="0.9"/>
-        </g>
-      );
-
-    default: return null;
-  }
+  const lip = 'rgba(14,60,8,0.7)';
+  if (type === 'flat')
+    return <path d="M 80 148 Q 100 150 120 148" stroke={lip} strokeWidth="3" fill="none" strokeLinecap="round"/>;
+  if (type === 'smile')
+    return (
+      <>
+        <path d="M 76 146 Q 100 162 124 146" fill="rgba(8,42,4,0.55)" stroke={lip} strokeWidth="1.5"/>
+        <path d="M 82 156 Q 100 162 118 156" stroke="rgba(100,200,60,0.3)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      </>
+    );
+  if (type === 'grin')
+    return (
+      <g>
+        <path d="M 66 144 Q 100 166 134 144" fill="#0a2808"/>
+        {[66,78,90,102,114].map((x, i) => (
+          <rect key={i} x={x + 2} y="144" width="10" height="10" rx="2" fill="#fffff0"/>
+        ))}
+        <path d="M 66 144 Q 100 166 134 144" fill="none" stroke={lip} strokeWidth="2"/>
+      </g>
+    );
+  if (type === 'bigGrin')
+    return (
+      <g>
+        <path d="M 60 142 Q 100 168 140 142" fill="#0a2808"/>
+        {[60,73,86,100,113,126].map((x, i) => (
+          <rect key={i} x={x + 2} y="142" width="11" height="12" rx="2.5" fill="#fffff0"/>
+        ))}
+        <path d="M 60 142 Q 100 168 140 142" fill="none" stroke={lip} strokeWidth="2"/>
+      </g>
+    );
+  if (type === 'open')
+    return (
+      <g>
+        <ellipse cx="100" cy="152" rx="22" ry="15" fill="#0a2808"/>
+        <ellipse cx="100" cy="147" rx="22" ry="9"  fill="#cc4444" opacity="0.75"/>
+        <ellipse cx="100" cy="158" rx="11" ry="7"  fill="#e05050" opacity="0.9"/>
+      </g>
+    );
+  return null;
 }
 
 /* ─── Accessories ─────────────────────────────────────────────────────────── */
-function Extra({ type, glowColor }) {
-  switch (type) {
-    case 'phone':
-      return (
-        <g>
-          <rect x="126" y="128" width="18" height="28" rx="4"
-            fill="#111827" stroke="#374151" strokeWidth="1.2"/>
-          <rect x="128" y="131" width="14" height="18" rx="2"
-            fill="#2563eb" opacity="0.75"/>
-          {/* Screen glow reflection on face */}
-          <ellipse cx="126" cy="132" rx="18" ry="12"
-            fill="rgba(59,130,246,0.12)" style={{filter:'blur(6px)'}}/>
-          <text style={{animation:'zzz-drift 2.4s ease-out infinite 0s'}}
-            x="150" y="110" fontSize="13" fontWeight="bold" fill="#93c5fd" opacity="0.8">z</text>
-          <text style={{animation:'zzz-drift 2.4s ease-out infinite 0.9s'}}
-            x="158" y="92"  fontSize="16" fontWeight="bold" fill="#93c5fd" opacity="0.55">z</text>
-          <text style={{animation:'zzz-drift 2.4s ease-out infinite 1.7s'}}
-            x="164" y="72"  fontSize="20" fontWeight="bold" fill="#93c5fd" opacity="0.3">Z</text>
-        </g>
-      );
-
-    case 'laptop':
-      return (
-        <g>
-          {/* Laptop glow from below */}
-          <ellipse cx="100" cy="196" rx="46" ry="12"
-            fill="rgba(96,165,250,0.22)" style={{filter:'blur(6px)'}}/>
-          {/* Lightning bolts */}
-          <path d="M 14 40 L 8 56 L 16 56 L 8 74 L 24 52 L 16 52 Z"
-            fill={glowColor} opacity="0.8"
-            style={{animation:'spark-pop 2s ease-out infinite 0.3s'}}/>
-          <path d="M 178 34 L 173 48 L 180 48 L 174 62 L 188 44 L 181 44 Z"
-            fill={glowColor} opacity="0.7"
-            style={{animation:'spark-pop 2s ease-out infinite 1.2s'}}/>
-        </g>
-      );
-
-    case 'flower':
-      return (
-        <text x="132" y="134" fontSize="26"
-          style={{animation:'spark-pop 3s ease-out infinite 0.5s'}}>🌸</text>
-      );
-
-    case 'crown':
-      return (
-        <g>
-          <path d="M 58 24 L 68 8 L 100 18 L 132 8 L 142 24 L 136 30 L 64 30 Z"
-            fill="#fbbf24" stroke="#d97706" strokeWidth="2"/>
-          <circle cx="100" cy="10" r="5.5" fill="#ef4444"/>
-          <circle cx="68"  cy="12" r="4"   fill="#34d399"/>
-          <circle cx="132" cy="12" r="4"   fill="#60a5fa"/>
-          {/* Crown highlight */}
-          <path d="M 65 26 Q 100 22 135 26"
-            stroke="rgba(255,255,255,0.4)" strokeWidth="2" fill="none"/>
-        </g>
-      );
-
-    case 'crownTilt':
-      return (
-        <g transform="rotate(14,100,18)">
-          <path d="M 58 24 L 68 8 L 100 18 L 132 8 L 142 24 L 136 30 L 64 30 Z"
-            fill="#a78bfa" stroke="#7c3aed" strokeWidth="2"/>
-          <circle cx="100" cy="10" r="5" fill="#f9a8d4"/>
-        </g>
-      );
-
-    case 'papers':
-      return (
-        <g>
-          {[[10,30,-22],[16,54,15],[170,24,18],[166,52,-12]].map(([x,y,rot],i) => (
-            <rect key={i} x={x} y={y} width="20" height="26" rx="2"
-              fill="white" stroke="#e5e7eb" strokeWidth="1"
-              transform={`rotate(${rot},${x+10},${y+13})`}
-              style={{animation:`spark-pop 1.5s ease-out infinite ${i*0.4}s`}}/>
-          ))}
-        </g>
-      );
-
-    case 'sparkles':
-      return (
-        <g>
-          {[['8','32','16','0s'],['170','24','14','0.7s'],['168','60','11','1.2s'],['10','62','11','1.8s']].map(([x,y,fs,d],i) => (
-            <text key={i} x={x} y={y} fontSize={fs}
-              style={{animation:`spark-pop 2.2s ease-out infinite ${d}`}}>✨</text>
-          ))}
-        </g>
-      );
-
-    default: return null;
-  }
+function Extra({ type, color }) {
+  if (type === 'crown')
+    return (
+      <g>
+        <path d="M 58 30 L 68 14 L 100 24 L 132 14 L 142 30 L 136 36 L 64 36 Z"
+          fill="#fbbf24" stroke="#d97706" strokeWidth="2"/>
+        <circle cx="100" cy="16" r="5.5" fill="#ef4444"/>
+        <circle cx="68"  cy="18" r="4"   fill="#34d399"/>
+        <circle cx="132" cy="18" r="4"   fill="#60a5fa"/>
+        <path d="M 66 32 Q 100 28 134 32" stroke="rgba(255,255,255,0.45)" strokeWidth="2" fill="none"/>
+      </g>
+    );
+  if (type === 'crownTilt')
+    return (
+      <g transform="rotate(14,100,24)">
+        <path d="M 60 30 L 70 14 L 100 22 L 130 14 L 140 30 L 134 36 L 66 36 Z"
+          fill="#a78bfa" stroke="#7c3aed" strokeWidth="2"/>
+        <circle cx="100" cy="14" r="5" fill="#f9a8d4"/>
+      </g>
+    );
+  if (type === 'sparks')
+    return (
+      <g>
+        <path d="M 16 48 L 10 62 L 18 62 L 10 78 L 26 56 L 18 56 Z"
+          fill={color} opacity="0.85"
+          style={{ animation: 'spark-pop 2s ease-out infinite 0.3s' }}/>
+        <path d="M 178 42 L 173 54 L 180 54 L 174 66 L 188 48 L 181 48 Z"
+          fill={color} opacity="0.75"
+          style={{ animation: 'spark-pop 2s ease-out infinite 1.1s' }}/>
+      </g>
+    );
+  if (type === 'sparkles')
+    return (
+      <g>
+        {[['10','38','18','0s'],['172','28','14','0.7s'],['170','64','12','1.3s'],['8','66','12','1.9s']].map(([x, y, fs, d], i) => (
+          <text key={i} x={x} y={y} fontSize={fs}
+            style={{ animation: `spark-pop 2.2s ease-out infinite ${d}` }}>✨</text>
+        ))}
+      </g>
+    );
+  return null;
 }
 
-/* ─── Main component (GSAP-powered) ──────────────────────────────────────── */
-export default function GoblinMascot({ mascotState = 'idle', size = 180 }) {
+/* ─── Main Component ──────────────────────────────────────────────────────── */
+export default function GoblinMascot({ mascotState = 'idle', size = 200 }) {
   const cfg = STATE[mascotState] ?? STATE.idle;
 
-  // SVG group refs for per-part GSAP animation
-  const goblinRef   = useRef(null);
-  const headGrpRef  = useRef(null);
-  const bodyGrpRef  = useRef(null);
-  const earLGrpRef  = useRef(null);
-  const earRGrpRef  = useRef(null);
-  const eyeLGrpRef  = useRef(null);
-  const eyeRGrpRef  = useRef(null);
-  const blinkTlRef  = useRef(null);
-  const mountedRef  = useRef(true);
+  const goblinRef  = useRef(null);
+  const headGrpRef = useRef(null);
+  const bodyGrpRef = useRef(null);
+  const earLGrpRef = useRef(null);
+  const earRGrpRef = useRef(null);
+  const eyeLGrpRef = useRef(null);
+  const eyeRGrpRef = useRef(null);
+  const blinkTlRef = useRef(null);
+  const mountedRef = useRef(true);
 
   const [captionIdx, setCaptionIdx] = useState(0);
-  const captionRef = useRef(null);
+  const captionTimer = useRef(null);
 
-  // Caption cycling
-  useEffect(() => {
-    setCaptionIdx(0);
-    captionRef.current = setInterval(() => {
-      setCaptionIdx(i => (i + 1) % cfg.captions.length);
-    }, 4500);
-    return () => clearInterval(captionRef.current);
-  }, [mascotState, cfg.captions.length]);
-
-  // Mount tracking
   useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
   }, []);
 
-  // Eye blink — scheduled recursively with random delay
-  const scheduleBlink = useCallback((baseDelay = 3.5) => {
+  useEffect(() => {
+    setCaptionIdx(0);
+    clearInterval(captionTimer.current);
+    captionTimer.current = setInterval(() => {
+      setCaptionIdx(i => (i + 1) % cfg.captions.length);
+    }, 4500);
+    return () => clearInterval(captionTimer.current);
+  }, [mascotState, cfg.captions.length]);
+
+  const scheduleBlink = useCallback((delay = 3.5) => {
     if (!mountedRef.current) return;
     if (blinkTlRef.current) blinkTlRef.current.kill();
-    if (!eyeLGrpRef.current || !eyeRGrpRef.current) return;
-    const delay = baseDelay + Math.random() * 2.5;
-    blinkTlRef.current = gsap.timeline({ delay })
-      .to([eyeLGrpRef.current, eyeRGrpRef.current], {
-        scaleY: 0.05, duration: 0.07, ease: 'power2.in', transformOrigin: 'center center'
-      })
-      .to([eyeLGrpRef.current, eyeRGrpRef.current], {
-        scaleY: 1, duration: 0.1, ease: 'power1.out', transformOrigin: 'center center'
-      })
-      .then(() => { if (mountedRef.current) scheduleBlink(baseDelay); });
+    const tgtL = eyeLGrpRef.current;
+    const tgtR = eyeRGrpRef.current;
+    if (!tgtL || !tgtR) return;
+    const d = delay + Math.random() * 2.5;
+    blinkTlRef.current = gsap.timeline({ delay: d })
+      .to([tgtL, tgtR], { scaleY: 0.05, duration: 0.07, ease: 'power2.in',  transformOrigin: 'center center' })
+      .to([tgtL, tgtR], { scaleY: 1,    duration: 0.10, ease: 'power1.out', transformOrigin: 'center center' })
+      .then(() => { if (mountedRef.current) scheduleBlink(delay); });
   }, []);
 
-  // Main animation — runs on every mascotState change
   useEffect(() => {
-    const grps = [goblinRef, headGrpRef, bodyGrpRef, earLGrpRef, earRGrpRef, eyeLGrpRef, eyeRGrpRef];
-    grps.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
+    const refs = [goblinRef, headGrpRef, bodyGrpRef, earLGrpRef, earRGrpRef, eyeLGrpRef, eyeRGrpRef];
+    refs.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
     if (blinkTlRef.current) blinkTlRef.current.kill();
-    grps.forEach(r => { if (r.current) gsap.set(r.current, { clearProps: 'all' }); });
+    refs.forEach(r => { if (r.current) gsap.set(r.current, { clearProps: 'all' }); });
     if (!goblinRef.current) return;
 
-    switch (mascotState) {
+    const g  = goblinRef.current;
+    const h  = headGrpRef.current;
+    const bd = bodyGrpRef.current;
+    const eL = earLGrpRef.current;
+    const eR = earRGrpRef.current;
+    const yL = eyeLGrpRef.current;
+    const yR = eyeRGrpRef.current;
 
+    switch (mascotState) {
       case 'idle':
-        gsap.to(goblinRef.current, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to(bodyGrpRef.current, { scaleY: 1.018, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
-        gsap.to(headGrpRef.current, { rotation: -1.5, duration: 3.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
+        gsap.to(g, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        if (bd) gsap.to(bd, { scaleY: 1.015, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        if (h)  gsap.to(h,  { rotation: -1.5, duration: 3.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 108px' });
         scheduleBlink(3.5);
         break;
 
       case 'working':
-        gsap.to(goblinRef.current, { y: -6, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to(bodyGrpRef.current, { scaleY: 1.03, scaleX: 0.99, duration: 0.65, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
-        gsap.to(headGrpRef.current, { y: 3, rotation: 2, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
-        gsap.to([eyeLGrpRef.current, eyeRGrpRef.current], { scale: 1.07, duration: 0.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center center' });
+        gsap.to(g, { y: -5, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        if (bd) gsap.to(bd, { scaleY: 1.03, duration: 0.65, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        if (h)  gsap.to(h,  { y: 3, rotation: 2, duration: 0.85, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 108px' });
+        if (yL && yR) gsap.to([yL, yR], { scale: 1.08, duration: 0.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center center' });
         break;
 
       case 'break':
-        gsap.to(goblinRef.current, { y: -14, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to(goblinRef.current, { rotation: -2.5, duration: 4.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
-        gsap.to(earLGrpRef.current, { rotation: 5, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '44px 52px' });
-        gsap.to(earRGrpRef.current, { rotation: -5, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '156px 52px' });
+        gsap.to(g, { y: -14, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(g, { rotation: -2.5, duration: 4.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 224px' });
+        if (eL) gsap.to(eL, { rotation: 5,  duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '44px 52px' });
+        if (eR) gsap.to(eR, { rotation: -5, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '156px 52px' });
         scheduleBlink(5);
         break;
 
       case 'overdue':
-        gsap.to(goblinRef.current, { x: 5, duration: 0.065, yoyo: true, repeat: -1, ease: 'none' });
-        gsap.to(headGrpRef.current, { x: 4, duration: 0.055, yoyo: true, repeat: -1, ease: 'none' });
-        gsap.to(bodyGrpRef.current, { scaleY: 1.04, duration: 0.32, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
+        gsap.to(g, { x: 5,  duration: 0.065, yoyo: true, repeat: -1, ease: 'none' });
+        if (h)  gsap.to(h,  { x: 4,  duration: 0.055, yoyo: true, repeat: -1, ease: 'none' });
+        if (bd) gsap.to(bd, { scaleY: 1.04, duration: 0.32, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: 'center top' });
         break;
 
       case 'celebrate': {
-        // Professional squash & stretch jump with elastic landing
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.28 });
-        tl.to(goblinRef.current, { y: -32, scaleX: 0.84, scaleY: 1.22, duration: 0.3, ease: 'power2.out', transformOrigin: '100px 220px' })
-          .to(goblinRef.current, { y: 0, scaleX: 1.28, scaleY: 0.78, duration: 0.17, ease: 'power3.in', transformOrigin: '100px 220px' })
-          .to(goblinRef.current, { scaleX: 1, scaleY: 1, duration: 0.7, ease: 'elastic.out(1.2, 0.4)', transformOrigin: '100px 220px' })
-          .to(goblinRef.current, { rotation: -8, duration: 0.18, ease: 'power2.inOut', transformOrigin: '100px 220px' })
-          .to(goblinRef.current, { rotation: 8, duration: 0.18, ease: 'power2.inOut', transformOrigin: '100px 220px' })
-          .to(goblinRef.current, { rotation: 0, duration: 0.14, ease: 'power1.out', transformOrigin: '100px 220px' });
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
+        tl.to(g, { y: -34, scaleX: 0.86, scaleY: 1.2, duration: 0.28, ease: 'power2.out', transformOrigin: '100px 224px' })
+          .to(g, { y: 0, scaleX: 1.26, scaleY: 0.8, duration: 0.16, ease: 'power3.in', transformOrigin: '100px 224px' })
+          .to(g, { scaleX: 1, scaleY: 1, duration: 0.7, ease: 'elastic.out(1.2,0.4)', transformOrigin: '100px 224px' })
+          .to(g, { rotation: -7, duration: 0.16, ease: 'power2.inOut', transformOrigin: '100px 224px' })
+          .to(g, { rotation: 7,  duration: 0.16, ease: 'power2.inOut', transformOrigin: '100px 224px' })
+          .to(g, { rotation: 0,  duration: 0.12, ease: 'power1.out',   transformOrigin: '100px 224px' });
         break;
       }
 
       case 'good':
-        gsap.to(goblinRef.current, { scale: 1.04, y: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
-        gsap.to(headGrpRef.current, { rotation: 2, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 150px' });
+        gsap.to(g, { scale: 1.04, y: -4, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 224px' });
+        if (h) gsap.to(h, { rotation: 2, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 108px' });
         scheduleBlink(4.5);
         break;
 
       case 'great':
-        gsap.to(goblinRef.current, { scale: 1.06, y: -6, duration: 1.4, yoyo: true, repeat: -1, ease: 'power1.inOut', transformOrigin: '100px 220px' });
-        gsap.to(earLGrpRef.current, { rotation: 9, duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '44px 52px' });
-        gsap.to(earRGrpRef.current, { rotation: -9, duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '156px 52px' });
+        gsap.to(g, { scale: 1.06, y: -6, duration: 1.4, yoyo: true, repeat: -1, ease: 'power1.inOut', transformOrigin: '100px 224px' });
+        if (eL) gsap.to(eL, { rotation: 9,  duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '44px 52px' });
+        if (eR) gsap.to(eR, { rotation: -9, duration: 0.65, yoyo: true, repeat: -1, ease: 'power2.inOut', transformOrigin: '156px 52px' });
         scheduleBlink(4);
         break;
 
       case 'done':
-        gsap.to(goblinRef.current, { y: -10, duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to(goblinRef.current, { rotation: -1.5, duration: 5.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 220px' });
+        gsap.to(g, { y: -10, duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(g, { rotation: -1.5, duration: 5.5, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '100px 224px' });
         scheduleBlink(5.5);
         break;
 
       default:
-        gsap.to(goblinRef.current, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to(g, { y: -8, duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
         scheduleBlink(4);
     }
 
     return () => {
-      grps.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
+      refs.forEach(r => { if (r.current) gsap.killTweensOf(r.current); });
       if (blinkTlRef.current) blinkTlRef.current.kill();
     };
   }, [mascotState, scheduleBlink]);
 
   return (
-    <div className="flex flex-col items-center gap-3 select-none">
-      <div className="relative flex items-center justify-center">
-        <div className="absolute rounded-full animate-ring" style={{
-          width: size + 32, height: size + 32,
-          background: `radial-gradient(circle, ${cfg.glow} 0%, transparent 68%)`,
-        }}/>
-        <svg viewBox="0 0 200 220" width={size} height={size}
-          aria-label="Goblin mascot"
-          style={{ filter: `drop-shadow(0 0 24px ${cfg.glow}) drop-shadow(0 0 8px ${cfg.glow})`, overflow: 'visible' }}>
-          <Defs/>
-          <g ref={goblinRef}>
-            <Extra type={cfg.extra} glowColor={cfg.ringColor}/>
-            <g ref={earLGrpRef}><LeftEar/></g>
-            <g ref={earRGrpRef}><RightEar/></g>
-            <g ref={bodyGrpRef}><Body/></g>
-            <g ref={headGrpRef}>
-              <Head/><Hair/><Cheeks/><Nose/>
-            </g>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, userSelect: 'none' }}>
+      <svg viewBox="0 0 200 232" width={size} height={size}
+        aria-label="Goblin mascot"
+        style={{ overflow: 'visible', filter: `drop-shadow(0 0 20px ${cfg.glow})` }}>
+        <Defs/>
+        {/* Ground shadow */}
+        <ellipse cx="100" cy="226" rx="66" ry="9" fill="rgba(10,40,5,0.13)"/>
+        <g ref={goblinRef}>
+          <Extra type={cfg.extra} color={cfg.ringColor}/>
+          <g ref={earLGrpRef}><LeftEar/></g>
+          <g ref={earRGrpRef}><RightEar/></g>
+          <g ref={bodyGrpRef}><Body/></g>
+          <g ref={headGrpRef}>
+            <Head/>
+            <Hair/>
+            <Cheeks/>
             <Brows type={cfg.brows}/>
-            <g ref={eyeLGrpRef}><EyeUnit cx={72}  clipId="cp-eyeL" state={cfg.eyes}/></g>
-            <g ref={eyeRGrpRef}><EyeUnit cx={128} clipId="cp-eyeR" state={cfg.eyes}/></g>
+            <g ref={eyeLGrpRef}><EyeUnit cx={70}  state={cfg.eyes}/></g>
+            <g ref={eyeRGrpRef}><EyeUnit cx={130} state={cfg.eyes}/></g>
+            <Nose/>
             <Mouth type={cfg.mouth}/>
           </g>
-        </svg>
-      </div>
-      <div key={`${mascotState}-${captionIdx}`} className="animate-caption px-4 py-2 rounded-2xl text-center"
-        style={{ background:'rgba(255,255,255,0.05)', border:`1px solid ${cfg.glow}`, backdropFilter:'blur(12px)', maxWidth:270 }}>
-        <p className="text-sm font-semibold leading-snug" style={{ color: cfg.ringColor }}>
+        </g>
+      </svg>
+
+      {/* Caption bubble */}
+      <div key={`${mascotState}-${captionIdx}`}
+        style={{
+          padding: '8px 18px', borderRadius: 99,
+          background: 'white',
+          border: `1.5px solid ${cfg.glow}`,
+          maxWidth: 260,
+        }}
+        className="animate-caption">
+        <p style={{ fontSize: 13, fontWeight: 700, color: '#0f2008', textAlign: 'center', lineHeight: 1.3 }}>
           {cfg.captions[captionIdx]}
         </p>
       </div>
