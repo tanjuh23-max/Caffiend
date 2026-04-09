@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import GoblinMascot from './components/GoblinMascot';
+import Onboarding from './components/Onboarding';
 
 /* ─── Constants ───────────────────────────────────────────────────────────── */
 const WORK_OPTIONS  = [
@@ -167,6 +168,23 @@ function UpgradeBanner({ onDismiss }) {
 
 /* ─── Main App ────────────────────────────────────────────────────────────── */
 export default function App() {
+  const [onboarded, setOnboarded] = useState(
+    () => localStorage.getItem('focusbro_onboarded') === 'true'
+  );
+
+  if (!onboarded) {
+    return (
+      <Onboarding onComplete={() => {
+        localStorage.setItem('focusbro_onboarded', 'true');
+        setOnboarded(true);
+      }}/>
+    );
+  }
+
+  return <MainApp/>;
+}
+
+function MainApp() {
   const stored = loadState() ?? defaultState();
 
   const [sessions, setSessions]   = useState(stored.sessions);
