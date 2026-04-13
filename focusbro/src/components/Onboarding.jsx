@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import GoblinMascot from './GoblinMascot';
 
 /* ── Pricing ─────────────────────────────────────────────────────────────── */
 const PLANS = [
@@ -185,7 +186,7 @@ function ChainVisual({ broken }) {
 function Welcome({ onNext }) {
   return (
     <div className="flex flex-col items-center justify-center h-full px-6 text-center gap-6 animate-pop">
-      <div className="text-7xl" style={{ filter: 'drop-shadow(0 4px 24px rgba(34,197,94,0.4))' }}>🧌</div>
+      <GoblinMascot mascotState="idle" size={180}/>
       <div>
         <h1 style={{ fontSize: 32, fontWeight: 900, color: '#0f2008', letterSpacing: '-1px', lineHeight: 1.1 }}>
           Is your phone<br/>destroying your focus?
@@ -447,8 +448,8 @@ function Paywall({ onComplete }) {
   return (
     <div className="flex flex-col px-5 pt-6 gap-4 animate-pop">
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 44 }}>🧌</div>
-        <h2 style={{ fontSize: 26, fontWeight: 900, color: '#0f2008', marginTop: 8, lineHeight: 1.2 }}>
+        <GoblinMascot mascotState="great" size={140}/>
+        <h2 style={{ fontSize: 26, fontWeight: 900, color: '#0f2008', marginTop: 4, lineHeight: 1.2 }}>
           Unlock Full Goblin Mode
         </h2>
         <p style={{ fontSize: 14, color: '#4a6741', marginTop: 6 }}>
