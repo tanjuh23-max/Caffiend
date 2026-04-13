@@ -107,7 +107,7 @@ export default function GoblinMascot({ mascotState = 'idle', size = 220 }) {
         alt="Goblin mascot"
         width={size}
         height={size}
-        style={{ objectFit: 'contain', filter: glow }}
+        style={{ objectFit: 'contain', filter: glow, mixBlendMode: 'multiply' }}
       />
       <div key={`${mascotState}-${capIdx}`} className="animate-caption"
         style={{ padding: '6px 14px', borderRadius: 99,
