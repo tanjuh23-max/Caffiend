@@ -185,21 +185,33 @@ function ChainVisual({ broken }) {
 /* ── Step components ─────────────────────────────────────────────────────── */
 function Welcome({ onNext }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-6 text-center gap-6 animate-pop">
-      <GoblinMascot mascotState="idle" size={180}/>
-      <div>
-        <h1 style={{ fontSize: 32, fontWeight: 900, color: '#0f2008', letterSpacing: '-1px', lineHeight: 1.1 }}>
-          Is your phone<br/>destroying your focus?
-        </h1>
-        <p style={{ marginTop: 12, fontSize: 16, color: '#4a6741', lineHeight: 1.5 }}>
-          Brainfog diagnoses your phone addiction and trains your ADHD brain to lock in — without burning out.
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', minHeight: '100vh', padding: '40px 24px 32px',
+      textAlign: 'center', gap: 0 }} className="animate-pop">
+
+      {/* Goblin hero — takes up top half */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <GoblinMascot mascotState="idle" size={260}/>
       </div>
-      <button onClick={onNext}
-        style={{ width: '100%', padding: '18px', borderRadius: 18, background: '#15803d', color: 'white', fontSize: 18, fontWeight: 900, border: 'none', boxShadow: '0 8px 32px rgba(21,128,61,0.35)' }}>
-        Find out how bad it is →
-      </button>
-      <p style={{ fontSize: 12, color: '#7aaa6a' }}>Takes 60 seconds · No account needed</p>
+
+      {/* Text + CTA pinned to bottom half */}
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div>
+          <h1 style={{ fontSize: 34, fontWeight: 900, color: '#0f2008', letterSpacing: '-1px', lineHeight: 1.1, margin: 0 }}>
+            Is your phone<br/>destroying your focus?
+          </h1>
+          <p style={{ marginTop: 12, fontSize: 16, color: '#4a6741', lineHeight: 1.5 }}>
+            Brainfog diagnoses your phone addiction and trains your ADHD brain to lock in — without burning out.
+          </p>
+        </div>
+        <button onClick={onNext}
+          style={{ width: '100%', padding: '18px', borderRadius: 18, background: '#15803d',
+            color: 'white', fontSize: 18, fontWeight: 900, border: 'none',
+            boxShadow: '0 8px 32px rgba(21,128,61,0.35)', cursor: 'pointer' }}>
+          Find out how bad it is →
+        </button>
+        <p style={{ fontSize: 12, color: '#7aaa6a', margin: 0 }}>Takes 60 seconds · No account needed</p>
+      </div>
     </div>
   );
 }
