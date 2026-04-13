@@ -419,10 +419,30 @@ function ChainBreaker({ onNext }) {
   );
 }
 
+/* Stripe payment link URLs — injected at build time from .env */
+const STRIPE_LINKS = {
+  yearly:  (typeof __STRIPE_YEARLY__  !== 'undefined' && __STRIPE_YEARLY__)  || null,
+  monthly: (typeof __STRIPE_MONTHLY__ !== 'undefined' && __STRIPE_MONTHLY__) || null,
+  weekly:  (typeof __STRIPE_WEEKLY__  !== 'undefined' && __STRIPE_WEEKLY__)  || null,
+};
+
 function Paywall({ onComplete }) {
   const [selected, setSelected] = useState('yearly');
 
   const plan = PLANS.find(p => p.id === selected);
+  const stripeReady = !!STRIPE_LINKS.yearly;
+
+  function handleCTA() {
+    const link = STRIPE_LINKS[selected];
+    if (link) {
+      // Mark onboarding done so returning from Stripe lands on main app
+      localStorage.setItem('brainfog_onboarded', 'true');
+      window.location.href = link;
+    } else {
+      // Stripe not set up yet — skip paywall (dev mode)
+      onComplete();
+    }
+  }
 
   return (
     <div className="flex flex-col px-5 pt-6 gap-4 animate-pop">
@@ -487,16 +507,16 @@ function Paywall({ onComplete }) {
       </div>
 
       {/* CTA */}
-      <button onClick={onComplete}
-        style={{ width: '100%', padding: 18, borderRadius: 18, background: '#15803d', color: 'white', fontSize: 18, fontWeight: 900, border: 'none', boxShadow: '0 8px 32px rgba(21,128,61,0.4)' }}>
-        {plan.cta}
+      <button onClick={handleCTA}
+        style={{ width: '100%', padding: 18, borderRadius: 18, background: '#15803d', color: 'white', fontSize: 18, fontWeight: 900, border: 'none', boxShadow: '0 8px 32px rgba(21,128,61,0.4)', cursor: 'pointer' }}>
+        {plan.cta} {stripeReady ? '→' : '(dev)'}
       </button>
       <p style={{ fontSize: 12, color: '#7aaa6a', textAlign: 'center', marginTop: -8 }}>
         {plan.sub}
       </p>
 
       <button onClick={onComplete}
-        style={{ background: 'none', border: 'none', fontSize: 13, color: '#9ab890', padding: '4px 0 12px' }}>
+        style={{ background: 'none', border: 'none', fontSize: 13, color: '#9ab890', padding: '4px 0 12px', cursor: 'pointer' }}>
         Maybe later — continue free
       </button>
     </div>

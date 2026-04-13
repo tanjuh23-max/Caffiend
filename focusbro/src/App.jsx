@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import GoblinMascot from './components/GoblinMascot';
 import Onboarding from './components/Onboarding';
+import AuthModal from './components/AuthModal';
+import { supabase } from './lib/supabase';
 
 /* ─── Constants ────────────────────────────────────────────────────────────── */
 const WORK_OPTIONS  = [
@@ -69,9 +71,21 @@ class ErrorBoundary extends Component {
 
 /* ─── App gate ─────────────────────────────────────────────────────────────── */
 export default function App() {
-  const [onboarded, setOnboarded] = useState(
-    () => localStorage.getItem('brainfog_onboarded') === 'true'
-  );
+  const [onboarded, setOnboarded] = useState(() => {
+    // If returning from Stripe with ?subscribed=1 — mark subscribed + onboarded
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('subscribed') === '1') {
+        localStorage.setItem('brainfog_subscribed', 'true');
+        localStorage.setItem('brainfog_onboarded',  'true');
+        // Clean up URL
+        window.history.replaceState({}, '', window.location.pathname);
+        return true;
+      }
+    }
+    return localStorage.getItem('brainfog_onboarded') === 'true';
+  });
+
   if (!onboarded) {
     return (
       <Onboarding onComplete={() => {
@@ -83,22 +97,33 @@ export default function App() {
   return <ErrorBoundary><MainApp/></ErrorBoundary>;
 }
 
+/* ─── Push notification helper ─────────────────────────────────────────────── */
+function notify(title, body) {
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  try { new Notification(title, { body, icon: '/favicon.svg', tag: 'brainfog' }); } catch {}
+}
+
 /* ─── Main App ─────────────────────────────────────────────────────────────── */
 function MainApp() {
   const stored = useRef(loadState() ?? defaultState());
 
-  const [sessions,   setSessions]   = useState(stored.current.sessions);
-  const [goblinHp,   setGoblinHp]   = useState(stored.current.goblinHp);
-  const [streak,     setStreak]     = useState(stored.current.streak);
-  const [phase,      setPhase]      = useState('idle');
-  const [timeLeft,   setTimeLeft]   = useState(WORK_OPTIONS[1].s);
-  const [running,    setRunning]    = useState(false);
-  const [workIdx,    setWorkIdx]    = useState(1);
-  const [breakIdx,   setBreakIdx]   = useState(1);
-  const [workElapsed,setWorkElapsed]= useState(0);
-  const [celebFlag,  setCelebFlag]  = useState(false);
-  const [caughtYou,  setCaughtYou]  = useState(false);
-  const [tab,        setTab]        = useState('focus');
+  const [sessions,    setSessions]   = useState(stored.current.sessions);
+  const [goblinHp,    setGoblinHp]   = useState(stored.current.goblinHp);
+  const [streak,      setStreak]     = useState(stored.current.streak);
+  const [phase,       setPhase]      = useState('idle');
+  const [timeLeft,    setTimeLeft]   = useState(WORK_OPTIONS[1].s);
+  const [running,     setRunning]    = useState(false);
+  const [workIdx,     setWorkIdx]    = useState(1);
+  const [breakIdx,    setBreakIdx]   = useState(1);
+  const [workElapsed, setWorkElapsed]= useState(0);
+  const [celebFlag,   setCelebFlag]  = useState(false);
+  const [caughtYou,   setCaughtYou]  = useState(false);
+  const [tab,         setTab]        = useState('focus');
+  const [user,        setUser]       = useState(null);
+  const [showAuth,    setShowAuth]   = useState(false);
+  const [subscribed,  setSubscribed] = useState(
+    () => localStorage.getItem('brainfog_subscribed') === 'true'
+  );
 
   const celebTimer      = useRef(null);
   const caughtPenalty   = useRef(false);
@@ -114,7 +139,60 @@ function MainApp() {
   useEffect(() => { workElapsedRef.current = workElapsed; }, [workElapsed]);
   useEffect(() => { sessionsRef.current = sessions; }, [sessions]);
 
-  // Persist
+  // ── Supabase auth listener ──
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) setUser(data.session.user);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // ── Supabase: load cloud state when user logs in ──
+  useEffect(() => {
+    if (!supabase || !user) return;
+    async function loadCloud() {
+      const today = new Date().toDateString();
+      const [{ data: gs }, { data: sessions_data }, { data: profile }] = await Promise.all([
+        supabase.from('goblin_state').select('*').eq('user_id', user.id).single(),
+        supabase.from('focus_sessions').select('*').eq('user_id', user.id)
+          .gte('ended_at', new Date().toISOString().slice(0, 10)),
+        supabase.from('profiles').select('subscription_status').eq('id', user.id).single(),
+      ]);
+      if (gs) {
+        setGoblinHp(gs.hp);
+        setStreak(gs.streak);
+      }
+      if (sessions_data?.length) {
+        const mapped = sessions_data.map(s => ({
+          id: s.id, endedAt: s.ended_at, workS: s.work_s,
+        }));
+        setSessions(mapped);
+      }
+      if (profile?.subscription_status === 'active' || profile?.subscription_status === 'trialing') {
+        setSubscribed(true);
+        localStorage.setItem('brainfog_subscribed', 'true');
+      }
+    }
+    loadCloud();
+  }, [user]);
+
+  // ── Supabase: save goblin state when it changes ──
+  useEffect(() => {
+    if (!supabase || !user) return;
+    const t = setTimeout(() => {
+      supabase.from('goblin_state').upsert({
+        user_id: user.id, hp: goblinHp, streak,
+        updated_at: new Date().toISOString(),
+      });
+    }, 1500); // debounce 1.5s
+    return () => clearTimeout(t);
+  }, [user, goblinHp, streak]);
+
+  // Local persist (always, regardless of auth)
   useEffect(() => { saveState({ sessions, goblinHp, streak }); }, [sessions, goblinHp, streak]);
 
   // Tab-switch detection
@@ -136,8 +214,8 @@ function MainApp() {
 
   // Countdown — uses refs to avoid stale closures
   const handlePhaseEnd = useCallback(() => {
-    const currentPhase   = phaseRef.current;
-    const currentElapsed = workElapsedRef.current;
+    const currentPhase    = phaseRef.current;
+    const currentElapsed  = workElapsedRef.current;
     const currentSessions = sessionsRef.current;
 
     setRunning(false);
@@ -154,11 +232,17 @@ function MainApp() {
       celebTimer.current = setTimeout(() => setCelebFlag(false), 3500);
       setPhase('break');
       setTimeLeft(BREAK_OPTIONS[1].s);
+      notify('Session complete! 🧌', 'Take your break — goblin demands it.');
+      // Sync new session to Supabase
+      if (supabase && user) {
+        supabase.from('focus_sessions').insert({ user_id: user.id, work_s: currentElapsed + 1 });
+      }
     } else if (currentPhase === 'break') {
       setPhase('idle');
       setTimeLeft(workS);
+      notify('Break over 🧌', 'Ready for the next session? Lock in.');
     }
-  }, [workS]);
+  }, [workS, user]);
 
   useEffect(() => {
     if (!running) return;
@@ -177,6 +261,7 @@ function MainApp() {
     setTimeLeft(workS);
     setWorkElapsed(0);
     setRunning(true);
+    // Request notification permission on first session start
     if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -498,6 +583,54 @@ function MainApp() {
           <div style={{ padding: '16px 20px', paddingTop: 'env(safe-area-inset-top)' }}>
             <h2 style={{ fontSize: 26, fontWeight: 900, color: '#0f2008', marginBottom: 20 }}>Settings</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+              {/* Account / sync */}
+              {user ? (
+                <div style={{ padding: '16px 20px', borderRadius: 16, background: '#f0fce8', border: '2px solid #22c55e' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 800, color: '#15803d', margin: 0 }}>✅ Syncing across devices</p>
+                      <p style={{ fontSize: 12, color: '#4a6741', margin: '3px 0 0' }}>{user.email}</p>
+                    </div>
+                    <button onClick={() => supabase?.auth.signOut()}
+                      style={{ fontSize: 12, color: '#7aaa6a', background: 'none', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => setShowAuth(true)}
+                  style={{ padding: '16px 20px', borderRadius: 16, background: '#15803d',
+                    color: 'white', fontSize: 15, fontWeight: 800, border: 'none', cursor: 'pointer', textAlign: 'left',
+                    boxShadow: '0 4px 20px rgba(21,128,61,0.25)' }}>
+                  ☁️ Sign in to sync across devices
+                  <span style={{ display: 'block', fontSize: 12, fontWeight: 500, opacity: 0.8, marginTop: 2 }}>
+                    HP, streak &amp; sessions saved to cloud
+                  </span>
+                </button>
+              )}
+
+              {/* Subscription status */}
+              <div style={{ padding: '14px 20px', borderRadius: 16, background: 'white', border: `2px solid ${subscribed ? '#22c55e' : '#d1f0b8'}` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: subscribed ? '#15803d' : '#7aaa6a', margin: 0 }}>
+                      {subscribed ? '👑 Brainfog Premium' : '🔒 Free plan'}
+                    </p>
+                    <p style={{ fontSize: 12, color: '#7aaa6a', margin: '3px 0 0' }}>
+                      {subscribed ? 'Full goblin mode unlocked' : 'Upgrade to unlock all features'}
+                    </p>
+                  </div>
+                  {!subscribed && (
+                    <button onClick={() => { localStorage.removeItem('brainfog_onboarded'); window.location.reload(); }}
+                      style={{ fontSize: 12, color: 'white', background: '#15803d', border: 'none',
+                        borderRadius: 10, padding: '6px 12px', fontWeight: 800, cursor: 'pointer' }}>
+                      Upgrade
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <button onClick={clearData} style={{ padding: '16px 20px', borderRadius: 16, background: 'white',
                 border: '2px solid #fca5a5', color: '#dc2626', fontSize: 15, fontWeight: 800, cursor: 'pointer', textAlign: 'left' }}>
                 🗑️ Reset all data
@@ -517,6 +650,14 @@ function MainApp() {
           </div>
         )}
       </div>
+
+      {/* ── Auth modal ── */}
+      {showAuth && (
+        <AuthModal
+          onClose={() => setShowAuth(false)}
+          onAuth={u => { setUser(u); setShowAuth(false); }}
+        />
+      )}
 
       {/* ── Bottom Nav ── */}
       <nav style={{
