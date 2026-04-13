@@ -191,7 +191,7 @@ function Welcome({ onNext }) {
           Is your phone<br/>destroying your focus?
         </h1>
         <p style={{ marginTop: 12, fontSize: 16, color: '#4a6741', lineHeight: 1.5 }}>
-          FocusBro diagnoses your phone addiction and trains your ADHD brain to lock in — without burning out.
+          Brainfog diagnoses your phone addiction and trains your ADHD brain to lock in — without burning out.
         </p>
       </div>
       <button onClick={onNext}
@@ -331,7 +331,7 @@ function ScienceScreen({ onNext }) {
           This isn't just an app.<br/>The science is real.
         </h2>
         <p style={{ fontSize: 14, color: '#4a6741', marginTop: 8, lineHeight: 1.5 }}>
-          Every feature in FocusBro is built on peer-reviewed research into ADHD, focus, and behaviour change.
+          Every feature in Brainfog is built on peer-reviewed research into ADHD, focus, and behaviour change.
         </p>
       </div>
 
@@ -412,7 +412,7 @@ function ChainBreaker({ onNext }) {
         <button onClick={onNext}
           style={{ width: '100%', padding: 18, borderRadius: 18, background: '#15803d', color: 'white', fontSize: 18, fontWeight: 900, border: 'none', boxShadow: '0 8px 32px rgba(21,128,61,0.45)', marginTop: 8 }}
           className="animate-pop">
-          Unlock FocusBro →
+          Unlock Brainfog →
         </button>
       )}
     </div>

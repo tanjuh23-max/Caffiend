@@ -21,7 +21,7 @@ const OVERDUE_THRESHOLD_S = 55 * 60;
 /* ─── Storage ──────────────────────────────────────────────────────────────── */
 function loadState() {
   try {
-    const raw = localStorage.getItem('focusbro_v2');
+    const raw = localStorage.getItem('brainfog_v2');
     if (!raw) return null;
     const s = JSON.parse(raw);
     const today = new Date().toDateString();
@@ -30,7 +30,7 @@ function loadState() {
   } catch { return null; }
 }
 function saveState(s) {
-  try { localStorage.setItem('focusbro_v2', JSON.stringify(s)); } catch {}
+  try { localStorage.setItem('brainfog_v2', JSON.stringify(s)); } catch {}
 }
 function defaultState() {
   return { sessions: [], goblinHp: 60, streak: 0, lastSessionDate: null };
@@ -55,7 +55,7 @@ class ErrorBoundary extends Component {
           <p style={{ fontSize: 48 }}>🧌</p>
           <p style={{ fontSize: 18, fontWeight: 700, color: '#dc2626', marginTop: 12 }}>Something broke</p>
           <p style={{ fontSize: 13, color: '#7aaa6a', marginTop: 8 }}>{this.state.error.message}</p>
-          <button onClick={() => { localStorage.removeItem('focusbro_v2'); window.location.reload(); }}
+          <button onClick={() => { localStorage.removeItem('brainfog_v2'); window.location.reload(); }}
             style={{ marginTop: 20, padding: '12px 24px', borderRadius: 12, background: '#15803d',
               color: 'white', fontWeight: 700, border: 'none', fontSize: 14 }}>
             Reset & Reload
@@ -70,12 +70,12 @@ class ErrorBoundary extends Component {
 /* ─── App gate ─────────────────────────────────────────────────────────────── */
 export default function App() {
   const [onboarded, setOnboarded] = useState(
-    () => localStorage.getItem('focusbro_onboarded') === 'true'
+    () => localStorage.getItem('brainfog_onboarded') === 'true'
   );
   if (!onboarded) {
     return (
       <Onboarding onComplete={() => {
-        localStorage.setItem('focusbro_onboarded', 'true');
+        localStorage.setItem('brainfog_onboarded', 'true');
         setOnboarded(true);
       }}/>
     );
@@ -258,7 +258,7 @@ function MainApp() {
             {/* Header */}
             <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px 8px' }}>
               <h1 style={{ fontSize: 26, fontWeight: 900, color: '#0f2008', letterSpacing: -0.5, margin: 0 }}>
-                Focus<span style={{ color: '#15803d' }}>Bro</span>
+                Brain<span style={{ color: '#15803d' }}>fog</span>
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 {streak > 0 && (
@@ -268,7 +268,7 @@ function MainApp() {
                     <span style={{ fontSize: 14, fontWeight: 900, color: '#15803d' }}>{streak}</span>
                   </div>
                 )}
-                <button onClick={() => { localStorage.removeItem('focusbro_onboarded'); window.location.reload(); }}
+                <button onClick={() => { localStorage.removeItem('brainfog_onboarded'); window.location.reload(); }}
                   style={{ fontSize: 12, color: '#7aaa6a', background: 'none', border: 'none', fontWeight: 600, cursor: 'pointer' }}>
                   Help
                 </button>
@@ -502,14 +502,14 @@ function MainApp() {
                 border: '2px solid #fca5a5', color: '#dc2626', fontSize: 15, fontWeight: 800, cursor: 'pointer', textAlign: 'left' }}>
                 🗑️ Reset all data
               </button>
-              <button onClick={() => { localStorage.removeItem('focusbro_onboarded'); window.location.reload(); }}
+              <button onClick={() => { localStorage.removeItem('brainfog_onboarded'); window.location.reload(); }}
                 style={{ padding: '16px 20px', borderRadius: 16, background: 'white',
                   border: '2px solid #d1f0b8', color: '#4a6741', fontSize: 15, fontWeight: 800, cursor: 'pointer', textAlign: 'left' }}>
                 🔄 Replay onboarding
               </button>
               <div style={{ padding: '16px 20px', borderRadius: 16, background: 'white', border: '1px solid #d1f0b8' }}>
                 <p style={{ fontSize: 13, color: '#7aaa6a', margin: 0, lineHeight: 1.6 }}>
-                  FocusBro v1.0 — Built for ADHD brains 🧌<br/>
+                  Brainfog v1.0 — Built for ADHD brains 🧌<br/>
                   Lock in. Take breaks. Don't rot.
                 </p>
               </div>

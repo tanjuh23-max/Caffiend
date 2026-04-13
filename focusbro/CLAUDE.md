@@ -1,7 +1,7 @@
-# FocusBro — Claude Code Design System
+# Brainfog — Claude Code Design System
 
 ## Project Overview
-FocusBro is an ADHD focus app with a goblin mascot. It mirrors Brainrot's methodology (mascot health degrades with bad habits, recovers with focus) but targets ADHD users. Built with React 18 + Vite + Tailwind CSS + GSAP.
+Brainfog is an ADHD focus app with a goblin mascot. It mirrors Brainrot's methodology (mascot health degrades with bad habits, recovers with focus) but targets ADHD users. Built with React 18 + Vite + Tailwind CSS + GSAP.
 
 ---
 

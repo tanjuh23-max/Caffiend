@@ -101,14 +101,20 @@ export default function GoblinMascot({ mascotState = 'idle', size = 220 }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, userSelect: 'none' }}>
-      <img
-        ref={imgRef}
-        src={src}
-        alt="Goblin mascot"
-        width={size}
-        height={size}
-        style={{ objectFit: 'contain', filter: glow, mixBlendMode: 'multiply' }}
-      />
+      {/* Outer div: blend mode removes white bg by multiplying with page */}
+      <div style={{ display: 'inline-block', mixBlendMode: 'multiply' }}>
+        {/* Inner div: glow filter — kept separate so blend mode works correctly */}
+        <div style={{ filter: glow }}>
+          <img
+            ref={imgRef}
+            src={src}
+            alt="Goblin mascot"
+            width={size}
+            height={size}
+            style={{ objectFit: 'contain', display: 'block' }}
+          />
+        </div>
+      </div>
       <div key={`${mascotState}-${capIdx}`} className="animate-caption"
         style={{ padding: '6px 14px', borderRadius: 99,
           background: 'rgba(21,128,61,0.07)', border: '1px solid #d1f0b8',
