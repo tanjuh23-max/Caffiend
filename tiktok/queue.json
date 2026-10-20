@@ -1,0 +1,242 @@
+[
+ {
+  "hook": "why you wake up at 3am for no reason",
+  "reveal": "it's the energy drink you had after work",
+  "drink": "Monster",
+  "mg": 160,
+  "start_hour": 17.5,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you when your head hits the pillow",
+  "caption": "why you wake up at 3am for no reason 😮‍💨\n\nMonster (160mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #monsterenergy #energydrink"
+ },
+ {
+  "hook": "why you're tired but wired every single night",
+  "reveal": "it's your 4pm Costa flat white",
+  "drink": "Costa flat white",
+  "mg": 277,
+  "start_hour": 16,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at 11pm. that's more than a whole espresso",
+  "caption": "why you're tired but wired every single night 😮‍💨\n\nCosta flat white (277mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #costa #coffee"
+ },
+ {
+  "hook": "why your sleep tracker says you got barely any deep sleep",
+  "reveal": "it's the pre-workout before your evening session",
+  "drink": "pre-workout",
+  "mg": 200,
+  "start_hour": 18.5,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at bedtime. deep sleep is the first thing it steals",
+  "caption": "why your sleep tracker says you got barely any deep sleep 😮‍💨\n\npre-workout (200mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #preworkout #gym"
+ },
+ {
+  "hook": "why 8 hours of sleep still leaves you wrecked",
+  "reveal": "it's the cold brew you had at lunch",
+  "drink": "large cold brew",
+  "mg": 207,
+  "start_hour": 13,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at 11pm. you slept, just not deeply",
+  "caption": "why 8 hours of sleep still leaves you wrecked 😮‍💨\n\nlarge cold brew (207mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #coldbrew #coffee"
+ },
+ {
+  "hook": "why you lie there scrolling for an hour before you can sleep",
+  "reveal": "it's the Red Bull at 5pm",
+  "drink": "Red Bull",
+  "mg": 80,
+  "start_hour": 17,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at bedtime. your brain isn't ready yet",
+  "caption": "why you lie there scrolling for an hour before you can sleep 😮‍💨\n\nRed Bull (80mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #redbull #energydrink"
+ },
+ {
+  "hook": "why night shifts wreck you for days",
+  "reveal": "it's the energy drink at 2am",
+  "drink": "Monster",
+  "mg": 160,
+  "start_hour": 2,
+  "bed_hour": 9,
+  "payoff": "{bed_mg}mg still active when you finally get to bed at 9am",
+  "caption": "why night shifts wreck you for days 😮‍💨\n\nMonster (160mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #nightshift #shiftwork"
+ },
+ {
+  "hook": "why you can't switch your brain off at night",
+  "reveal": "it's the matcha latte at 4pm",
+  "drink": "matcha latte",
+  "mg": 70,
+  "start_hour": 16,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at 11pm. matcha isn't caffeine-free",
+  "caption": "why you can't switch your brain off at night 😮‍💨\n\nmatcha latte (70mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #matcha #matchalatte"
+ },
+ {
+  "hook": "why your heart's still racing when you're exhausted",
+  "reveal": "it's the two Monsters you had today",
+  "drink": "2 Monsters",
+  "mg": 320,
+  "start_hour": 15,
+  "bed_hour": 23.5,
+  "payoff": "{bed_mg}mg still active at bedtime. more than a whole Red Bull",
+  "caption": "why your heart's still racing when you're exhausted 😮‍💨\n\n2 Monsters (320mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #monsterenergy #energydrink"
+ },
+ {
+  "hook": "why gym days ruin your sleep",
+  "reveal": "it's the pre-workout at 7pm",
+  "drink": "strong pre-workout",
+  "mg": 300,
+  "start_hour": 19,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at 11pm. that's two Red Bulls at bedtime",
+  "caption": "why gym days ruin your sleep 😮‍💨\n\nstrong pre-workout (300mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #preworkout #gymtok"
+ },
+ {
+  "hook": "why you sleep worse on work days",
+  "reveal": "it's the Pret latte on your afternoon break",
+  "drink": "Pret latte",
+  "mg": 180,
+  "start_hour": 15,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at 11pm. weekends don't have that latte",
+  "caption": "why you sleep worse on work days 😮‍💨\n\nPret latte (180mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #pret #coffee"
+ },
+ {
+  "hook": "why you wake up already tired",
+  "reveal": "it's the Pepsi Max with dinner",
+  "drink": "500ml Pepsi Max",
+  "mg": 64,
+  "start_hour": 19,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at bedtime. nobody counts the fizzy drinks",
+  "caption": "why you wake up already tired 😮‍💨\n\n500ml Pepsi Max (64mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #pepsimax #fizzydrinks"
+ },
+ {
+  "hook": "why you sleep fine on holiday but awful at home",
+  "reveal": "it's the 2pm office coffee",
+  "drink": "office coffee",
+  "mg": 140,
+  "start_hour": 14,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at 11pm. holidays don't have that coffee",
+  "caption": "why you sleep fine on holiday but awful at home 😮‍💨\n\noffice coffee (140mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #worklife #coffee"
+ },
+ {
+  "hook": "why you can't fall asleep before 1am anymore",
+  "reveal": "it's the venti at 1pm",
+  "drink": "Starbucks venti",
+  "mg": 410,
+  "start_hour": 13,
+  "bed_hour": 24,
+  "payoff": "{bed_mg}mg still in you at midnight. more than a can of Red Bull",
+  "caption": "why you can't fall asleep before 1am anymore 😮‍💨\n\nStarbucks venti (410mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #starbucks #coffee"
+ },
+ {
+  "hook": "why late-night study sessions backfire",
+  "reveal": "it's the Red Bull at 9pm",
+  "drink": "Red Bull",
+  "mg": 80,
+  "start_hour": 21,
+  "bed_hour": 1,
+  "payoff": "{bed_mg}mg still active when you finally sleep at 1am",
+  "caption": "why late-night study sessions backfire 😮‍💨\n\nRed Bull (80mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #studytok #exams"
+ },
+ {
+  "hook": "why the noon coffee rule isn't working for you",
+  "reveal": "it's the large coffee at 12pm. yes, noon",
+  "drink": "large coffee",
+  "mg": 200,
+  "start_hour": 12,
+  "bed_hour": 22.5,
+  "payoff": "{bed_mg}mg still in you at 10:30pm. noon isn't early enough for a big one",
+  "caption": "why the noon coffee rule isn't working for you 😮‍💨\n\nlarge coffee (200mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #coffee #sleephacks"
+ },
+ {
+  "hook": "why you feel hungover without drinking",
+  "reveal": "it's the Celsius you had at 4pm",
+  "drink": "Celsius",
+  "mg": 200,
+  "start_hour": 16,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at 11pm. your sleep never got deep",
+  "caption": "why you feel hungover without drinking 😮‍💨\n\nCelsius (200mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #celsius #energydrink"
+ },
+ {
+  "hook": "why weekends never fix your sleep",
+  "reveal": "it's the Costa americano at 3pm",
+  "drink": "Costa americano",
+  "mg": 277,
+  "start_hour": 15,
+  "bed_hour": 23.5,
+  "payoff": "{bed_mg}mg still in you at 11:30pm. the lie-in can't catch up",
+  "caption": "why weekends never fix your sleep 😮‍💨\n\nCosta americano (277mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #costa #weekend"
+ },
+ {
+  "hook": "why you're wide awake when everyone else is asleep",
+  "reveal": "it's the NOCCO at 5pm",
+  "drink": "NOCCO",
+  "mg": 180,
+  "start_hour": 17,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still active at bedtime. more than a whole Red Bull",
+  "caption": "why you're wide awake when everyone else is asleep 😮‍💨\n\nNOCCO (180mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #nocco #energydrink"
+ },
+ {
+  "hook": "why your sleep got worse when you started training",
+  "reveal": "it's the energy drink before the gym",
+  "drink": "Ghost energy",
+  "mg": 200,
+  "start_hour": 18,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at 11pm. the gym isn't the problem",
+  "caption": "why your sleep got worse when you started training 😮‍💨\n\nGhost energy (200mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #gymtok #ghostenergy"
+ },
+ {
+  "hook": "why that one afternoon cuppa matters",
+  "reveal": "it's the tea at 6pm",
+  "drink": "builder's tea",
+  "mg": 50,
+  "start_hour": 18,
+  "bed_hour": 22.5,
+  "payoff": "{bed_mg}mg still active at bedtime. tea counts too",
+  "caption": "why that one afternoon cuppa matters 😮‍💨\n\nbuilder's tea (50mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #tea #britishtea"
+ },
+ {
+  "hook": "why your partner falls asleep instantly and you don't",
+  "reveal": "it's the coffee you both had at 4pm",
+  "drink": "coffee",
+  "mg": 140,
+  "start_hour": 16,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at 11pm. some people clear it twice as fast",
+  "caption": "why your partner falls asleep instantly and you don't 😮‍💨\n\ncoffee (140mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #couples #coffee"
+ },
+ {
+  "hook": "why Sunday night sleep is always the worst",
+  "reveal": "it's the double espresso at brunch",
+  "drink": "double espresso",
+  "mg": 126,
+  "start_hour": 12.5,
+  "bed_hour": 22.5,
+  "payoff": "{bed_mg}mg still active at 10:30pm. right before a Monday",
+  "caption": "why Sunday night sleep is always the worst 😮‍💨\n\ndouble espresso (126mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #sundayscaries #brunch"
+ },
+ {
+  "hook": "why you dream so weirdly lately",
+  "reveal": "it's the iced latte at 3pm",
+  "drink": "iced latte",
+  "mg": 150,
+  "start_hour": 15,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg still in you at 11pm. it's messing with your sleep stages",
+  "caption": "why you dream so weirdly lately 😮‍💨\n\niced latte (150mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #icedlatte #dreams"
+ },
+ {
+  "hook": "why you need 3 coffees just to feel normal",
+  "reveal": "it's yesterday's coffee you never cleared",
+  "drink": "large coffee",
+  "mg": 200,
+  "start_hour": 16,
+  "bed_hour": 23,
+  "payoff": "{bed_mg}mg at bedtime means worse sleep, so tomorrow you need more",
+  "caption": "why you need 3 coffees just to feel normal 😮‍💨\n\nlarge coffee (200mg) at {start} leaves ~{bed_mg}mg in your system at {bed}.\n\nsee your own curve, free: cafify.app\n\n#sleep #cantsleep #caffeine #sleeptips #tired #coffeeaddict #tired"
+ }
+]
